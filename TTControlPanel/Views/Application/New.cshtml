@@ -1,0 +1,49 @@
+﻿@model NewApplicationGetModel
+@{
+	ViewData["Title"] = "New";
+}
+
+<h1>Nuova Applicazione</h1>
+<br />
+<div asp-if="Model.Error != 0">
+	<label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di inserimento, controllare di aver inserito tutti i dati richiesti.</label>
+	<label class="error_lbl" asp-if="Model.Error == 2">Codice applicazione non valido. Inserire un altro codice.</label>
+	<label class="error_lbl" asp-if="Model.Error == 3">Nome applicazione già assegnato ad un'altro elemento.</label>
+	<label class="error_lbl" asp-if="Model.Error == 4">Versione non valida. Ricontrollare la versione inserita [0123456789].</label>
+</div>
+<form asp-antiforgery="true" asp-controller="application" asp-action="new" autocomplete="off" style="width:300px;">
+	<label>Codice:</label>
+	<label class="checkbox">
+		Genera automaticamente il codice
+		<input type="checkbox" checked="checked" name="automaticCode" id="automaticCode" value="true" />
+		<span class="checkmark"></span>
+	</label>
+	<div id="viewManCode" style="display:none;">
+		<input type="text" name="code" id="code" />
+		<br />
+	</div>
+	<label style="margin-top:15px;">Nome:</label>
+	<input type="text" name="name" />
+	<br />
+	<label>Data Rilascio:</label>
+	<input type="date" name="release" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
+	<br />
+	<label>Versione Iniziale:</label>
+	<input type="text" name="major" style="width:55px;" onkeypress='return EnterOnlyNumber(event);' /><span style="margin: 0px 2px 0px 6px;">.</span>
+	<input type="text" name="minor" style="width:55px;" onkeypress='return EnterOnlyNumber(event);' />
+	<br />
+	<br />
+	<input type="submit" value="Aggiungi" name="submit" style="margin-top:20px;" />
+</form>
+
+@section Scripts
+{
+	<script type="text/javascript">
+	
+		$('#automaticCode').change(function () {
+			console.log("change");
+			$('#viewManCode').toggle();
+		});
+
+	</script>
+}

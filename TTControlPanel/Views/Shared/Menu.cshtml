@@ -1,0 +1,8 @@
+﻿@{ var user = Context.Items["User"] as User; }
+
+<div asp-if="@(user != null)" class="menu">
+    <ul>
+        <li><a asp-action="index" asp-controller="home">Home</a></li>
+        <li><a asp-action="index" asp-controller="application">Applicazioni</a></li>
+    </ul>
+</div>

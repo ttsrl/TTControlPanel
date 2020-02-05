@@ -1,0 +1,70 @@
+﻿@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+<div id="loginBox">
+    <img src="~/images/logo_b.png" class="logo" />
+    <h2 class="titleBox">Login</h2>
+    @if (Model != null)
+    {
+        @if (Model.Error == LoginError.Password || Model.Error == LoginError.UsernameEmail)
+        {
+            <label class="errorLogin">Username o Password Errati!</label>
+        }
+        else if (Model.Error == LoginError.Banned)
+        {
+            <label class="errorLogin">Utente non abilitato all'accesso!</label>
+        }
+    }
+    <br />
+    <form asp-controller="Home" asp-action="Login" asp-antiforgery="true" autocomplete="off" id="loginForm">
+        <label for="usernameTxt">Username:</label>
+        <span class="loginField">
+            <span class="icon user"></span>
+            <input type="text" id="usernameTxt" value="" name="username" />
+        </span>
+        <label for="passwordTxt">Password:</label>
+        <span class="loginField">
+            <span class="icon password"></span>
+            <input type="password" id="passwordTxt" value="" name="password" style="width: 456px;" />
+            <span class="icon view showPass"></span>
+        </span>
+        <a href="#">Password dimenticata?</a>
+        <br />
+        <input type="submit" value="ACCEDI" class="button" />
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $("#usernameTxt").focus(function(){
+            $(this).parent().addClass("focus");
+        });
+
+        $("#usernameTxt").blur(function(){
+            $(this).parent().removeClass("focus");
+        });
+
+        $("#passwordTxt").focus(function(){
+            $(this).parent().addClass("focus");
+        });
+
+        $("#passwordTxt").blur(function(){
+            $(this).parent().removeClass("focus");
+        });
+
+        $(".showPass").click(function () {
+            if ($(this).hasClass("view")) {
+                $(this).removeClass("view");
+                $(this).addClass("hide");
+                $("#passwordTxt").attr("type", "text");
+            } else {
+                 $(this).removeClass("hide");
+                $(this).addClass("view");
+                $("#passwordTxt").attr("type", "password");
+            }
+        });
+
+    </script>
+}

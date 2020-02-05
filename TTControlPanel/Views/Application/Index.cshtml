@@ -1,0 +1,37 @@
+﻿@model IndexApplicationModel
+@{
+    ViewData["Title"] = "Applicazioni";
+}
+
+<h1>Applicazioni</h1>
+<br />
+<table class="table">
+    <tr>
+        <td style="min-width:50px;">Id</td>
+        <td style="min-width:100px;">Codice</td>
+        <td style="min-width:180px;">Nome</td>
+        <td style="min-width:200px;">Versioni</td>
+        <td>Azioni</td>
+    </tr>
+    @foreach (var a in Model.Applications)
+    {
+        <tr>
+            <td>@a.Id</td>
+            <td><b>@a.Code</b></td>
+            <td>@a.Name</td>
+            <td>@string.Join(", ", a.Versions.Select(v => (v.GetVersion().Major + "." + v.GetVersion().Minor)).ToArray())</td>
+            <td>
+                <span><a asp-controller="Application" asp-action="Versions" asp-route-id="@a.Id">Versioni</a></span>
+                <span><a asp-controller="Application" asp-action="Edit" asp-route-id="@a.Id">Modifica</a></span>
+                <span><a asp-controller="Application" asp-action="Delete" asp-route-id="@a.Id">Elimina</a></span>
+            </td>
+        </tr>
+    }
+    <tr asp-if="Model.Applications.Count == 0">
+        <td colspan="5" style="text-align:center">Nessuna applicazioni aggiunta</td>
+    </tr>
+</table>
+<br />
+<div>
+    <a asp-action="new" asp-controller="application" ><input type="button" value="Aggiungi" /></a>
+</div>

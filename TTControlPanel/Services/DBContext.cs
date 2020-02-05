@@ -1,0 +1,89 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using TTControlPanel.Models;
+
+namespace TTControlPanel.Services
+{
+    public class DBContext : DbContext
+    {
+
+        private static bool started = false;
+        public static bool Started { get => started; }
+        public static DbContextOptions<DBContext> Options;
+
+        public DBContext(DbContextOptions<DBContext> options) : base(options)
+        {
+            started = true;
+            Options = options;
+        }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Application> Applications { get; set; }
+        public DbSet<ApplicationVersion> ApplicationsVersions { get; set; }
+        public DbSet<License> Licenses { get; set; }
+        public DbSet<ProductKey> ProductKeys { get; set; }
+
+        
+
+        private static DBContext _instance;
+        public static DBContext Instance
+        {
+            get
+            {
+                if (started)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new DBContext(Options);
+                    }
+                    return _instance;
+                }
+                return null;
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>().Property(u => u.Visible).HasDefaultValue(true);
+        }
+
+        public static async Task Initialize(DBContext context, Cryptography crypt)
+        {
+            await context.Database.EnsureCreatedAsync();
+            if (await context.Users.AnyAsync()) return;
+
+            var roles = new List<Role>
+            {
+                new Role
+                {
+                    Name = "Administrator",
+                    Description = "Amministratore"
+                }
+            };
+            // set all grants to administrator
+            foreach (var g in Role.GetGrantNames()) roles[0][g] = true;
+            var users = new List<User>
+            {
+                new User
+                {
+                    Role = roles[0],
+                    Password = await crypt.Argon2HashAsync("francesco1995"),
+                    Username = "Administrator",
+                    Email = "francesco.f@ttautomazioni.it",
+                    PhoneNumber = "3387463020",
+                    Visible = true
+                }
+            };
+
+            await context.Roles.AddRangeAsync(roles);
+            await context.Users.AddRangeAsync(users);
+            await context.SaveChangesAsync();
+        }
+    }
+}

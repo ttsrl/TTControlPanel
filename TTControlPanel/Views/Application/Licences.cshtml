@@ -1,0 +1,31 @@
+﻿@model LicencesVersionApplicationGetModel
+@{
+    ViewData["Title"] = Model.Application.Name + " - Licenze";
+}
+<h1>@Model.Application.Name - @Model.Version.Version - Licenze</h1>
+<br />
+<table class="table">
+    <tr>
+        <td>Id</td>
+        <td>ProductKey</td>
+        <td>HID</td>
+        <td>ConfirmCode</td>
+        <td>Stato</td>
+        <td>Data Rilascio</td>
+        <td>Data Attivazione</td>
+        <td>Azioni</td>
+    </tr>
+    @foreach (var l in Model.Version.Licences)
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
+</table>
