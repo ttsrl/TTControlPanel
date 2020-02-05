@@ -3,32 +3,30 @@
     ViewData["Title"] = Model.Application.Name + " - Versioni";
 }
 
-<h1>@Model.Application.Name - Versioni</h1>
+<h2>@Model.Application.Name - Versioni</h2>
 <br />
 <table class="table">
     <tr>
-        <td>Id</td>
         <td>Versione</td>
         <td>Data di Rilascio</td>
         <td>Licenze Rilasciate</td>
         <td>Clienti Associati</td>
         <td>Azioni</td>
     </tr>
-    @foreach (var v in Model.Versions)
+    @foreach (var v in Model.Application.ApplicationVersions)
     {
         <tr>
-            <td>@v.Id</td>
-            <td>@v.Version</td>
+            <td><b>@v.Version</b></td>
             <td>@v.ReleaseDate.ToString("dd/MM/yyyy")</td>
             <td>@v.Licences.Count.ToString()</td>
             <td>@v.Licences.Select(l => l.Client).Distinct().ToList().Count.ToString()</td>
             <td>
-                <span><a asp-controller="Application" asp-action="Licences" asp-route-id="@v.Id">Licenze</a></span>
+                <span><a asp-controller="License" asp-action="ApplicationVersion" asp-route-id="@v.Id">Licenze</a></span>
                 <span><a asp-controller="Application" asp-action="DeleteVersion" asp-route-id="@v.Id">Elimina</a></span>
             </td>
         </tr>
     }
-    <tr asp-if="Model.Versions.Count == 0">
+    <tr asp-if="Model.Application.ApplicationVersions.Count == 0">
         <td colspan="5" style="text-align:center">Nessuna versione presente</td>
     </tr>
 </table>

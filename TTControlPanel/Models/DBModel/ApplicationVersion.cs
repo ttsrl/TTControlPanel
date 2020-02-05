@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TTControlPanel.Models
 {
@@ -13,6 +10,7 @@ namespace TTControlPanel.Models
 
         public int Id { get; set; }
         public string Version { get => v; set => v = value; }
+        public Application Application { get; set; }
         public List<License> Licences { get; set; }
         public DateTime ReleaseDate
         {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TTControlPanel.Services;
 
 namespace TTControlPanel.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class TTPanelContextModelSnapshot : ModelSnapshot
+    [Migration("20200205164621_5")]
+    partial class _5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,6 +111,8 @@ namespace TTControlPanel.Migrations
 
                     b.Property<DateTime?>("ActivateDateTime");
 
+                    b.Property<int?>("ApplicationId");
+
                     b.Property<int?>("ApplicationVersionId");
 
                     b.Property<int?>("ClientId");
@@ -122,6 +126,8 @@ namespace TTControlPanel.Migrations
                     b.Property<DateTime>("ReleaseDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
 
                     b.HasIndex("ApplicationVersionId");
 
@@ -208,8 +214,8 @@ namespace TTControlPanel.Migrations
 
             modelBuilder.Entity("TTControlPanel.Models.ApplicationVersion", b =>
                 {
-                    b.HasOne("TTControlPanel.Models.Application", "Application")
-                        .WithMany("ApplicationVersions")
+                    b.HasOne("TTControlPanel.Models.Application")
+                        .WithMany("Versions")
                         .HasForeignKey("ApplicationId");
                 });
 
@@ -222,7 +228,11 @@ namespace TTControlPanel.Migrations
 
             modelBuilder.Entity("TTControlPanel.Models.License", b =>
                 {
-                    b.HasOne("TTControlPanel.Models.ApplicationVersion", "ApplicationVersion")
+                    b.HasOne("TTControlPanel.Models.Application", "Application")
+                        .WithMany()
+                        .HasForeignKey("ApplicationId");
+
+                    b.HasOne("TTControlPanel.Models.ApplicationVersion")
                         .WithMany("Licences")
                         .HasForeignKey("ApplicationVersionId");
 

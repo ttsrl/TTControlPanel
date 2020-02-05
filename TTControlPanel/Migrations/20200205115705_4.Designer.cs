@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TTControlPanel.Services;
 
 namespace TTControlPanel.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class TTPanelContextModelSnapshot : ModelSnapshot
+    [Migration("20200205115705_4")]
+    partial class _4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,8 +210,8 @@ namespace TTControlPanel.Migrations
 
             modelBuilder.Entity("TTControlPanel.Models.ApplicationVersion", b =>
                 {
-                    b.HasOne("TTControlPanel.Models.Application", "Application")
-                        .WithMany("ApplicationVersions")
+                    b.HasOne("TTControlPanel.Models.Application")
+                        .WithMany("Versions")
                         .HasForeignKey("ApplicationId");
                 });
 
@@ -222,7 +224,7 @@ namespace TTControlPanel.Migrations
 
             modelBuilder.Entity("TTControlPanel.Models.License", b =>
                 {
-                    b.HasOne("TTControlPanel.Models.ApplicationVersion", "ApplicationVersion")
+                    b.HasOne("TTControlPanel.Models.ApplicationVersion")
                         .WithMany("Licences")
                         .HasForeignKey("ApplicationVersionId");
 

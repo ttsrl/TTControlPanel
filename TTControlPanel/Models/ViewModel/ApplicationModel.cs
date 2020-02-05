@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TTControlPanel.Models.ViewModel
 {
@@ -33,12 +31,5 @@ namespace TTControlPanel.Models.ViewModel
     public class VersionsApplicationGetModel
     {
         public Application Application { get; set; }
-        public List<ApplicationVersion> Versions { get; set; }
-    }
-
-    public class LicencesVersionApplicationGetModel
-    {
-        public Application Application { get; set; }
-        public ApplicationVersion Version { get; set; }
     }
 }

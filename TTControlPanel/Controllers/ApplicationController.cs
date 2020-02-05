@@ -26,7 +26,7 @@ namespace TTControlPanel.Controllers
         public async Task<IActionResult> Index()
         {
             var apps = await _db.Applications
-                .Include(a => a.Versions)
+                .Include(a => a.ApplicationVersions)
                 .ToListAsync();
             var m = new IndexApplicationModel
             {
@@ -70,15 +70,15 @@ namespace TTControlPanel.Controllers
                     ReleaseDate = model.Release,
                     Version = version
                 };
+                await _db.ApplicationsVersions.AddAsync(appV);
                 var app = new Application
                 {
                     Code = code,
                     Name = name,
-                    Versions = new List<ApplicationVersion>() { appV }
+                    ApplicationVersions = new List<ApplicationVersion>() { appV }
                 };
-
-                await _db.ApplicationsVersions.AddAsync(appV);
                 await _db.Applications.AddAsync(app);
+                appV.Application = app;
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -95,17 +95,17 @@ namespace TTControlPanel.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var app = await _db.Applications.Where(a => a.Id == id)
-                .Include(a => a.Versions)
+                .Include(a => a.ApplicationVersions)
                     .ThenInclude(v => v.Licences)
                         .ThenInclude(v => v.ProductKey)
                 .FirstOrDefaultAsync();
             if(app == null)
                 return RedirectToAction("Index");
-            foreach(var v  in app.Versions)
+            foreach(var v  in app.ApplicationVersions)
             {
                 _db.Licenses.RemoveRange(v.Licences);
             }
-            _db.ApplicationsVersions.RemoveRange(app.Versions);
+            _db.ApplicationsVersions.RemoveRange(app.ApplicationVersions);
             _db.Applications.Remove(app);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -115,10 +115,10 @@ namespace TTControlPanel.Controllers
         public async Task<IActionResult> Versions(int id)
         {
             var app = await _db.Applications.Where(a => a.Id == id)
-                .Include(a => a.Versions)
+                .Include(a => a.ApplicationVersions)
                     .ThenInclude(v => v.Licences)
                         .ThenInclude(l => l.ProductKey)
-                .Include(a => a.Versions)
+                .Include(a => a.ApplicationVersions)
                     .ThenInclude(v => v.Licences)
                         .ThenInclude(l => l.Client)
                 .FirstOrDefaultAsync();
@@ -126,20 +126,13 @@ namespace TTControlPanel.Controllers
                 return RedirectToAction("Index");
             var m = new VersionsApplicationGetModel
             {
-                Application = app,
-                Versions = app.Versions
+                Application = app
             };
             return View(m);
         }
 
         [HttpGet]
         public async Task<IActionResult> DeleteVersion(int id)
-        {
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Licences(int id)
         {
             return RedirectToAction("Index");
         }
