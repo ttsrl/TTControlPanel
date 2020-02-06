@@ -2,7 +2,9 @@
 @{
 	ViewData["Title"] = "New";
 }
-
+<div id="explorerLink">
+	<a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova
+</div>
 <h1>Nuova Applicazione</h1>
 <br />
 <div asp-if="Model.Error != 0">

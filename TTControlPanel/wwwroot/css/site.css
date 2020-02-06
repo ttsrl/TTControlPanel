@@ -112,7 +112,7 @@ input[type="button"], input[type="submit"], .btn {
         color: #fff !important;
     }
 
-input[type="text"], input[type="password"], input[type="date"] {
+input[type="text"], input[type="password"], input[type="date"], textarea {
     background-color: #fff;
     border: 1px solid #b3b6b8;
     border-radius: 3px;
@@ -123,6 +123,11 @@ input[type="text"], input[type="password"], input[type="date"] {
     height: 36px;
     padding: 0 12px;
     width: 100%;
+}
+
+textarea {
+    padding: 6px 10px;
+    min-height: 108px;
 }
 
 .checkbox {
@@ -226,7 +231,7 @@ main {
 /* ------------------------------- login ------------------------------------------*/
 
 #loginBox {
-    width: 600px;
+    width: 500px;
     height: auto;
     display: block;
     margin: 50px auto;
@@ -262,7 +267,7 @@ main {
         height: 38px;
         line-height: 36px;
         padding: 0;
-        width: 495px;
+        width: 395px;
     }
 
     #loginBox .loginField.focus {
@@ -333,3 +338,14 @@ form label {
 .table td span::after {
     content: ' - ';
 }
+
+#explorerLink {
+    border-bottom: 1px solid #e1e1e1;
+    font-size: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 7px;
+}
+
+    #explorerLink a, #explorerLink a:hover {
+        font-weight: normal;
+    }

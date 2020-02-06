@@ -34,7 +34,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ApplicationVersion(int id)
+        public async Task<IActionResult> VersionLicenses(int id)
         {
             var version = await _db.ApplicationsVersions.Where(v => v.Id == id)
                 .Include(av => av.Application)
@@ -45,8 +45,8 @@ namespace TTControlPanel.Controllers
                 .FirstOrDefaultAsync();
             if (version == null)
                 return RedirectToAction("Index");
-            var m = new IndexLicenseModel { ApplicationVersion = version, Licenses = version.Licences };
-            return View("Index", m);
+            var m = new ApplicationLicensesModel { ApplicationVersion = version, Licenses = version.Licences };
+            return View(m);
         }
     }
 }
