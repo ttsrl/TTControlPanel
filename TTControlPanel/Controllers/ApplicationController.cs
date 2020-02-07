@@ -138,32 +138,33 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> NewVersion(int id)
+        public async Task<IActionResult> NewVersion(int id, int error = 0)
         {
             var app = await _db.Applications.Where(a => a.Id == id).FirstOrDefaultAsync();
             if (app == null)
                 return RedirectToAction("Index");
-            return View(new NewVersionApplicationGetModel { Application = app });
+            return View(new NewVersionApplicationGetModel { Application = app, Error = error });
         }
 
         [HttpPost]
-        public async Task<IActionResult> NewVersion(NewVersionApplicationPostModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewVersion(int id, NewVersionApplicationPostModel model)
         {
             if (ModelState.IsValid)
             {
                 //validate application
                 var app = await _db.Applications.Where(a => a.Id == model.Application).FirstOrDefaultAsync();
                 if (app == null)
-                    return View(new NewVersionApplicationGetModel { Error = 2 });
+                    return RedirectToAction("NewVersion", new { id = id, error = 2 });
                 //validate version
                 Version v = null;
                 var resV = Version.TryParse(model.Major + "." + model.Minor, out v);
                 var strV = (resV) ? v.ToString() : "";
                 if (string.IsNullOrEmpty(strV))
-                    return View(new NewVersionApplicationGetModel { Error = 3 });
+                    return RedirectToAction("NewVersion", new { id = id, error = 3 });
                 var vers = await _db.ApplicationsVersions.Where(av => av.Application == app && av.Version == strV).FirstOrDefaultAsync();
-                if (vers == null)
-                    return View(new NewVersionApplicationGetModel { Error = 4 });
+                if (vers != null)
+                    return RedirectToAction("NewVersion", new { id = id, error = 4 });
                 var appV = new ApplicationVersion
                 {
                     ReleaseDate = model.Release,
@@ -173,9 +174,9 @@ namespace TTControlPanel.Controllers
                 };
                 await _db.ApplicationsVersions.AddAsync(appV);
                 await _db.SaveChangesAsync();
-                return RedirectToAction("Versions", model.Application);
+                return RedirectToAction("Versions", "Application", new { id = model.Application });
             }
-            return View(new NewVersionApplicationGetModel { Error = 1 });
+            return RedirectToAction("NewVersion", new { id = id, error = 1 });
         }
 
     }

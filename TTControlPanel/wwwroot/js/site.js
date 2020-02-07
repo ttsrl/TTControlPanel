@@ -18,3 +18,19 @@ function EnterOnlyNumber(event) {
         return true;
     }
 }
+$(document).ready(function () {
+
+    $("script.inject-json").each(function (i, e) {
+        var name = $(e).attr("data-name") || "injectedJson";
+        var json = $(e).html();
+        if (name !== "injectedJson") {
+            window[name] = JSON.parse(json);
+        } else {
+            if (!window[name]) {
+                window[name] = new Array();
+            }
+            window[name].push(JSON.parse(json));
+        }
+    });
+
+});

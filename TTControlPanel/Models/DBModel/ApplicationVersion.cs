@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace TTControlPanel.Models
@@ -10,6 +11,7 @@ namespace TTControlPanel.Models
 
         public int Id { get; set; }
         public string Version { get => v; set => v = value; }
+        [JsonIgnore]
         public Application Application { get; set; }
         public List<License> Licences { get; set; }
         public DateTime ReleaseDate

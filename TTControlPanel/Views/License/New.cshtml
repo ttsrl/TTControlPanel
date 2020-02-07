@@ -1,0 +1,73 @@
+﻿@model NewLicenseGetModel
+@{
+    ViewData["Title"] = "Nuova Licenza";
+
+    var appS = (Model.Selected != null) ? Model.Selected.Application.Id : 0;
+    var vS = (Model.Selected != null) ? Model.Selected.Id : 0;
+}
+<h2>Nuova Licenza</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, alcuni dati sono insesistenti.</label>
+</div>
+<form asp-antiforgery="true" asp-controller="licence" asp-action="new" autocomplete="off">
+    <label>Applicazione:</label>
+    <select name="application" id="application" onchange="loadVersions(this)">
+        <option value="">--</option>
+        @foreach (var a in Model.Applications)
+        {
+            <option value="@a.Id" asp-selected="@(appS == a.Id)">@a.Name</option>
+        }
+    </select>
+    <label>Versione:</label>
+    <select name="version" id="versions">
+        <option value="">--</option>
+    </select>
+    <label>Cliente:</label>
+    <select name="client">
+        <option value="">--</option>
+        @foreach (var c in Model.Clients)
+        {
+            <option value="@c.Id">@c.Name</option>
+        }
+    </select>
+    <br />
+    <br />
+    <input type="submit" value="Aggiungi" name="submit" style="margin-top:20px;" />
+</form>
+
+@section Scripts
+{
+    <script class="inject-json" data-name="application" type="application/json">
+        @Html.Raw(JsonConvert.SerializeObject(Model.Applications))
+    </script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            loadVersions($("#application"));
+        });
+
+        function loadVersions(item) {
+            var val = $(item).val();
+            if (val == "") {
+                $("#versions").empty();
+                $("#versions").append("<option value='-1'>--</option>");
+                return;
+            }
+            $.each(application, function (index, obj) {
+                if (obj.Id == val) {
+                    var vers = obj.ApplicationVersions;
+                    $("#versions").empty();
+                    $.each(vers, function (index, obj) {
+                        if("@vS" == obj.Id)
+                            $("#versions").append("<option selected>" + obj.Version + "</option>");
+                        else
+                            $("#versions").append("<option>" + obj.Version + "</option>");
+                    });
+                }
+            });
+        }
+
+    </script>
+}

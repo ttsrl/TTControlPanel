@@ -25,17 +25,17 @@ namespace TTControlPanel.Services
                 while (true)
                 {
                     StringBuilder str = new StringBuilder();
-                    str.Append(Utilities.Utilities.RandomLetter());
+                    str.Append(RandomLetter());
                     str.Append(client.Code);
-                    str.Append(Utilities.Utilities.RandomLetter());
+                    str.Append(RandomLetter());
                     str.Append(app.Code);
-                    str.Append(Utilities.Utilities.RandomLetter());
-                    str.Append(Utilities.Utilities.VersionToInt(appV.GetVersion()).ToString("000000"));
-                    str.Append(Utilities.Utilities.RandomLetter());
+                    str.Append(RandomLetter());
+                    str.Append(VersionToInt(appV.GetVersion()).ToString("000000"));
+                    str.Append(RandomLetter());
                     str.Append(appV.ReleaseDate.ToString("yMMdd"));
-                    str.Append(Utilities.Utilities.RandomLetter());
+                    str.Append(RandomLetter());
                     str.Append(DateTime.Now.ToString("yMMdd"));
-                    str.Append(Utilities.Utilities.RandomLetter());
+                    str.Append(RandomLetter());
 
                     if (!prods.Contains(str.ToString()))
                         return str.ToString();

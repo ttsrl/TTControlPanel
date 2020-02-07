@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace TTControlPanel.Models.ViewModel
@@ -9,9 +10,27 @@ namespace TTControlPanel.Models.ViewModel
         public List<License> Licenses { get; set; }
     }
 
-    public class ApplicationLicensesModel
+    public class VersionLicensesModel
     {
         public ApplicationVersion ApplicationVersion { get; set; }
         public List<License> Licenses { get; set; }
+    }
+
+    public class NewLicenseGetModel
+    {
+        public int Error { get; set; }
+        public List<Application> Applications { get; set; }
+        public List<Client> Clients { get; set; }
+        public ApplicationVersion Selected { get; set; }
+    }
+
+    public class NewLicensePostModel
+    {
+        [Required]
+        public int Application { get; set; }
+        [Required]
+        public int Version { get; set; }
+        [Required]
+        public int Client { get; set; }
     }
 }

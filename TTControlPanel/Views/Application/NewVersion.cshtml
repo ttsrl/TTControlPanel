@@ -14,7 +14,7 @@
     <label class="error_lbl" asp-if="Model.Error == 3">Errore, versione non valida.</label>
     <label class="error_lbl" asp-if="Model.Error == 4">Errore, questa versione è già presente per questa applicazione.</label>
 </div>
-<form asp-antiforgery="true" asp-controller="application" asp-action="NewVersion" autocomplete="off" style="width:300px;">
+<form asp-antiforgery="true" asp-controller="application" asp-action="NewVersion" asp-route-id="@Model.Application.Id" autocomplete="off" style="width:300px;">
     <input type="hidden" name="application" value="@Model.Application.Id" />
     <label>Data Rilascio:</label>
     <input type="date" name="release" value="@(DateTime.Now.ToString("yyyy-MM-dd"))" />
