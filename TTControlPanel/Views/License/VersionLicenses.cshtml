@@ -8,19 +8,19 @@
 <h2>@Model.ApplicationVersion.Application.Name @Model.ApplicationVersion.Version - Licenze</h2>
 <br />
 <table class="table">
-    <tr>
+    <tr style="font-weight:bold;">
         <td>ProductKey</td>
-        <td>Stato</td>
         <td>Data Rilascio</td>
+        <td>Stato</td>
         <td>Data Attivazione</td>
         <td>Azioni</td>
     </tr>
     @foreach (var l in Model.Licenses)
     {
         <tr>
-            <td style="text-align:center"><a asp-controller="" asp-action="" asp-route-id="">@l.ProductKey</a></td>
-            <td>@(l.Activate ? "Attiva" : "Inattiva")</td>
+            <td style="text-align:center"><a asp-controller="" asp-action="" asp-route-id="">@l.ProductKey.Key</a></td>
             <td>@l.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</td>
+            <td style="color: @(l.Activate ? "green" : "red");">@(l.Activate ? "Attiva" : "Inattiva")</td>
             <td>@(l.ActivateDateTime == null ? "-" : ((DateTime)l.ActivateDateTime).ToString("dd/MM/yyyy HH:mm"))</td>
             <td>
                 <span><a asp-controller="License" asp-action="Delete" asp-route-id="@l.Id">Rimuovi</a></span>

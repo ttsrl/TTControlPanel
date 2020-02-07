@@ -79,7 +79,7 @@ namespace TTControlPanel.Controllers
             {
                 var app = await _db.Applications.Where(a => a.Id == model.Application).FirstOrDefaultAsync();
                 var appv = await _db.ApplicationsVersions.Where(v => v.Id == model.Version).Include(v => v.Application).FirstOrDefaultAsync();
-                var client = await _db.Clients.Where(c => c.Id == model.Client).FirstOrDefaultAsync();
+                var client = await _db.Clients.Include(c => c.Applications).Where(c => c.Id == model.Client).FirstOrDefaultAsync();
                 if(app == null || appv == null || client == null)
                     RedirectToAction("New", new { error = 2 });
                 if(appv.Application != app)
@@ -93,6 +93,8 @@ namespace TTControlPanel.Controllers
                     ApplicationVersion = appv,
                     ProductKey = p
                 };
+                if (!client.Applications.Contains(app))
+                    client.Applications.Add(app);
                 await _db.ProductKeys.AddAsync(p);
                 await _db.Licenses.AddAsync(l);
                 await _db.SaveChangesAsync();

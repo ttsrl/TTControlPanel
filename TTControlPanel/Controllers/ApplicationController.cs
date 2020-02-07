@@ -50,15 +50,15 @@ namespace TTControlPanel.Controllers
                 //validate code
                 var code = "";
                 if (model.AutomaticCode)
-                    code = utils.GenerateApplicationCode();
+                    code = await utils.GenerateApplicationCode();
                 else
-                    code = (utils.ValidateApplicationCode(model.Code)) ? model.Code : "";
+                    code = (await utils.ValidateApplicationCode(model.Code)) ? model.Code : "";
                 //validate version
                 Version v = null;
                 var resV = Version.TryParse(model.Major + "." + model.Minor, out v);
                 var version = (resV) ? v.ToString() : "";
                 //validate name
-                var name = utils.ValidateApplicationName(model.Name) ? model.Name : "";
+                var name = await utils.ValidateApplicationName(model.Name) ? model.Name : "";
                 if(string.IsNullOrEmpty(code))
                     return View(new NewApplicationGetModel { Error = 2 });
                 if (string.IsNullOrEmpty(name))

@@ -16,5 +16,6 @@ namespace TTControlPanel.Models
         public string CAP { get; set; }
         public string City { get => city; set { city = value?.ToFirstCharUpper(); } }
         public string Province { get => prov; set { prov = value?.ToUpper(); } }
+        public string Country { get; set; }
     }
 }

@@ -5,13 +5,17 @@
     var appS = (Model.Selected != null) ? Model.Selected.Application.Id : 0;
     var vS = (Model.Selected != null) ? Model.Selected.Id : 0;
 }
+<div id="explorerLink">
+    <div asp-if="@(Model.Selected != null)"><a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Application" asp-action="Versions" asp-route-id="@Model.Selected.Application.Id">@Model.Selected.Application.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@Model.Selected.Id">@Model.Selected.Version</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova Licenza</div>
+    <div asp-if="@(Model.Selected == null)"><a asp-controller="License" asp-action="Index">Licenze</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova</div>
+</div>
 <h2>Nuova Licenza</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
     <label class="error_lbl" asp-if="Model.Error == 2">Errore, alcuni dati sono insesistenti.</label>
 </div>
-<form asp-antiforgery="true" asp-controller="licence" asp-action="new" autocomplete="off">
+<form asp-antiforgery="true" asp-controller="licence" asp-action="new" autocomplete="off" style="width:350px;">
     <label>Applicazione:</label>
     <select name="application" id="application" onchange="loadVersions(this)">
         <option value="">--</option>
@@ -52,7 +56,7 @@
             var val = $(item).val();
             if (val == "") {
                 $("#versions").empty();
-                $("#versions").append("<option value='-1'>--</option>");
+                $("#versions").append("<option value=''>--</option>");
                 return;
             }
             $.each(application, function (index, obj) {
@@ -61,9 +65,9 @@
                     $("#versions").empty();
                     $.each(vers, function (index, obj) {
                         if("@vS" == obj.Id)
-                            $("#versions").append("<option selected>" + obj.Version + "</option>");
+                            $("#versions").append("<option value='" + obj.Id + "' selected>" + obj.Version + "</option>");
                         else
-                            $("#versions").append("<option>" + obj.Version + "</option>");
+                            $("#versions").append("<option value='" + obj.Id + "'>" + obj.Version + "</option>");
                     });
                 }
             });

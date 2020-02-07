@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TTControlPanel.Services;
 
 namespace TTControlPanel.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class TTPanelContextModelSnapshot : ModelSnapshot
+    [Migration("20200207144004_8")]
+    partial class _8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,7 +88,7 @@ namespace TTControlPanel.Migrations
 
                     b.Property<int?>("AddressId");
 
-                    b.Property<string>("Code");
+                    b.Property<int?>("Code");
 
                     b.Property<string>("Name");
 

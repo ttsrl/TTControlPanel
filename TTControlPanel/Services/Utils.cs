@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,21 +50,55 @@ namespace TTControlPanel.Services
             return Sha256Hash(pk + "-" + hid, 32);
         }
 
-        public string GenerateApplicationCode()
+        private string generateCode()
         {
            return RandomCifre().ToString() + RandomCifre().ToString() + RandomCifre().ToString() + RandomCifre().ToString();
         }
 
-        public bool ValidateApplicationCode(string code)
+        public async Task<string> GenerateApplicationCode()
         {
-            var appC = _dB.Applications.Select(p => p.Code).ToList();
+            var appC = await _dB.Applications.Select(p => p.Code).ToListAsync();
+            while (true)
+            {
+                var tmpC = generateCode();
+                if (!appC.Contains(tmpC))
+                    return tmpC;
+            }
+        }
+
+        public async Task<string> GenerateClientCode()
+        {
+            var cC = await _dB.Clients.Select(p => p.Code).ToListAsync();
+            while (true)
+            {
+                var tmpC = generateCode();
+                if (!cC.Contains(tmpC))
+                    return tmpC;
+            }
+        }
+
+        public async Task<bool> ValidateClientCode(string code)
+        {
+            var cC = await _dB.Clients.Select(p => p.Code).ToListAsync();
+            return !cC.Contains(code) && code.Length == 4;
+        }
+
+        public async Task<bool> ValidateApplicationCode(string code)
+        {
+            var appC = await _dB.Applications.Select(p => p.Code).ToListAsync();
             return !appC.Contains(code) && code.Length == 4;
         }
 
-        public bool ValidateApplicationName(string name)
+        public async Task<bool> ValidateApplicationName(string name)
         {
-            var appC = _dB.Applications.Select(p => p.Name).ToList();
+            var appC = await _dB.Applications.Select(p => p.Name).ToListAsync();
             return !appC.Contains(name);
+        }
+
+        public async Task<bool> ValidateVAT(string vat)
+        {
+            var cV = await _dB.Clients.Select(c => c.VAT).ToListAsync();
+            return !cV.Contains(vat);
         }
     }
 }
