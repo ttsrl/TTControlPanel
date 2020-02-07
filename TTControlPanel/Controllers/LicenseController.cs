@@ -102,5 +102,11 @@ namespace TTControlPanel.Controllers
             }
             return RedirectToAction("New", new { error = 1 });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details()
+        {
+            return View();
+        }
     }
 }

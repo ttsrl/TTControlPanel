@@ -33,4 +33,9 @@ namespace TTControlPanel.Models.ViewModel
         [Required]
         public int Client { get; set; }
     }
+
+    public class DetailsLicenseModel
+    {
+        public License License { get; set; }
+    }
 }

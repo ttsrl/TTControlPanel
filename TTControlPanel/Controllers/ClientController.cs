@@ -32,6 +32,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> New([FromServices] Utils utils, NewClientPostModel model)
         {
             if (ModelState.IsValid)
