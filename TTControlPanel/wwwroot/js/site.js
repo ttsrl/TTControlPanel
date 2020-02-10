@@ -18,7 +18,10 @@ function EnterOnlyNumber(event) {
         return true;
     }
 }
+
 $(document).ready(function () {
+
+    var clipboard = new ClipboardJS('.clipboard');
 
     $("script.inject-json").each(function (i, e) {
         var name = $(e).attr("data-name") || "injectedJson";

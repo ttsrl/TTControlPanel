@@ -27,8 +27,7 @@ namespace TTControlPanel.Services
         public DbSet<ApplicationVersion> ApplicationsVersions { get; set; }
         public DbSet<License> Licenses { get; set; }
         public DbSet<ProductKey> ProductKeys { get; set; }
-
-        
+        public DbSet<HID> Hids { get; set; }
 
         private static DBContext _instance;
         public static DBContext Instance

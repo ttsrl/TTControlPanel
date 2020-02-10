@@ -104,9 +104,48 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var lc = await _db.Licenses
+                .Include(l => l.ProductKey)
+                .Include(l => l.ApplicationVersion)
+                    .ThenInclude(av => av.Application)
+                .Include(l => l.Client)
+                .Include(l => l.Hid)
+                .FirstOrDefaultAsync();
+            return View(new DetailsLicenseModel { License = lc });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GenerateConfirmCode(int id, int error = 0)
+        {
+            var l = await _db.Licenses.Include(ll => ll.ProductKey).Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            if (l == null)
+                return RedirectToAction("Index");
+            return View(new ConfirmCodeGetModel { License = l, Error = error });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GenerateConfirmCode([FromServices] Utils utils, int id, string hid)
+        {
+            var l = await _db.Licenses.Include(ll => ll.ProductKey).Include(ll => ll.Hid).Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            if(l == null)
+                return RedirectToAction("Index");
+            if (l.ProductKey == null)
+                return RedirectToAction("Index");
+            if (string.IsNullOrEmpty(hid))
+                return RedirectToAction("GenerateConfirmCode", new { id = id, error = 1 });
+            if (l.Hid.Value == hid)
+                return RedirectToAction("GenerateConfirmCode", new { id = id, error = 2 });
+            var cnfc = utils.GenerateConfirmCode(l.ProductKey, hid);
+            var h = new HID
+            {
+                Value = hid
+            };
+            l.Hid = h;
+            l.ConfirmCode = cnfc;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = id });
         }
     }
 }

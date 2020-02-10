@@ -18,7 +18,7 @@
     @foreach (var l in Model.Licenses)
     {
         <tr>
-            <td style="text-align:center"><a asp-controller="" asp-action="" asp-route-id="">@l.ProductKey.Key</a></td>
+            <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
             <td>@l.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</td>
             <td style="color: @(l.Activate ? "green" : "red");">@(l.Activate ? "Attiva" : "Inattiva")</td>
             <td>@(l.ActivateDateTime == null ? "-" : ((DateTime)l.ActivateDateTime).ToString("dd/MM/yyyy HH:mm"))</td>

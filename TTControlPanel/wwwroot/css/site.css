@@ -353,3 +353,16 @@ form label {
     #explorerLink a, #explorerLink a:hover {
         font-weight: normal;
     }
+
+.content {
+    padding: 0px 30px;
+}
+
+    .content .title {
+        display: inline-block;
+        width: 180px;
+        font-family: OpenSansBold;
+    }
+.content .val{
+
+}

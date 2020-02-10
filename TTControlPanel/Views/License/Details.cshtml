@@ -2,11 +2,83 @@
 @{
     ViewData["Title"] = "Dettagli Licenza";
 }
-
+<div id="explorerLink">
+    <a asp-controller="License" asp-action="Index">License</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.License.ProductKey.Key
+</div>
 <h2>Dettagli Licenza</h2>
 <br />
-<div>
-    <label></label>
-    <label></label>
+<div class="content">
+    <label class="title">Stato:</label>
+    <label class="val" style="color: @(Model.License.Activate ? "green" : "red");">@(Model.License.Activate ? "Attiva" : "Inattiva")</label>
+    <br />
+    <label class="title">Data Attivazione:</label>
+    <label class="val">@(Model.License.ActivateDateTime == null ? "--" : ((DateTime)(Model.License.ActivateDateTime)).ToString("dd/MM/yyyy"))</label>
+    <br />
+    <label class="title">Data Rilascio:</label>
+    <label class="val">@Model.License.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</label>
+    <br />
+    <label class="title">Codice di richiesta (HID):</label>
+    <label class="val">@(Model.License.Hid == null ? "--" : Model.License.Hid.Value)</label>
+    <label asp-if="Model.License.Hid != null">(aggiunto in data: @Model.License.Hid.Timestamp.ToString("dd/MM/yyyy"))</label>
+    <br />
+    <label class="title">Codice di conferma:</label>
+    @if (!string.IsNullOrEmpty(Model.License.ConfirmCode))
+    {
+        <label class="val" style="font-family: OpenSansBold;">@Model.License.ConfirmCode</label>
+        <input type="button" class="clipboard" value="Copia" style="margin-left: 40px;height: 30px;" data-clipboard-text="@Model.License.ConfirmCode" />
+    }
+    else
+    {
+        <a class="btn" asp-controller="License" asp-action="GenerateConfirmCode" asp-route-id="@Model.License.Id" style="height: 30px;">Genera</a>
+    }
+    <br />
+    <div style="margin: 15px 0px;">
+        <h4>ProductKey</h4>
+        <label class="title">Key:</label>
+        <label class="val" style="font-family: OpenSansBold;">@Model.License.ProductKey.Key</label>
+        <input type="button" value="Copia" class="clipboard" style="margin-left: 40px;height: 30px;" data-clipboard-text="@Model.License.ProductKey.Key" />
+        <br />
+        <label class="title">Rilasciato Da:</label>
+        <label class="val">@Model.License.ProductKey.GenerateUser.Username</label>
+        <br />
+        <label class="title">Data di rilascio:</label>
+        <label class="val">@Model.License.ProductKey.GenerateDateTime.ToString("dd/MM/yyyy HH:mm")</label>
+        <br />
+    </div>
+    <div style="margin: 15px 0px;">
+        <h4>Applicazione</h4>
+        <label class="title">Codice:</label>
+        <label class="val">@Model.License.ApplicationVersion.Application.Code</label>
+        <br />
+        <label class="title">Nome:</label>
+        <label class="val">@Model.License.ApplicationVersion.Application.Name</label>
+        <br />
+        <label class="title">Versione:</label>
+        <label class="val">@Model.License.ApplicationVersion.Version</label>
+        <br />
+        <label class="title">Rilascio versione:</label>
+        <label class="val">@Model.License.ApplicationVersion.ReleaseDate.ToString("dd/MM/yyyy")</label>
+    </div>
+    <div style="margin: 15px 0px;">
+        <h4>Cliente</h4>
+        <label class="title">Codice:</label>
+        <label class="val">@Model.License.Client.Code</label>
+        <br />
+        <label class="title">Nome:</label>
+        <label class="val">@Model.License.Client.Name</label>
+        <br />
+        <label class="title">P. I.V.A:</label>
+        <label class="val">@Model.License.Client.VAT</label>
+        <br />
+    </div>
+    <br />
+    <label class="title"></label>
+    <label class="val"></label>
     <br />
 </div>
+
+@section Scripts{ 
+    <script type="text/javascript">
+
+    </script>
+}

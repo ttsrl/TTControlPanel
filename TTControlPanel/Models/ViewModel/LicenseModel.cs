@@ -38,4 +38,16 @@ namespace TTControlPanel.Models.ViewModel
     {
         public License License { get; set; }
     }
+
+    public class ConfirmCodeGetModel
+    {
+        public License License { get; set; }
+        public int Error { get; set; }
+    }
+
+    public class ConfirmCodePostModel
+    {
+        [Required]
+        public string HID { get; set; }
+    }
 }

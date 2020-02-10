@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TTControlPanel.Services;
 
 namespace TTControlPanel.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class TTPanelContextModelSnapshot : ModelSnapshot
+    [Migration("20200210113555_10")]
+    partial class _10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,11 +109,15 @@ namespace TTControlPanel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("LicenseId");
+
                     b.Property<DateTime>("Timestamp");
 
                     b.Property<string>("Value");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LicenseId");
 
                     b.ToTable("Hids");
                 });
@@ -132,8 +138,6 @@ namespace TTControlPanel.Migrations
 
                     b.Property<string>("ConfirmCode");
 
-                    b.Property<int?>("HidId");
-
                     b.Property<int?>("ProductKeyId");
 
                     b.Property<DateTime>("ReleaseDate");
@@ -143,8 +147,6 @@ namespace TTControlPanel.Migrations
                     b.HasIndex("ApplicationVersionId");
 
                     b.HasIndex("ClientId");
-
-                    b.HasIndex("HidId");
 
                     b.HasIndex("ProductKeyId");
 
@@ -239,6 +241,13 @@ namespace TTControlPanel.Migrations
                         .HasForeignKey("AddressId");
                 });
 
+            modelBuilder.Entity("TTControlPanel.Models.HID", b =>
+                {
+                    b.HasOne("TTControlPanel.Models.License")
+                        .WithMany("HID")
+                        .HasForeignKey("LicenseId");
+                });
+
             modelBuilder.Entity("TTControlPanel.Models.License", b =>
                 {
                     b.HasOne("TTControlPanel.Models.ApplicationVersion", "ApplicationVersion")
@@ -248,10 +257,6 @@ namespace TTControlPanel.Migrations
                     b.HasOne("TTControlPanel.Models.Client", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId");
-
-                    b.HasOne("TTControlPanel.Models.HID", "Hid")
-                        .WithMany()
-                        .HasForeignKey("HidId");
 
                     b.HasOne("TTControlPanel.Models.ProductKey", "ProductKey")
                         .WithMany()

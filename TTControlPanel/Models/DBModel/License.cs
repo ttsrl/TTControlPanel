@@ -12,7 +12,7 @@ namespace TTControlPanel.Models
         public int Id { get; set; }
         public ProductKey ProductKey { get; set; }
         public ApplicationVersion ApplicationVersion { get; set; }
-        public string HID { get; set; }
+        public HID Hid { get; set; }
         public string ConfirmCode { get; set; }
         public bool Activate { get; set; }
         public DateTime? ActivateDateTime { get; set; }

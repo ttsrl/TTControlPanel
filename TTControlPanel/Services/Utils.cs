@@ -45,7 +45,7 @@ namespace TTControlPanel.Services
             catch { return null; }
         }
 
-        public string GenerateResponseCode(ProductKey pk, string hid)
+        public string GenerateConfirmCode(ProductKey pk, string hid)
         {
             return Sha256Hash(pk + "-" + hid, 32);
         }
