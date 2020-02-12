@@ -1,11 +1,11 @@
 ﻿@model VersionsApplicationGetModel
 @{
-    ViewData["Title"] = Model.Application.Name + " - Versioni";
+    ViewData["Title"] = Model.Application.Name;
 }
 <div id="explorerLink">
     <a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.Application.Name
 </div>
-<h2>@Model.Application.Name - Versioni</h2>
+<h2>@Model.Application.Name</h2>
 <br />
 <table class="table">
     <tr style="font-weight:bold;">
@@ -13,6 +13,7 @@
         <td>Data di Rilascio</td>
         <td>Licenze Rilasciate</td>
         <td>Clienti Associati</td>
+        <td>Note</td>
         <td>Azioni</td>
     </tr>
     @foreach (var v in Model.Application.ApplicationVersions)
@@ -22,6 +23,7 @@
             <td>@v.ReleaseDate.ToString("dd/MM/yyyy")</td>
             <td>@v.Licences.Count.ToString()</td>
             <td>@v.Licences.Select(l => l.Client).Distinct().ToList().Count.ToString()</td>
+            <td>@v.Notes</td>
             <td>
                 <span><a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@v.Id">Licenze</a></span>
                 <span><a asp-controller="Application" asp-action="DeleteVersion" asp-route-id="@v.Id">Elimina</a></span>
@@ -29,7 +31,7 @@
         </tr>
     }
     <tr asp-if="Model.Application.ApplicationVersions.Count == 0">
-        <td colspan="5" style="text-align:center">Nessuna versione presente</td>
+        <td colspan="6" style="text-align:center">Nessuna versione presente</td>
     </tr>
 </table>
 <br />

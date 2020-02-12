@@ -18,10 +18,9 @@
     {
         <tr>
             <td><b>@a.Code</b></td>
-            <td><b>@a.Name</b></td>
+            <td><a asp-controller="Application" asp-action="Versions" asp-route-id="@a.Id"><b>@a.Name</b></a></td>
             <td>@string.Join(", ", a.ApplicationVersions.Select(v => (v.GetVersion().Major + "." + v.GetVersion().Minor)).ToArray())</td>
             <td>
-                <span><a asp-controller="Application" asp-action="Versions" asp-route-id="@a.Id">Versioni</a></span>
                 <span><a asp-controller="Application" asp-action="Edit" asp-route-id="@a.Id">Modifica</a></span>
                 <span><a asp-controller="Application" asp-action="Delete" asp-route-id="@a.Id">Elimina</a></span>
             </td>

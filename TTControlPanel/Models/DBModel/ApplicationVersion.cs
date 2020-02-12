@@ -14,6 +14,7 @@ namespace TTControlPanel.Models
         [JsonIgnore]
         public Application Application { get; set; }
         public List<License> Licences { get; set; }
+        public string Notes { get; set; }
         public DateTime ReleaseDate
         {
             get => releaseDate ?? DateTime.Now;

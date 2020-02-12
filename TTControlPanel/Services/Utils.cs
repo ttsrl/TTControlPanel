@@ -85,14 +85,18 @@ namespace TTControlPanel.Services
 
         public async Task<bool> ValidateApplicationCode(string code)
         {
+            int i;
+            var r = int.TryParse(code, out i);
+            if (!r)
+                return false;
             var appC = await _dB.Applications.Select(p => p.Code).ToListAsync();
             return !appC.Contains(code) && code.Length == 4;
         }
 
         public async Task<bool> ValidateApplicationName(string name)
         {
-            var appC = await _dB.Applications.Select(p => p.Name).ToListAsync();
-            return !appC.Contains(name);
+            var appC = await _dB.Applications.Select(p => p.Name.ToLower()).ToListAsync();
+            return !appC.Contains(name.ToLower());
         }
 
         public async Task<bool> ValidateVAT(string vat)
