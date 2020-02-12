@@ -1,0 +1,29 @@
+﻿@model PrecompiledNewLicenseGetModel
+@{
+    ViewData["Title"] = "Nuova licenza";
+}
+<div id="explorerLink">
+    <a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Application" asp-action="Versions" asp-route-id="@Model.ApplicationVersion.Application.Id">@Model.ApplicationVersion.Application.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@Model.ApplicationVersion.Id">@Model.ApplicationVersion.Version</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova Licenza
+</div>
+<h2>@Model.ApplicationVersion.Application.Name @Model.ApplicationVersion.Version - Nuova Licenza</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, alcuni dati sono insesistenti.</label>
+</div>
+<form asp-antiforgery="true" asp-route-id="@Model.ApplicationVersion.Id" autocomplete="off" style="width:350px;">
+    <label>Cliente:</label>
+    <select name="client">
+        <option value="">--</option>
+        @foreach (var c in Model.Clients)
+        {
+            <option value="@c.Id">@c.Name</option>
+        }
+    </select>
+    <br />
+    <label>Note:</label>
+    <textarea name="notes"></textarea>
+    <br />
+    <br />
+    <input type="submit" value="Aggiungi" name="submit" style="margin-top:20px;" />
+</form>

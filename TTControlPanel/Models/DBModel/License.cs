@@ -17,6 +17,7 @@ namespace TTControlPanel.Models
         public bool Activate { get; set; }
         public DateTime? ActivateDateTime { get; set; }
         public Client Client { get; set; }
+        public string Notes { get; set; }
         public DateTime ReleaseDate
         {
             get => releaseDate ?? DateTime.Now;

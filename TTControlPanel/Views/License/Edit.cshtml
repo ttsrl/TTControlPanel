@@ -1,0 +1,28 @@
+﻿@model EditLicenseGetModel
+@{
+    ViewData["Title"] = "Edit";
+}
+<div id="explorerLink">
+    <a asp-controller="" asp-action="Index" asp-route-id="">License</a>
+</div>
+<h2>Modifica</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, alcuni dati sono insesistenti.</label>
+</div>
+<form asp-antiforgery="true" asp-route-id="@Model.License.Id" autocomplete="off" style="width:350px;">
+    <label>Versione:</label>
+    <select name="version" id="versions">
+        <option value="">--</option>
+    </select>
+    <label>Cliente:</label>
+    <select name="client">
+        <option value="">--</option>
+        @foreach (var c in Model.Clients)
+        {
+            <option value="@c.Id">@c.Name</option>
+        }
+    </select>
+    <input type="submit" value="Modifica" />
+</form>

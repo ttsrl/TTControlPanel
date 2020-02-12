@@ -1,13 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace TTControlPanel.Models.ViewModel
 {
     public class IndexLicenseModel
     {
         public List<License> Licenses { get; set; }
+    }
+
+    public class EditLicenseGetModel
+    {
+        public int Error { get; set; }
+        public License License { get; set; }
+        public List<Client> Clients { get; set; }
+    }
+
+    public class EditLicensePostModel
+    {
+
     }
 
     public class VersionLicensesModel
@@ -21,7 +31,6 @@ namespace TTControlPanel.Models.ViewModel
         public int Error { get; set; }
         public List<Application> Applications { get; set; }
         public List<Client> Clients { get; set; }
-        public ApplicationVersion Selected { get; set; }
     }
 
     public class NewLicensePostModel
@@ -32,6 +41,21 @@ namespace TTControlPanel.Models.ViewModel
         public int Version { get; set; }
         [Required]
         public int Client { get; set; }
+        public string Notes { get; set; }
+    }
+
+    public class PrecompiledNewLicenseGetModel
+    {
+        public int Error { get; set; }
+        public ApplicationVersion ApplicationVersion { get; set; }
+        public List<Client> Clients { get; set; }
+    }
+
+    public class PrecompiledNewLicensePostModel
+    {
+        [Required]
+        public int Client { get; set; }
+        public string Notes { get; set; }
     }
 
     public class DetailsLicenseModel

@@ -97,6 +97,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromServices] Utils utils, int id, EditApplicationPostModel model)
         {
             var app = await _db.Applications.Include(a => a.ApplicationVersions).Where(a => a.Id == id).FirstOrDefaultAsync();

@@ -6,7 +6,6 @@ using TTControlPanel.Models;
 using System.Threading.Tasks;
 using TTControlPanel.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace TTControlPanel.Controllers
 {
@@ -34,6 +33,19 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Edit()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, EditLicensePostModel model)
+        {
+            return View();
+        }
+
+        [HttpGet]
         public async Task<IActionResult> VersionLicenses(int id)
         {
             var version = await _db.ApplicationsVersions.Where(v => v.Id == id)
@@ -50,24 +62,13 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> New(int error = 0)
+        public async Task<IActionResult> New()
         {
             var apps = await _db.Applications
                 .Include(a => a.ApplicationVersions)
                 .ToListAsync();
             var clients = await _db.Clients.ToListAsync();
-            return View(new NewLicenseGetModel { Applications = apps, Clients = clients, Error = error });
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> NewByVersion(int id)
-        {
-            var apps = await _db.Applications
-                .Include(a => a.ApplicationVersions)
-                .ToListAsync();
-            var clients = await _db.Clients.ToListAsync();
-            var selected = await _db.ApplicationsVersions.Where(v => v.Id == id).Include(v => v.Application).FirstOrDefaultAsync();
-            return View("New", new NewLicenseGetModel { Applications = apps, Clients = clients, Selected = selected });
+            return View(new NewLicenseGetModel { Applications = apps, Clients = clients });
         }
 
         [HttpPost]
@@ -75,32 +76,84 @@ namespace TTControlPanel.Controllers
         public async Task<IActionResult> New([FromServices] Utils utils, NewLicensePostModel model)
         {
             var uLog = HttpContext.Items["User"] as User;
+            var apps = await _db.Applications
+                .Include(a => a.ApplicationVersions)
+                .ToListAsync();
+            var clients = await _db.Clients.ToListAsync();
             if (ModelState.IsValid)
             {
                 var app = await _db.Applications.Where(a => a.Id == model.Application).FirstOrDefaultAsync();
-                var appv = await _db.ApplicationsVersions.Where(v => v.Id == model.Version).Include(v => v.Application).FirstOrDefaultAsync();
+                var appv = await _db.ApplicationsVersions.Include(v => v.Application).Where(v => v.Id == model.Version).FirstOrDefaultAsync();
                 var client = await _db.Clients.Include(c => c.Applications).Where(c => c.Id == model.Client).FirstOrDefaultAsync();
-                if(app == null || appv == null || client == null)
-                    RedirectToAction("New", new { error = 2 });
-                if(appv.Application != app)
-                    RedirectToAction("New", new { error = 2 });
-                var productkey = utils.GenerateProdutKey(app, appv, client);
+                if (app == null || appv == null || client == null)
+                    return View(new NewLicenseGetModel { Applications = apps, Clients = clients, Error = 2 });
+                if (appv.Application != app)
+                    return View(new NewLicenseGetModel { Applications = apps, Clients = clients, Error = 2 });
+                var productkey = await utils.GenerateProdutKey(app, appv, client);
                 var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey };
                 var l = new License
                 {
                     Activate = false,
                     Client = client,
                     ApplicationVersion = appv,
-                    ProductKey = p
+                    ProductKey = p,
+                    Notes = model.Notes
                 };
                 if (!client.Applications.Contains(app))
                     client.Applications.Add(app);
                 await _db.ProductKeys.AddAsync(p);
                 await _db.Licenses.AddAsync(l);
                 await _db.SaveChangesAsync();
-                return RedirectToAction("VersionLicenses", new { id = appv.Id });
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("New", new { error = 1 });
+            return View(new NewLicenseGetModel { Applications = apps, Clients = clients, Error = 1 });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PrecompiledNew(int id)
+        {
+            var apps = await _db.Applications
+                .Include(a => a.ApplicationVersions)
+                .ToListAsync();
+            var clients = await _db.Clients.ToListAsync();
+            var av = await _db.ApplicationsVersions.Include(v => v.Application).Where(v => v.Id == id).FirstOrDefaultAsync();
+            if (av == null)
+                return RedirectToAction("Index");
+            return View(new PrecompiledNewLicenseGetModel { Clients = clients, ApplicationVersion = av });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PrecompiledNew([FromServices] Utils utils, int id, PrecompiledNewLicensePostModel model)
+        {
+            var uLog = HttpContext.Items["User"] as User;
+            var clients = await _db.Clients.ToListAsync();
+            var av = await _db.ApplicationsVersions.Include(v => v.Licences).Include(v => v.Application).Where(v => v.Id == id).FirstOrDefaultAsync();
+            if (av == null)
+                return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var client = await _db.Clients.Include(c => c.Applications).Where(c => c.Id == model.Client).FirstOrDefaultAsync();
+                if(client == null)
+                    return View(new PrecompiledNewLicenseGetModel { Clients = clients, ApplicationVersion = av, Error = 2 });
+                var productkey = await utils.GenerateProdutKey(av.Application, av, client);
+                var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey };
+                var l = new License
+                {
+                    Activate = false,
+                    Client = client,
+                    ApplicationVersion = av,
+                    ProductKey = p,
+                    Notes = model.Notes
+                };
+                if (!client.Applications.Contains(av.Application))
+                    client.Applications.Add(av.Application);
+                await _db.ProductKeys.AddAsync(p);
+                await _db.Licenses.AddAsync(l);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("VersionLicenses", new { id = id });
+            }
+            return View(new PrecompiledNewLicenseGetModel { Clients = clients, ApplicationVersion = av, Error = 1 });
         }
 
         [HttpGet]
@@ -126,6 +179,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> GenerateConfirmCode([FromServices] Utils utils, int id, string hid)
         {
             var l = await _db.Licenses.Include(ll => ll.ProductKey).Include(ll => ll.Hid).Where(ll => ll.Id == id).FirstOrDefaultAsync();

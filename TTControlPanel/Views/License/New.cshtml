@@ -1,13 +1,9 @@
 ﻿@model NewLicenseGetModel
 @{
     ViewData["Title"] = "Nuova Licenza";
-
-    var appS = (Model.Selected != null) ? Model.Selected.Application.Id : 0;
-    var vS = (Model.Selected != null) ? Model.Selected.Id : 0;
 }
 <div id="explorerLink">
-    <div asp-if="@(Model.Selected != null)"><a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Application" asp-action="Versions" asp-route-id="@Model.Selected.Application.Id">@Model.Selected.Application.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@Model.Selected.Id">@Model.Selected.Version</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova Licenza</div>
-    <div asp-if="@(Model.Selected == null)"><a asp-controller="License" asp-action="Index">Licenze</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova</div>
+    <a asp-controller="License" asp-action="Index">Licenze</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova
 </div>
 <h2>Nuova Licenza</h2>
 <br />
@@ -15,13 +11,13 @@
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
     <label class="error_lbl" asp-if="Model.Error == 2">Errore, alcuni dati sono insesistenti.</label>
 </div>
-<form asp-antiforgery="true" asp-controller="licence" asp-action="new" autocomplete="off" style="width:350px;">
+<form asp-antiforgery="true" autocomplete="off" style="width:350px;">
     <label>Applicazione:</label>
     <select name="application" id="application" onchange="loadVersions(this)">
         <option value="">--</option>
         @foreach (var a in Model.Applications)
         {
-            <option value="@a.Id" asp-selected="@(appS == a.Id)">@a.Name</option>
+            <option value="@a.Id">@a.Name</option>
         }
     </select>
     <label>Versione:</label>
@@ -36,6 +32,9 @@
             <option value="@c.Id">@c.Name</option>
         }
     </select>
+    <br />
+    <label>Note:</label>
+    <textarea name="notes"></textarea>
     <br />
     <br />
     <input type="submit" value="Aggiungi" name="submit" style="margin-top:20px;" />
@@ -64,10 +63,7 @@
                     var vers = obj.ApplicationVersions;
                     $("#versions").empty();
                     $.each(vers, function (index, obj) {
-                        if("@vS" == obj.Id)
-                            $("#versions").append("<option value='" + obj.Id + "' selected>" + obj.Version + "</option>");
-                        else
-                            $("#versions").append("<option value='" + obj.Id + "'>" + obj.Version + "</option>");
+                        $("#versions").append("<option value='" + obj.Id + "'>" + obj.Version + "</option>");
                     });
                 }
             });

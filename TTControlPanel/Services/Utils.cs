@@ -18,11 +18,11 @@ namespace TTControlPanel.Services
             _dB = DBContext.Instance;
         }
 
-        public string GenerateProdutKey(Application app, ApplicationVersion appV, Client client)
+        public async Task<string> GenerateProdutKey(Application app, ApplicationVersion appV, Client client)
         {
             try
             {
-                var prods = _dB.ProductKeys.Select(p => p.Key).ToList();
+                var prods = await _dB.ProductKeys.Select(p => p.Key).ToListAsync();
                 while (true)
                 {
                     StringBuilder str = new StringBuilder();
