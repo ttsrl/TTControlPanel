@@ -9,7 +9,7 @@
 <br />
 <div class="content">
     <label class="title">Stato:</label>
-    <label class="val" style="color: @(Model.License.Activate ? "green" : "red");">@(Model.License.Activate ? "Attiva" : "Inattiva")</label>
+    <label class="val license@(Enum.GetName(typeof(License.LicenseState), Model.License.State))">@(Model.License.State == License.LicenseState.Inactive ? "Inattiva" : ((Model.License.State == License.LicenseState.Active) ? "Attiva" : "Bloccata"))</label>
     <br />
     <label class="title">Data Attivazione:</label>
     <label class="val">@(Model.License.ActivateDateTime == null ? "--" : ((DateTime)(Model.License.ActivateDateTime)).ToString("dd/MM/yyyy"))</label>
@@ -35,7 +35,7 @@
     <div style="margin: 15px 0px;">
         <h4>ProductKey</h4>
         <label class="title">Key:</label>
-        <label class="val" style="font-family: OpenSansBold;">@Model.License.ProductKey.Key</label>
+        <label class="val productkey">@Model.License.ProductKey.Key</label>
         <input type="button" value="Copia" class="clipboard" style="margin-left: 40px;height: 30px;" data-clipboard-text="@Model.License.ProductKey.Key" />
         <br />
         <label class="title">Rilasciato Da:</label>

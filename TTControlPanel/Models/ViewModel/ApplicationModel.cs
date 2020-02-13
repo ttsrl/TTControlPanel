@@ -32,7 +32,6 @@ namespace TTControlPanel.Models.ViewModel
     {
         public int Error { get; set; }
         public Application Application { get; set; }
-        public ApplicationVersion InitialVersion { get; set; }
     }
 
     public class EditApplicationPostModel
@@ -41,8 +40,6 @@ namespace TTControlPanel.Models.ViewModel
         public string Code { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
-        public DateTime Release { get; set; }
     }
 
     public class VersionsApplicationGetModel
@@ -64,6 +61,16 @@ namespace TTControlPanel.Models.ViewModel
         public string Major { get; set; }
         [Required]
         public string Minor { get; set; }
+        public string Notes { get; set; }
+    }
+
+    public class EditVersionApplicationGetModel
+    {
+        public ApplicationVersion ApplicationVersion { get; set; }
+    }
+
+    public class EditVersionApplicationPostModel
+    {
         public string Notes { get; set; }
     }
 }

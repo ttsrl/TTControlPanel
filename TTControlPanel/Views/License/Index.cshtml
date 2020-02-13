@@ -20,11 +20,11 @@
         <tr>
             <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
             <td>@l.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</td>
-            <td style="color: @(l.Activate ? "green" : "red");">@(l.Activate ? "Attiva" : "Inattiva")</td>
+            <td class="license@(Enum.GetName(typeof(License.LicenseState), l.State))">@(l.State == License.LicenseState.Inactive ? "Inattiva" : ((l.State == License.LicenseState.Active) ? "Attiva" : "Bloccata"))</td>
             <td>@(l.ActivateDateTime == null ? "-" : ((DateTime)l.ActivateDateTime).ToString("dd/MM/yyyy HH:mm"))</td>
             <td>
-                <span><a asp-controller="License" asp-action="Delete" asp-route-id="@l.Id">Rimuovi</a></span>
                 <span><a asp-controller="License" asp-action="Edit" asp-route-id="@l.Id">Modifica</a></span>
+                <span><a asp-if="@(l.State == License.LicenseState.Inactive)" asp-controller="License" asp-action="Delete" asp-route-id="@l.Id">Rimuovi</a></span>
             </td>
         </tr>
     }

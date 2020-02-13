@@ -1,11 +1,11 @@
 ﻿@model EditApplicationGetModel
 @{
-    ViewData["Title"] = "Modifica Applicazione";
+    ViewData["Title"] = "Modifica " + Model.Application.Name;
 }
 <div id="explorerLink">
-    <a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.Application.Name
+    <a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Application" asp-action="Versions" asp-route-id="@Model.Application.Id">@Model.Application.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Modifica
 </div>
-<h2>Modifica @Model.Application.Name</h2>
+<h2>@Model.Application.Name - Modifica</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di inserimento, controllare di aver inserito tutti i dati richiesti.</label>
@@ -18,9 +18,6 @@
     <br />
     <label style="margin-top:15px;">Nome:</label>
     <input type="text" name="name" value="@Model.Application.Name" />
-    <br />
-    <label>Data Rilascio (@Model.InitialVersion.Version):</label>
-    <input type="date" name="release" value="@Model.InitialVersion.ReleaseDate.ToString("yyyy-MM-dd")" />
     <br />
     <br />
     <br />

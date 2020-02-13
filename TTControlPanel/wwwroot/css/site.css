@@ -366,3 +366,21 @@ form label {
 .content .val{
 
 }
+
+    .content .productkey {
+        font-family: OpenSansBold;
+        color: #00881f;
+        font-size: 16px;
+    }
+
+.licenseInactive{
+    color:#ed5508;
+}
+
+.licenseActive {
+    color: #017600;
+}
+
+.licenseBanned {
+    color: #cc0000;
+}

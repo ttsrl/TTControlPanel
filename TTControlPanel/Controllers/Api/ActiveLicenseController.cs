@@ -32,7 +32,7 @@ namespace TTControlPanel.Controllers.Api
                     .Include(p => p.Client)
                     .Include(p => p.ApplicationVersion)
                         .ThenInclude(v => v.Application)
-                .Where(ll => ll.ProductKey.Key == productKey && ll.Activate == false && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == appVersion)
+                .Where(ll => ll.ProductKey.Key == productKey && ll.State == License.LicenseState.Inactive && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == appVersion)
                 .FirstOrDefaultAsync();
                 if (l == null)
                     return NotFound();
@@ -43,7 +43,7 @@ namespace TTControlPanel.Controllers.Api
                 };
                 l.Hid = h;
                 l.ConfirmCode = cnfc;
-                l.Activate = true;
+                l.State = License.LicenseState.Active;
                 l.ActivateDateTime = DateTime.Now;
                 await _dB.SaveChangesAsync();
                 return Ok();

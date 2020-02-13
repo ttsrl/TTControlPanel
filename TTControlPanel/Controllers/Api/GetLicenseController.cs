@@ -36,7 +36,7 @@ namespace TTControlPanel.Controllers.Api
                     return NotFound(new { });
                 var obj = new ApiLicenseStructure
                 {
-                    Activate = pk.Activate,
+                    State = (int)pk.State,
                     ApplicationCode = pk.ApplicationVersion.Application.Code,
                     ApplicationVersion = pk.ApplicationVersion.Version,
                     ClientCode = pk.Client.Code,

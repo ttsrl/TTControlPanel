@@ -19,13 +19,13 @@
     @foreach (var v in Model.Application.ApplicationVersions)
     {
         <tr>
-            <td><b>@v.Version</b></td>
+            <td><a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@v.Id"><b>@v.Version</b></a></td>
             <td>@v.ReleaseDate.ToString("dd/MM/yyyy")</td>
             <td>@v.Licences.Count.ToString()</td>
             <td>@v.Licences.Select(l => l.Client).Distinct().ToList().Count.ToString()</td>
             <td>@v.Notes</td>
             <td>
-                <span><a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@v.Id">Licenze</a></span>
+                <span><a asp-controller="Application" asp-action="EditVersion" asp-route-id="@v.Id">Modifica</a></span>
                 <span><a asp-controller="Application" asp-action="DeleteVersion" asp-route-id="@v.Id">Elimina</a></span>
             </td>
         </tr>

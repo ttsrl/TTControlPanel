@@ -7,6 +7,13 @@ namespace TTControlPanel.Models
 {
     public class License
     {
+        public enum LicenseState
+        {
+            Inactive,
+            Active,
+            Banned
+        }
+
         private DateTime? releaseDate;
 
         public int Id { get; set; }
@@ -14,7 +21,7 @@ namespace TTControlPanel.Models
         public ApplicationVersion ApplicationVersion { get; set; }
         public HID Hid { get; set; }
         public string ConfirmCode { get; set; }
-        public bool Activate { get; set; }
+        public LicenseState State { get; set; }
         public DateTime? ActivateDateTime { get; set; }
         public Client Client { get; set; }
         public string Notes { get; set; }

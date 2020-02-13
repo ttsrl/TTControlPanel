@@ -1,6 +1,6 @@
 ﻿@model PrecompiledNewLicenseGetModel
 @{
-    ViewData["Title"] = "Nuova licenza";
+    ViewData["Title"] = "Nuova Licenza " + Model.ApplicationVersion.Application.Name + " " + Model.ApplicationVersion.Version ;
 }
 <div id="explorerLink">
     <a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Application" asp-action="Versions" asp-route-id="@Model.ApplicationVersion.Application.Id">@Model.ApplicationVersion.Application.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@Model.ApplicationVersion.Id">@Model.ApplicationVersion.Version</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova Licenza

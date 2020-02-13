@@ -13,6 +13,7 @@ namespace TTControlPanel.Models.ViewModel
         public int Error { get; set; }
         public License License { get; set; }
         public List<Client> Clients { get; set; }
+        public int Mode { get; set; }
     }
 
     public class EditLicensePostModel

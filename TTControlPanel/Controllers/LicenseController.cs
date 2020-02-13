@@ -80,7 +80,7 @@ namespace TTControlPanel.Controllers
                 var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey };
                 var l = new License
                 {
-                    Activate = false,
+                    State = License.LicenseState.Inactive,
                     Client = client,
                     ApplicationVersion = appv,
                     ProductKey = p,
@@ -127,7 +127,7 @@ namespace TTControlPanel.Controllers
                 var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey };
                 var l = new License
                 {
-                    Activate = false,
+                    State = License.LicenseState.Inactive,
                     Client = client,
                     ApplicationVersion = av,
                     ProductKey = p,
@@ -144,20 +144,20 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, int mod )
         {
             var l = await _db.Licenses.Include(ll => ll.ProductKey).Where(ll => ll.Id == id).FirstOrDefaultAsync();
             var cl = await _db.Clients.ToListAsync();
             if (l == null)
                 return RedirectToAction("Index");
-            return View(new EditLicenseGetModel { License = l, Clients = cl });
+            return View(new EditLicenseGetModel { License = l, Clients = cl, Mode = mod });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditLicensePostModel model)
+        public async Task<IActionResult> Edit(int id, int mod, EditLicensePostModel model)
         {
-            var l = await _db.Licenses.Include(ll => ll.ProductKey).Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            var l = await _db.Licenses.Include(ll => ll.ApplicationVersion).Include(ll => ll.ProductKey).Where(ll => ll.Id == id).FirstOrDefaultAsync();
             var cl = await _db.Clients.ToListAsync();
             if(l == null)
                 return RedirectToAction("Index");
@@ -165,11 +165,31 @@ namespace TTControlPanel.Controllers
             {
                 var client = await _db.Clients.Where(c => c.Id == model.Client).FirstOrDefaultAsync();
                 if(client == null)
-                    return View(new EditLicenseGetModel { License = l, Clients = cl, Error = 2 });
+                    return View(new EditLicenseGetModel { License = l, Clients = cl, Error = 2, Mode = mod });
                 l.Client = client;
                 await _db.SaveChangesAsync();
+                if(mod == 0)
+                    return RedirectToAction("Index");
+                else
+                    return RedirectToAction("VersionLicenses", new { id = l.ApplicationVersion.Id });
             }
-            return View(new EditLicenseGetModel { License = l, Clients = cl, Error = 1 });
+            return View(new EditLicenseGetModel { License = l, Clients = cl, Error = 1, Mode = mod });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id, int mod)
+        {
+            var l = await _db.Licenses.Include(ll => ll.Hid).Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            if(l == null)
+                return RedirectToAction("Index");
+            if(l.Hid != null)
+                _db.Hids.Remove(l.Hid);
+            _db.Licenses.Remove(l);
+            await _db.SaveChangesAsync();
+            if (mod == 0)
+                return RedirectToAction("Index");
+            else
+                return RedirectToAction("VersionLicenses", new { id = l.ApplicationVersion.Id });
         }
 
 

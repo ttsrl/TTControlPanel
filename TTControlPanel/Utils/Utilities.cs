@@ -35,6 +35,22 @@ namespace TTControlPanel.Utilities
             return chars[num].ToString();
         }
 
+        public static string RandomLetterUpper()
+        {
+            string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            Random rand = new Random();
+            int num = rand.Next(0, chars.Length);
+            return chars[num].ToString();
+        }
+
+        public static string RandomLetterLower()
+        {
+            string chars = "abcdefghijklmnopqrstuvwxyz";
+            Random rand = new Random();
+            int num = rand.Next(0, chars.Length);
+            return chars[num].ToString();
+        }
+
         public static int VersionToInt(Version v)
         {
             try

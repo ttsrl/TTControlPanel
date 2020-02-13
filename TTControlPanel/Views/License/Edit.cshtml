@@ -5,20 +5,23 @@
 <div id="explorerLink">
     <a asp-controller="License" asp-action="Index">Licenze</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="Details" asp-route-id="@Model.License.Id">@Model.License.ProductKey.Key</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Modifica
 </div>
-<h2>Modifica @Model.License.ProductKey.Id</h2>
+<h2>@Model.License.ProductKey.Key - Modifica</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
     <label class="error_lbl" asp-if="Model.Error == 2">Errore, alcuni dati sono insesistenti.</label>
 </div>
-<form asp-antiforgery="true" asp-route-id="@Model.License.Id" autocomplete="off" style="width:350px;">
+<form asp-antiforgery="true" asp-route-id="@Model.License.Id" asp-route-mod="@Model.Mode" autocomplete="off" style="width:350px;">
     <label>Cliente:</label>
     <select name="client">
         <option value="">--</option>
         @foreach (var c in Model.Clients)
         {
-            <option value="@c.Id">@c.Name</option>
+            <option value="@c.Id" asp-selected="@(Model.License.Client.Id == c.Id)">@c.Name</option>
         }
     </select>
+    <br />
+    <br />
+    <br />
     <input type="submit" value="Modifica" />
 </form>

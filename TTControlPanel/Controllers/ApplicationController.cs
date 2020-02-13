@@ -91,9 +91,7 @@ namespace TTControlPanel.Controllers
             var app = await _db.Applications.Include(a => a.ApplicationVersions).Where(a => a.Id == id).FirstOrDefaultAsync();
             if(app == null)
                 return RedirectToAction("Index");
-            if(app.ApplicationVersions.Count == 0)
-                return RedirectToAction("Index");
-            return View(new EditApplicationGetModel { Application = app, InitialVersion = app.ApplicationVersions[0] });
+            return View(new EditApplicationGetModel { Application = app });
         }
 
         [HttpPost]
@@ -103,23 +101,20 @@ namespace TTControlPanel.Controllers
             var app = await _db.Applications.Include(a => a.ApplicationVersions).Where(a => a.Id == id).FirstOrDefaultAsync();
             if (app == null)
                 return RedirectToAction("Index");
-            if (app.ApplicationVersions.Count == 0)
-                return RedirectToAction("Index");
             if (ModelState.IsValid)
             {
                 var code = (model.Code == app.Code) ? model.Code : ((await utils.ValidateApplicationCode(model.Code)) ? model.Code : "");
                 var name = (model.Name == app.Name) ? model.Name : ((await utils.ValidateApplicationName(model.Name)) ? model.Name : "");
                 if(string.IsNullOrEmpty(code))
-                    return View(new EditApplicationGetModel { Application = app, InitialVersion = app.ApplicationVersions[0], Error = 2 });
+                    return View(new EditApplicationGetModel { Application = app, Error = 2 });
                 if (string.IsNullOrEmpty(name))
-                    return View(new EditApplicationGetModel { Application = app, InitialVersion = app.ApplicationVersions[0], Error = 3 });
+                    return View(new EditApplicationGetModel { Application = app, Error = 3 });
                 app.Code = code;
                 app.Name = name;
-                app.ApplicationVersions[0].ReleaseDate = model.Release;
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(new EditApplicationGetModel { Application = app, InitialVersion = app.ApplicationVersions[0], Error = 1 });
+            return View(new EditApplicationGetModel { Application = app, Error = 1 });
         }
 
         [HttpGet]
@@ -211,6 +206,27 @@ namespace TTControlPanel.Controllers
                 return RedirectToAction("Versions", new { id = id });
             }
             return View(new NewVersionApplicationGetModel { Application = app, Error = 1 });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditVersion(int id)
+        {
+            var av = await _db.ApplicationsVersions.Include(v => v.Application).Where(v => v.Id == id).FirstOrDefaultAsync();
+            if (av == null)
+                return RedirectToAction("Index");
+            return View(new EditVersionApplicationGetModel { ApplicationVersion = av });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditVersion(int id, EditVersionApplicationPostModel model)
+        {
+            var av = await _db.ApplicationsVersions.Include(v => v.Application).Where(v => v.Id == id).FirstOrDefaultAsync();
+            if (av == null)
+                return RedirectToAction("Index");
+            av.Notes = model.Notes;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Versions", new { id = av.Application.Id });
         }
 
         [HttpGet]
