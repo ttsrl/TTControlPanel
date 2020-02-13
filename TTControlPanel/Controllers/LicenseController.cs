@@ -33,19 +33,6 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditLicensePostModel model)
-        {
-            return View();
-        }
-
-        [HttpGet]
         public async Task<IActionResult> VersionLicenses(int id)
         {
             var version = await _db.ApplicationsVersions.Where(v => v.Id == id)
@@ -157,6 +144,36 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var l = await _db.Licenses.Include(ll => ll.ProductKey).Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            var cl = await _db.Clients.ToListAsync();
+            if (l == null)
+                return RedirectToAction("Index");
+            return View(new EditLicenseGetModel { License = l, Clients = cl });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, EditLicensePostModel model)
+        {
+            var l = await _db.Licenses.Include(ll => ll.ProductKey).Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            var cl = await _db.Clients.ToListAsync();
+            if(l == null)
+                return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var client = await _db.Clients.Where(c => c.Id == model.Client).FirstOrDefaultAsync();
+                if(client == null)
+                    return View(new EditLicenseGetModel { License = l, Clients = cl, Error = 2 });
+                l.Client = client;
+                await _db.SaveChangesAsync();
+            }
+            return View(new EditLicenseGetModel { License = l, Clients = cl, Error = 1 });
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var lc = await _db.Licenses
@@ -170,12 +187,14 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GenerateConfirmCode(int id, int error = 0)
+        public async Task<IActionResult> GenerateConfirmCode(int id)
         {
-            var l = await _db.Licenses.Include(ll => ll.ProductKey).Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            var l = await _db.Licenses.Include(ll => ll.ProductKey).Include(ll => ll.Hid).Where(ll => ll.Id == id).FirstOrDefaultAsync();
             if (l == null)
                 return RedirectToAction("Index");
-            return View(new ConfirmCodeGetModel { License = l, Error = error });
+            if (l.ProductKey == null)
+                return RedirectToAction("Index");
+            return View(new ConfirmCodeGetModel { License = l });
         }
 
         [HttpPost]
@@ -188,9 +207,9 @@ namespace TTControlPanel.Controllers
             if (l.ProductKey == null)
                 return RedirectToAction("Index");
             if (string.IsNullOrEmpty(hid))
-                return RedirectToAction("GenerateConfirmCode", new { id = id, error = 1 });
+                return View(new ConfirmCodeGetModel { License = l, Error = 1 });
             if (l.Hid.Value == hid)
-                return RedirectToAction("GenerateConfirmCode", new { id = id, error = 2 });
+                return View(new ConfirmCodeGetModel { License = l, Error = 2 });
             var cnfc = utils.GenerateConfirmCode(l.ProductKey, hid);
             var h = new HID
             {

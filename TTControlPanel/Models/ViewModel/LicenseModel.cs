@@ -17,7 +17,8 @@ namespace TTControlPanel.Models.ViewModel
 
     public class EditLicensePostModel
     {
-
+        [Required]
+        public int Client { get; set; }
     }
 
     public class VersionLicensesModel

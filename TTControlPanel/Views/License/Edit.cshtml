@@ -1,21 +1,17 @@
 ﻿@model EditLicenseGetModel
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Modifica licenza";
 }
 <div id="explorerLink">
-    <a asp-controller="" asp-action="Index" asp-route-id="">License</a>
+    <a asp-controller="License" asp-action="Index">Licenze</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="Details" asp-route-id="@Model.License.Id">@Model.License.ProductKey.Key</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Modifica
 </div>
-<h2>Modifica</h2>
+<h2>Modifica @Model.License.ProductKey.Id</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
     <label class="error_lbl" asp-if="Model.Error == 2">Errore, alcuni dati sono insesistenti.</label>
 </div>
 <form asp-antiforgery="true" asp-route-id="@Model.License.Id" autocomplete="off" style="width:350px;">
-    <label>Versione:</label>
-    <select name="version" id="versions">
-        <option value="">--</option>
-    </select>
     <label>Cliente:</label>
     <select name="client">
         <option value="">--</option>
