@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TTControlPanel.Models
 {
     public class License
     {
-        public enum LicenseState
-        {
-            Inactive,
-            Active,
-            Banned
-        }
 
         private DateTime? releaseDate;
 
@@ -21,7 +12,8 @@ namespace TTControlPanel.Models
         public ApplicationVersion ApplicationVersion { get; set; }
         public HID Hid { get; set; }
         public string ConfirmCode { get; set; }
-        public LicenseState State { get; set; }
+        public bool Active { get; set; }
+        public bool Banned { get; set; }
         public DateTime? ActivateDateTime { get; set; }
         public Client Client { get; set; }
         public string Notes { get; set; }

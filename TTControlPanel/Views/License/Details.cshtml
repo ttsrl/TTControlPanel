@@ -7,19 +7,24 @@
 </div>
 <h2>Dettagli Licenza</h2>
 <br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, productkey non generato.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, codice di richiesta non inserito.</label>
+    <label class="error_lbl" asp-if="Model.Error == 3">Errore, codice di risposta non generato.</label>
+</div>
 <div class="content">
     <label class="title">Stato:</label>
-    <label class="val license@(Enum.GetName(typeof(License.LicenseState), Model.License.State))">@(Model.License.State == License.LicenseState.Inactive ? "Inattiva" : ((Model.License.State == License.LicenseState.Active) ? "Attiva" : "Bloccata"))</label>
+    <label class="val license@(Model.License.Banned ? "B" : Model.License.Active ? "A" : "I")">@(Model.License.Banned ? "Bloccata" : ((Model.License.Active) ? "Attiva" : "Inattiva"))</label>
     <br />
     <label class="title">Data Attivazione:</label>
-    <label class="val">@(Model.License.ActivateDateTime == null ? "--" : ((DateTime)(Model.License.ActivateDateTime)).ToString("dd/MM/yyyy"))</label>
+    <label class="val">@(Model.License.ActivateDateTime == null ? "--" : ((DateTime)(Model.License.ActivateDateTime)).ToString("dd/MM/yyyy HH:mm"))</label>
     <br />
     <label class="title">Data Rilascio:</label>
     <label class="val">@Model.License.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</label>
     <br />
     <label class="title">Codice di richiesta (HID):</label>
-    <label class="val">@(Model.License.Hid == null ? "--" : Model.License.Hid.Value)</label>
-    <label asp-if="Model.License.Hid != null">(aggiunto in data: @Model.License.Hid.Timestamp.ToString("dd/MM/yyyy"))</label>
+    <label class="val" style="font-family: OpenSansBold;">@(Model.License.Hid == null ? "--" : Model.License.Hid.Value)</label>
+    <label asp-if="Model.License.Hid != null">&nbsp;&nbsp;&nbsp;&nbsp;(aggiunto in data: @Model.License.Hid.Timestamp.ToString("dd/MM/yyyy"))</label>
     <br />
     <label class="title">Codice di conferma:</label>
     @if (!string.IsNullOrEmpty(Model.License.ConfirmCode))
@@ -37,6 +42,9 @@
         <label class="title">Key:</label>
         <label class="val productkey">@Model.License.ProductKey.Key</label>
         <input type="button" value="Copia" class="clipboard" style="margin-left: 40px;height: 30px;" data-clipboard-text="@Model.License.ProductKey.Key" />
+        <br />
+        <label class="title">Tipo:</label>
+        <label class="val">@(Model.License.ProductKey.Type.ToString())</label>
         <br />
         <label class="title">Rilasciato Da:</label>
         <label class="val">@Model.License.ProductKey.GenerateUser.Username</label>
@@ -72,9 +80,8 @@
         <br />
     </div>
     <br />
-    <label class="title"></label>
-    <label class="val"></label>
     <br />
+    <a class="btn" asp-controller="License" asp-action="OfflineActivation" asp-route-id="@Model.License.Id">Attivazione Offline</a>
 </div>
 
 @section Scripts{ 

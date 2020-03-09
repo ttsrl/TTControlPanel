@@ -10,5 +10,17 @@
     "inputFiles": [
       "wwwroot/js/site.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/js/test.min.js",
+    "inputFiles": [
+      "wwwroot/js/test.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/pgp.min.js",
+    "inputFiles": [
+      "wwwroot/js/pgp.js"
+    ]
   }
 ]

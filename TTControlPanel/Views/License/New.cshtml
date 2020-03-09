@@ -24,6 +24,17 @@
     <select name="version" id="versions">
         <option value="">--</option>
     </select>
+    <label>Tipologia:</label>
+    <select name="type" onchange="changeType(this)">
+        <option value="-1">--</option>
+        <option value="0">Normale</option>
+        <option value="1">Tempo</option>
+        <option value="2">Prova</option>
+    </select>
+    <div id="dateEnd" style="display:none;">
+        <label style="margin-top:10px !important">Durata:</label>
+        <input type="number" min="1" name="days" value="30" style="width:120px;" /><span>&nbsp;&nbsp;&nbsp;giorno/i</span>
+    </div>
     <label>Cliente:</label>
     <select name="client">
         <option value="">--</option>
@@ -67,6 +78,15 @@
                     });
                 }
             });
+        }
+
+        function changeType(item) {
+            var val = $(item).val();
+            if (val == "1" || val == "2") {
+                $("#dateEnd").css("display", "inline-block");
+            } else {
+                $("#dateEnd").css("display", "none");
+            }
         }
 
     </script>

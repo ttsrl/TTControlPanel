@@ -112,7 +112,7 @@ input[type="button"], input[type="submit"], .btn {
         color: #fff !important;
     }
 
-input[type="text"], input[type="password"], input[type="date"], textarea, select {
+input[type="text"], input[type="password"], input[type="date"], input[type="number"], textarea, select, number {
     background-color: #fff;
     border: 1px solid #b3b6b8;
     border-radius: 3px;
@@ -343,6 +343,10 @@ form label {
     content: ' - ';
 }
 
+.table tr.ban {
+    background-color: #e1e1e1;
+}
+
 #explorerLink {
     border-bottom: 1px solid #e1e1e1;
     font-size: 12px;
@@ -373,14 +377,14 @@ form label {
         font-size: 16px;
     }
 
-.licenseInactive{
+.licenseI {
     color:#ed5508;
 }
 
-.licenseActive {
+.licenseA {
     color: #017600;
 }
 
-.licenseBanned {
+.licenseB {
     color: #cc0000;
 }

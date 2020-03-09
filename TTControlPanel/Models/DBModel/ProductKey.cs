@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TTControlPanel.Models
 {
     public class ProductKey
     {
+        public enum PKType { Normal, Time, Trial }
         private DateTime? generateDate;
 
         public int Id { get; set; }
@@ -17,6 +15,7 @@ namespace TTControlPanel.Models
             get => generateDate ?? DateTime.Now;
             set => generateDate = value;
         }
+        public PKType Type { get; set; }
 
     }
 }

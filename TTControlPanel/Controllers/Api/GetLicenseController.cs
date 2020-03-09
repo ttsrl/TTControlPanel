@@ -24,6 +24,8 @@ namespace TTControlPanel.Controllers.Api
         {
             try
             {
+                if(string.IsNullOrEmpty(productKey) || string.IsNullOrEmpty(hid))
+                    return NotFound(new { });
                 var pk = await _dB.Licenses
                 .Include(l => l.ApplicationVersion)
                     .ThenInclude(l => l.Application)
@@ -36,7 +38,8 @@ namespace TTControlPanel.Controllers.Api
                     return NotFound(new { });
                 var obj = new ApiLicenseStructure
                 {
-                    State = (int)pk.State,
+                    Active = pk.Active,
+                    Banned = pk.Banned,
                     ApplicationCode = pk.ApplicationVersion.Application.Code,
                     ApplicationVersion = pk.ApplicationVersion.Version,
                     ClientCode = pk.Client.Code,

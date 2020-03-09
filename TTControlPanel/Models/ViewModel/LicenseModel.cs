@@ -8,20 +8,6 @@ namespace TTControlPanel.Models.ViewModel
         public List<License> Licenses { get; set; }
     }
 
-    public class EditLicenseGetModel
-    {
-        public int Error { get; set; }
-        public License License { get; set; }
-        public List<Client> Clients { get; set; }
-        public int Mode { get; set; }
-    }
-
-    public class EditLicensePostModel
-    {
-        [Required]
-        public int Client { get; set; }
-    }
-
     public class VersionLicensesModel
     {
         public ApplicationVersion ApplicationVersion { get; set; }
@@ -40,6 +26,10 @@ namespace TTControlPanel.Models.ViewModel
         [Required]
         public int Application { get; set; }
         [Required]
+        public int Type { get; set; }
+        [Required]
+        public int Days { get; set; }
+        [Required]
         public int Version { get; set; }
         [Required]
         public int Client { get; set; }
@@ -56,6 +46,10 @@ namespace TTControlPanel.Models.ViewModel
     public class PrecompiledNewLicensePostModel
     {
         [Required]
+        public int Type { get; set; }
+        [Required]
+        public int Days { get; set; }
+        [Required]
         public int Client { get; set; }
         public string Notes { get; set; }
     }
@@ -63,6 +57,7 @@ namespace TTControlPanel.Models.ViewModel
     public class DetailsLicenseModel
     {
         public License License { get; set; }
+        public int Error { get; set; }
     }
 
     public class ConfirmCodeGetModel

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +25,16 @@ namespace TTControlPanel.Controllers.Api
         {
             try
             {
+                if(string.IsNullOrEmpty(productKey) || string.IsNullOrEmpty(appCode) || string.IsNullOrEmpty(appVersion) || string.IsNullOrEmpty(hid))
+                    return NotFound();
+
                 var l = await _dB.Licenses
                     .Include(p => p.ProductKey)
                     .Include(p => p.Hid)
                     .Include(p => p.Client)
                     .Include(p => p.ApplicationVersion)
                         .ThenInclude(v => v.Application)
-                .Where(ll => ll.ProductKey.Key == productKey && ll.State == License.LicenseState.Inactive && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == appVersion)
+                .Where(ll => ll.ProductKey.Key == productKey && !ll.Active && !ll.Banned && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == appVersion)
                 .FirstOrDefaultAsync();
                 if (l == null)
                     return NotFound();
@@ -43,7 +45,7 @@ namespace TTControlPanel.Controllers.Api
                 };
                 l.Hid = h;
                 l.ConfirmCode = cnfc;
-                l.State = License.LicenseState.Active;
+                l.Active = true;
                 l.ActivateDateTime = DateTime.Now;
                 await _dB.SaveChangesAsync();
                 return Ok();

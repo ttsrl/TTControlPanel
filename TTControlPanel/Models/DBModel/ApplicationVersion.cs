@@ -23,7 +23,11 @@ namespace TTControlPanel.Models
 
         public Version GetVersion()
         {
-            return System.Version.Parse(v);
+            Version o;
+            if (System.Version.TryParse(v, out o))
+                return o;
+            else
+                return null;
         }
     }
 }

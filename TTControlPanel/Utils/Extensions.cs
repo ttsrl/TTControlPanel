@@ -1,13 +1,33 @@
 ﻿using System;
+using System.Collections;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 
 namespace TTControlPanel.Utilities
 {
     public static class Extensions
     {
+
+        public static string ReplaceBINDigits(this string key)
+        {
+            return Regex.Replace(key, @"\d", "1");
+        }
+
+        public static string ReplaceBINAlpha(this string key)
+        {
+            return Regex.Replace(key, @"[a-zA-Z]", "0");
+        }
+
+        public static bool[] ToBoolArray(this int value)
+        {
+            BitArray b = new BitArray(new int[] { value });
+            bool[] bits = new bool[b.Count];
+            b.CopyTo(bits, 0);
+            return bits;
+        }
 
         public static int ToInt(this char c)
         {

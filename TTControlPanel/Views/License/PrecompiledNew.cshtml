@@ -12,6 +12,17 @@
     <label class="error_lbl" asp-if="Model.Error == 2">Errore, alcuni dati sono insesistenti.</label>
 </div>
 <form asp-antiforgery="true" asp-route-id="@Model.ApplicationVersion.Id" autocomplete="off" style="width:350px;">
+    <label>Tipologia:</label>
+    <select name="type" onchange="changeType(this)">
+        <option value="-1">--</option>
+        <option value="0">Normale</option>
+        <option value="1">Tempo</option>
+        <option value="2">Prova</option>
+    </select>
+    <div id="dateEnd" style="display:none;">
+        <label style="margin-top:10px !important">Durata:</label>
+        <input type="number" min="1" name="days" value="30" style="width:120px;" /><span>&nbsp;&nbsp;&nbsp;giorno/i</span>
+    </div>
     <label>Cliente:</label>
     <select name="client">
         <option value="">--</option>
@@ -20,6 +31,7 @@
             <option value="@c.Id">@c.Name</option>
         }
     </select>
+
     <br />
     <label>Note:</label>
     <textarea name="notes"></textarea>
