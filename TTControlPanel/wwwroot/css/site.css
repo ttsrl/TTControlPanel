@@ -378,13 +378,9 @@ form label {
     }
 
 .licenseI {
-    color:#ed5508;
+    color: #cc0000;
 }
 
 .licenseA {
     color: #017600;
-}
-
-.licenseB {
-    color: #cc0000;
 }
