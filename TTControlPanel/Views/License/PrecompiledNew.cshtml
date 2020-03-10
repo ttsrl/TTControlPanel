@@ -39,3 +39,19 @@
     <br />
     <input type="submit" value="Aggiungi" name="submit" style="margin-top:20px;" />
 </form>
+
+@section Scripts{ 
+
+    <script type="text/javascript">
+
+        function changeType(item) {
+            var val = $(item).val();
+            if (val == "1" || val == "2") {
+                $("#dateEnd").css("display", "inline-block");
+            } else {
+                $("#dateEnd").css("display", "none");
+            }
+        }
+
+    </script>
+}

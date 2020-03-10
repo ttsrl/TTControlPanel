@@ -36,7 +36,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> New()
+        public IActionResult New()
         {
             return View(new NewApplicationGetModel());
         }
@@ -86,7 +86,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id )
+        public async Task<IActionResult> Edit(int id)
         {
             var app = await _db.Applications.Include(a => a.ApplicationVersions).Where(a => a.Id == id).FirstOrDefaultAsync();
             if(app == null)

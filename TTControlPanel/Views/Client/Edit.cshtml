@@ -1,0 +1,46 @@
+﻿@model  EditClientGetModel
+@{
+    ViewData["Title"] = "Modifica " + Model.Client.Name;
+}
+<div id="explorerLink">
+    <a asp-controller="Client" asp-action="Index">Clienti</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Client" asp-action="Details" asp-route-id="@Model.Client.Id">@Model.Client.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Modifica
+</div>
+<h2>Nuovo Cliente</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di modifica, controllare di aver inserito tutti i dati richiesti.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Codice cliente non valido. Inserire un altro codice.</label>
+    <label class="error_lbl" asp-if="Model.Error == 3">Cliente già presente nel database.</label>
+</div>
+<form asp-antiforgery="true" asp-controller="Client" asp-action="Edit" asp-route-id="@Model.Client.Id" autocomplete="off" style="width:350px;">
+    <label>Codice:</label>
+    <input type="text" name="code" id="code" value="@Model.Client.Code" />
+    <br />
+    <label style="margin-top:15px;">Nome:</label>
+    <input type="text" name="name" value="@Model.Client.Name" />
+    <br />
+    <label style="margin-top:15px;">Via:</label>
+    <input type="text" name="street" value="@Model.Client.Address.Street" />
+    <br />
+    <label style="margin-top:15px;">CAP:</label>
+    <input type="text" name="cap" value="@Model.Client.Address.CAP" />
+    <br />
+    <label style="margin-top:15px;">Comune:</label>
+    <input type="text" name="city" value="@Model.Client.Address.City" />
+    <br />
+    <label style="margin-top:15px;">Provincia:</label>
+    <select name="province">
+        @await Html.PartialAsync("ProvinceOptions", Model.Client.Address.Province);
+    </select>
+    <br />
+    <label>Stato:</label>
+    <select name="country">
+        @await Html.PartialAsync("CountryOptions", Model.Client.Address.Country);
+    </select>
+    <br />
+    <label style="margin-top:15px;">IVA:</label>
+    <input type="text" name="vat" value="@Model.Client.VAT" />
+    <br />
+    <br />
+    <input type="submit" value="Modifica" name="submit" style="margin-top:20px;" />
+</form>

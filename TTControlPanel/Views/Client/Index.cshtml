@@ -7,6 +7,10 @@
 </div>
 <h1>Clienti</h1>
 <br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, cliente inesistente.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Impossibile cancellare un cliente a cui sono associate una o più applicazioni.</label>
+</div>
 <table class="table">
     <tr style="font-weight:bold;">
         <td>Codice</td>
@@ -19,12 +23,12 @@
     {
         <tr>
             <td><b>@c.Code</b></td>
-            <td><b>@c.Name</b></td>
+            <td><b><a asp-controller="Client" asp-action="Details" asp-route-id="@c.Id">@c.Name</a></b></td>
             <td>@c.VAT</td>
             <td>@string.Join(", ", c.Applications.Select(v => (v.Name)).ToArray())</td>
             <td>
-                <span><a asp-controller="Client" asp-action="Edit">Modifica</a></span>
-                <span><a asp-controller="Client" asp-action="Delete">Elimina</a></span>
+                <span><a asp-controller="Client" asp-action="Edit" asp-route-id="@c.Id">Modifica</a></span>
+                <span><a asp-controller="Client" asp-action="Delete" asp-route-id="@c.Id">Elimina</a></span>
             </td>
         </tr>
     }

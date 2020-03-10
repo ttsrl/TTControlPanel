@@ -9,6 +9,7 @@ namespace TTControlPanel.Models.ViewModel
     public class IndexClientModel
     {
         public List<Client> Clients { get; set; }
+        public int Error { get; set; }
     }
 
     public class NewClientGetModel
@@ -34,5 +35,36 @@ namespace TTControlPanel.Models.ViewModel
         public string Country { get; set; }
         [Required]
         public string VAT { get; set; }
+    }
+
+    public class EditClientGetModel
+    {
+        public Client Client { get; set; }
+        public int Error { get; set; }
+    }
+
+    public class EditClientPostModel
+    {
+        [Required]
+        public string Code { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Street { get; set; }
+        [Required]
+        public string Cap { get; set; }
+        [Required]
+        public string City { get; set; }
+        [Required]
+        public string Province { get; set; }
+        [Required]
+        public string Country { get; set; }
+        [Required]
+        public string VAT { get; set; }
+    }
+
+    public class ClientDetailsGetMode
+    {
+        public Client Client { get; set; }
     }
 }

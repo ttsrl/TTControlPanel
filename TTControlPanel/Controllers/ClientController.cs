@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +25,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> New()
+        public IActionResult New()
         {
             return View(new NewClientGetModel());
         }
@@ -70,6 +69,67 @@ namespace TTControlPanel.Controllers
                 return RedirectToAction("Index");
             }
             return View(new NewClientGetModel { Error = 1 });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var client = await _db.Clients.Include(c => c.Applications).Include(c => c.Address).Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (client == null)
+                return RedirectToAction("Index");
+            return View(new ClientDetailsGetMode { Client = client });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var client = await _db.Clients.Include(c => c.Address).Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (client == null)
+                return RedirectToAction("Index");
+            return View(new EditClientGetModel { Client = client });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([FromServices] Utils utils, int id, EditClientPostModel model)
+        {
+            var client = await _db.Clients.Include(c => c.Address).Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (client == null)
+                return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var code = (model.Code == client.Code) ? model.Code : ((await utils.ValidateClientCode(model.Code)) ? model.Code : "");
+                var vat = (model.VAT == client.VAT) ? model.VAT : ((await utils.ValidateVAT(model.VAT)) ? model.VAT : "");
+                if (string.IsNullOrEmpty(code))
+                    return View(new EditClientGetModel { Client = client, Error = 2 });
+                if (string.IsNullOrEmpty(vat))
+                    return View(new EditClientGetModel { Client = client, Error = 3 });
+                client.Name = model.Name;
+                client.VAT = vat;
+                client.Code = code;
+                client.Address.CAP = model.Cap;
+                client.Address.City = model.City;
+                client.Address.Country = model.Country;
+                client.Address.Province = model.Province;
+                client.Address.Street = model.Street;
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(new EditClientGetModel { Client = client, Error = 1 });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var clients = await _db.Clients.Include(cc => cc.Applications).ToListAsync();
+            var c = await _db.Clients.Include(cc => cc.Applications).Where(cc => cc.Id == id).FirstOrDefaultAsync();
+            if (c == null)
+                return View("Index", new IndexClientModel { Clients = clients, Error = 1 });
+            if(c.Applications.Count > 0)
+                return View("Index", new IndexClientModel { Clients = clients, Error = 2 });
+            _db.Clients.Remove(c);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }

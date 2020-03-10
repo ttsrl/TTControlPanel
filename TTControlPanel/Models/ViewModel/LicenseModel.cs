@@ -6,12 +6,14 @@ namespace TTControlPanel.Models.ViewModel
     public class IndexLicenseModel
     {
         public List<License> Licenses { get; set; }
+        public int Error { get; set; }
     }
 
     public class VersionLicensesModel
     {
         public ApplicationVersion ApplicationVersion { get; set; }
         public List<License> Licenses { get; set; }
+        public int Error { get; set; }
     }
 
     public class NewLicenseGetModel

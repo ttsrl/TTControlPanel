@@ -7,6 +7,10 @@
 </div>
 <h2>Licenze</h2>
 <br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, licenza inesistente.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Impossibile cancellare un licenza attiva.</label>
+</div>
 <table class="table">
     <tr style="font-weight:bold;">
         <td>ProductKey</td>

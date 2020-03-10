@@ -10,7 +10,7 @@
 <div asp-if="Model.Error != 0">
 	<label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di inserimento, controllare di aver inserito tutti i dati richiesti.</label>
 	<label class="error_lbl" asp-if="Model.Error == 2">Codice applicazione non valido. Inserire un altro codice.</label>
-	<label class="error_lbl" asp-if="Model.Error == 3">Client già presente nel database.</label>
+	<label class="error_lbl" asp-if="Model.Error == 3">Cliente già presente nel database.</label>
 </div>
 <form asp-antiforgery="true" asp-controller="Client" asp-action="New" autocomplete="off" style="width:350px;">
 	<label>Codice:</label>

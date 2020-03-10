@@ -1,0 +1,53 @@
+﻿@model ClientDetailsGetMode
+@{
+    ViewData["Title"] = "Dettagli Cliente";
+}
+<div id="explorerLink">
+    <a asp-controller="Client" asp-action="Index">Clienti</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.Client.Name
+</div>
+<h2>Dettagli Cliente</h2>
+<br />
+<div class="content">
+    <div style="margin: 15px 0px;">
+        <h4>Dati</h4>
+        <label class="title">Id:</label>
+        <label class="val">@Model.Client.Id</label>
+        <br />
+        <label class="title">Nome:</label>
+        <label class="val">@Model.Client.Name</label>
+        <br />
+        <label class="title">Data di inserimento:</label>
+        <label class="val">@Model.Client.Timestamp.ToString("dd/MM/yyyy HH:mm")</label>
+        <br />
+        <label class="title">Codice:</label>
+        <label class="val">@Model.Client.Code</label>
+        <br />
+        <label class="title">Via:</label>
+        <label class="val">@Model.Client.Address.Street</label>
+        <br />
+        <label class="title">CAP:</label>
+        <label class="val">@Model.Client.Address.CAP</label>
+        <br />
+        <label class="title">Comune:</label>
+        <label class="val">@Model.Client.Address.City</label>
+        <br />
+        <label class="title">Provincia:</label>
+        <label class="val">@Model.Client.Address.Province</label>
+        <br />
+        <label class="title">Stato:</label>
+        <label class="val">@Model.Client.Address.Country</label>
+        <br />
+        <label class="title">IVA:</label>
+        <label class="val">@Model.Client.VAT</label>
+        <br />
+    </div>
+    <div>
+        <h4>Applicazioni</h4>
+        @foreach (var a in Model.Client.Applications)
+        {
+            <label>@a.Name</label>
+            <br />
+        }
+        <span asp-if="Model.Client.Applications.Count == 0">Nessuna applicazione associata a questo cliente</span>
+    </div>
+</div>

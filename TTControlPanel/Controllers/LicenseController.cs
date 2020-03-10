@@ -165,17 +165,53 @@ namespace TTControlPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id, int mod)
         {
-            var l = await _db.Licenses.Include(ll => ll.ApplicationVersion).Include(ll => ll.Hid).Where(ll => ll.Id == id).FirstOrDefaultAsync();
-            if(l == null)
-                return RedirectToAction("Index");
-            if(l.Hid != null)
+            var l = await _db.Licenses
+                .Include(ll => ll.ApplicationVersion)
+                    .ThenInclude(av => av.Application)
+                .Include(ll => ll.ApplicationVersion)
+                    .ThenInclude(av => av.Licences)
+                .Include(ll => ll.ApplicationVersion)
+                    .ThenInclude(av => av.Licences)
+                        .ThenInclude(av => av.ProductKey)
+                .Include(ll => ll.ApplicationVersion)
+                    .ThenInclude(av => av.Licences)
+                        .ThenInclude(ll => ll.Client)
+                .Include(ll => ll.Hid)
+                .Where(ll => ll.Id == id)
+                .FirstOrDefaultAsync();
+
+            if (l == null)
+            {
+                if (mod == 0)
+                    return View("Index", new IndexLicenseModel { Licenses = l.ApplicationVersion.Licences, Error = 1 });
+                else
+                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = l.ApplicationVersion, Licenses = l.ApplicationVersion.Licences, Error = 1 });
+            }
+            if(l.Active == true)
+            {
+                if (mod == 0)
+                    return View("Index", new IndexLicenseModel { Licenses = l.ApplicationVersion.Licences, Error = 2 });
+                else
+                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = l.ApplicationVersion, Licenses = l.ApplicationVersion.Licences, Error = 2 });
+            }
+
+            if (l.Hid != null)
                 _db.Hids.Remove(l.Hid);
+
+            var llc = await _db.Licenses.Include(ll => ll.Client).Where(ll => ll.Client.Id == l.Client.Id).ToListAsync();
+            if(llc.Count == 1)
+            {
+                var c = await _db.Clients.Include(cc => cc.Applications).Where(cc => cc.Id == l.Client.Id).FirstOrDefaultAsync();
+                if (c.Applications.Contains(l.ApplicationVersion.Application))
+                    c.Applications.Remove(l.ApplicationVersion.Application);
+            }
+
             _db.Licenses.Remove(l);
             await _db.SaveChangesAsync();
             if (mod == 0)
-                return RedirectToAction("Index");
+                return View("Index", new IndexLicenseModel { Licenses = l.ApplicationVersion.Licences });
             else
-                return RedirectToAction("VersionLicenses", new { id = l.ApplicationVersion.Id });
+                return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = l.ApplicationVersion, Licenses = l.ApplicationVersion.Licences });
         }
 
 
