@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TTControlPanel.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using TTControlPanel.Filters;
 
 namespace TTControlPanel.Controllers
 {
@@ -23,6 +24,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Index()
         {
             var apps = await _db.Applications
@@ -36,12 +38,14 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public IActionResult New()
         {
             return View(new NewApplicationGetModel());
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New([FromServices] Utils utils, NewApplicationPostModel model)
         {
@@ -86,6 +90,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Edit(int id)
         {
             var app = await _db.Applications.Include(a => a.ApplicationVersions).Where(a => a.Id == id).FirstOrDefaultAsync();
@@ -95,6 +100,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromServices] Utils utils, int id, EditApplicationPostModel model)
         {
@@ -118,6 +124,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Delete(int id)
         {
             var app = await _db.Applications.Where(a => a.Id == id)
@@ -146,6 +153,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Versions(int id)
         {
             var app = await _db.Applications.Where(a => a.Id == id)
@@ -166,6 +174,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> NewVersion(int id)
         {
             var app = await _db.Applications.Where(a => a.Id == id).FirstOrDefaultAsync();
@@ -175,6 +184,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NewVersion(int id, NewVersionApplicationPostModel model)
         {
@@ -209,6 +219,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> EditVersion(int id)
         {
             var av = await _db.ApplicationsVersions.Include(v => v.Application).Where(v => v.Id == id).FirstOrDefaultAsync();
@@ -218,6 +229,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditVersion(int id, EditVersionApplicationPostModel model)
         {
@@ -230,6 +242,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> DeleteVersion(int id)
         {
             var ve = await _db.ApplicationsVersions

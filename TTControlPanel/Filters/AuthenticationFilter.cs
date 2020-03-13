@@ -36,10 +36,13 @@ namespace TTControlPanel.Filters
                     return;
                 }
 
-                if (aa.Grants.Any(g => !user.Role[g]))
+                if(aa.Grants != null)
                 {
-                    NotFound(context);
-                    return;
+                    if (aa.Grants.Any(g => !user.Role[g]))
+                    {
+                        NotFound(context);
+                        return;
+                    }
                 }
             }
 
@@ -56,6 +59,11 @@ namespace TTControlPanel.Filters
         public AuthenticationAttribute(params string[] grants)
         {
             Grants = grants;
+        }
+
+        public AuthenticationAttribute()
+        {
+            Grants = null;
         }
 
         public string[] Grants { get; set; }

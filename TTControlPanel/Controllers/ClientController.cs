@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TTControlPanel.Filters;
 using TTControlPanel.Models;
 using TTControlPanel.Models.ViewModel;
 using TTControlPanel.Services;
@@ -18,6 +19,7 @@ namespace TTControlPanel.Controllers
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
+        [Authentication]
         public async Task<IActionResult> Index()
         {
             var clients = await _db.Clients.Include(c => c.Applications).ToListAsync();
@@ -25,12 +27,14 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public IActionResult New()
         {
             return View(new NewClientGetModel());
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New([FromServices] Utils utils, NewClientPostModel model)
         {
@@ -72,6 +76,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Details(int id)
         {
             var client = await _db.Clients.Include(c => c.Applications).Include(c => c.Address).Where(c => c.Id == id).FirstOrDefaultAsync();
@@ -81,6 +86,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Edit(int id)
         {
             var client = await _db.Clients.Include(c => c.Address).Where(c => c.Id == id).FirstOrDefaultAsync();
@@ -90,6 +96,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([FromServices] Utils utils, int id, EditClientPostModel model)
         {
@@ -119,6 +126,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Delete(int id)
         {
             var clients = await _db.Clients.Include(cc => cc.Applications).ToListAsync();

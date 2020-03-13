@@ -64,6 +64,44 @@ header {
     color: red;
 }
 
+#errorPage {
+    width: 650px;
+    margin: 90px auto;
+}
+
+    #errorPage img {
+        width: 190px;
+        float: left;
+    }
+
+    #errorPage h2 {
+        width: 100%;
+        text-decoration: none;
+        float: left;
+        margin-left: 20px;
+        margin-top: 25px;
+        font-size: 35px;
+    }
+
+    #errorPage label {
+        float: left;
+        width: 100%;
+        margin-left: 20px;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #757575;
+        position: relative;
+    }
+
+    #errorPage ul {
+        float: left;
+        margin: 2px 0px 0px 20px;
+        font-size: 14px;
+        color: #757575;
+        position: relative;
+    }
+
+
 /* -------------------- controlli  ----------------------- */
 
 a, a:link, a:visited {
@@ -367,9 +405,9 @@ form label {
         width: 180px;
         font-family: OpenSansBold;
     }
-.content .val{
 
-}
+    .content .val {
+    }
 
     .content .productkey {
         font-family: OpenSansBold;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TTControlPanel.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using static TTControlPanel.Models.ProductKey;
+using TTControlPanel.Filters;
 
 namespace TTControlPanel.Controllers
 {
@@ -21,6 +22,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Index()
         {
             var licenses = await _db.Licenses
@@ -34,6 +36,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> VersionLicenses(int id)
         {
             var version = await _db.ApplicationsVersions.Where(v => v.Id == id)
@@ -50,6 +53,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> New()
         {
             var apps = await _db.Applications
@@ -60,6 +64,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New([FromServices] Utils utils, NewLicensePostModel model)
         {
@@ -107,6 +112,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> PrecompiledNew(int id)
         {
             var apps = await _db.Applications
@@ -120,6 +126,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PrecompiledNew([FromServices] Utils utils, int id, PrecompiledNewLicensePostModel model)
         {
@@ -163,6 +170,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Delete(int id, int mod)
         {
             var l = await _db.Licenses
@@ -216,19 +224,23 @@ namespace TTControlPanel.Controllers
 
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Details(int id)
         {
             var lc = await _db.Licenses
                 .Include(l => l.ProductKey)
+                    .ThenInclude(pk => pk.GenerateUser)
                 .Include(l => l.ApplicationVersion)
                     .ThenInclude(av => av.Application)
                 .Include(l => l.Client)
                 .Include(l => l.Hid)
+                .Where(l => l.Id == id)
                 .FirstOrDefaultAsync();
             return View(new DetailsLicenseModel { License = lc });
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> GenerateConfirmCode([FromServices] Utils utils, int id)
         {
             var l = await _db.Licenses
@@ -253,6 +265,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpPost]
+        [Authentication]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GenerateConfirmCode([FromServices] Utils utils, int id, string hid)
         {
@@ -280,6 +293,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Ban(int id, int mod)
         {
             var l = await _db.Licenses.Include(ll => ll.ApplicationVersion).Where(ll => ll.Id == id).FirstOrDefaultAsync();
@@ -294,6 +308,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Restore(int id, int mod)
         {
             var l = await _db.Licenses.Include(ll => ll.ApplicationVersion).Where(ll => ll.Id == id).FirstOrDefaultAsync();
@@ -308,6 +323,7 @@ namespace TTControlPanel.Controllers
         }
 
         [HttpGet]
+        [Authentication]
         public async Task<IActionResult> OfflineActivation(int id)
         {
             var l = await _db.Licenses
