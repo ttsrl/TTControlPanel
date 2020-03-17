@@ -22,26 +22,11 @@
     <label class="title">Data Rilascio:</label>
     <label class="val">@Model.License.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</label>
     <br />
-    <label class="title">Codice di richiesta (HID):</label>
-    <label class="val" style="font-family: OpenSansBold;">@(Model.License.Hid == null ? "--" : Model.License.Hid.Value)</label>
-    <label asp-if="Model.License.Hid != null">&nbsp;&nbsp;&nbsp;&nbsp;(aggiunto in data: @Model.License.Hid.Timestamp.ToString("dd/MM/yyyy"))</label>
-    <br />
-    <label class="title">Codice di conferma:</label>
-    @if (!string.IsNullOrEmpty(Model.License.ConfirmCode))
-    {
-        <label class="val" style="font-family: OpenSansBold;">@Model.License.ConfirmCode</label>
-        <input type="button" class="clipboard" value="Copia" style="margin-left: 40px;height: 30px;" data-clipboard-text="@Model.License.ConfirmCode" />
-    }
-    else
-    {
-        <a class="btn" asp-controller="License" asp-action="GenerateConfirmCode" asp-route-id="@Model.License.Id" style="height: 30px;">Genera</a>
-    }
-    <br />
-    <div style="margin: 15px 0px;">
+    <div style="margin: 20px 0px;">
         <h4>ProductKey</h4>
         <label class="title">Key:</label>
         <label class="val productkey">@Model.License.ProductKey.Key</label>
-        <input type="button" value="Copia" class="clipboard" style="margin-left: 40px;height: 30px;" data-clipboard-text="@Model.License.ProductKey.Key" />
+        <input type="button" value="Copia" class="clipboard" style="margin-left: 30px;height: 30px;" data-clipboard-text="@Model.License.ProductKey.Key" />
         <br />
         <label class="title">Tipo:</label>
         <label class="val">@(Model.License.ProductKey.Type.ToString())</label>
@@ -53,7 +38,23 @@
         <label class="val">@Model.License.ProductKey.GenerateDateTime.ToString("dd/MM/yyyy HH:mm")</label>
         <br />
     </div>
-    <div style="margin: 15px 0px;">
+    <div style="margin: 20px 0px;">
+        <h4>Request Code (HID)</h4>
+        <label class="title">Code:</label>
+        <label class="val" style="font-family: OpenSansBold; font-size: 16px;">@(Model.License.Hid == null ? "--" : Model.License.Hid.Value)</label>
+        <a asp-if="Model.License.Hid == null" class="btn" asp-controller="License" asp-action="GenerateConfirmCode" asp-route-id="@Model.License.Id" style="height: 30px;">Aggiungi</a>
+        <br />
+        <label class="title">Data di rilascio:</label>
+        <label class="val">@((Model.License.Hid == null) ? "--" : Model.License.Hid.Timestamp.ToString("dd/MM/yyyy"))</label>
+        <br />
+    </div>
+    <div style="margin: 20px 0px;">
+        <h4>Confirm Code</h4>
+        <label class="title">Code:</label>
+        <label class="val" style="font-family: OpenSansBold; font-size: 16px; max-width: 325px; display: inline-block; word-wrap: break-word; vertical-align: top;">@(!string.IsNullOrEmpty(Model.License.ConfirmCode) ? Model.License.ConfirmCode : "--")</label>
+        <input asp-if="!string.IsNullOrEmpty(Model.License.ConfirmCode)" type="button" class="clipboard" value="Copia" style="margin-left: 30px;height: 30px;" data-clipboard-text="@Model.License.ConfirmCode" />
+    </div>
+    <div style="margin: 20px 0px;">
         <h4>Applicazione</h4>
         <label class="title">Codice:</label>
         <label class="val">@Model.License.ApplicationVersion.Application.Code</label>
@@ -67,7 +68,7 @@
         <label class="title">Rilascio versione:</label>
         <label class="val">@Model.License.ApplicationVersion.ReleaseDate.ToString("dd/MM/yyyy")</label>
     </div>
-    <div style="margin: 15px 0px;">
+    <div style="margin: 20px 0px;">
         <h4>Cliente</h4>
         <label class="title">Codice:</label>
         <label class="val">@Model.License.Client.Code</label>
