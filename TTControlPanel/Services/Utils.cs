@@ -161,11 +161,6 @@ namespace TTControlPanel.Services
             return o;
         }
 
-        public string GenerateConfirmCode(ProductKey pk, string hid)
-        {
-            return Sha256Hash(pk + "-" + hid, 32);
-        }
-
         private string generateCode()
         {
            return RandomCifre().ToString() + RandomCifre().ToString() + RandomCifre().ToString() + RandomCifre().ToString();

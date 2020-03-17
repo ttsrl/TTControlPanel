@@ -6,12 +6,13 @@ namespace TTControlPanel.Models
     {
 
         private DateTime? releaseDate;
+        private string confirmCode;
 
         public int Id { get; set; }
         public ProductKey ProductKey { get; set; }
         public ApplicationVersion ApplicationVersion { get; set; }
         public HID Hid { get; set; }
-        public string ConfirmCode { get; set; }
+        public string ConfirmCode { get => confirmCode; set => confirmCode = value.ToUpper(); }
         public bool Active { get; set; }
         public bool Banned { get; set; }
         public DateTime? ActivateDateTime { get; set; }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TTControlPanel.Models;
 using TTControlPanel.Services;
-using TTLL.Models;
+using static TTLL.License;
 
 namespace TTControlPanel.Controllers.Api
 {
@@ -38,7 +38,7 @@ namespace TTControlPanel.Controllers.Api
                 .FirstOrDefaultAsync();
                 if (l == null)
                     return NotFound();
-                var cnfc = utils.GenerateConfirmCode(l.ProductKey, hid);
+                var cnfc = GetConfirmCode(l.ProductKey.Key, hid);
                 var h = new HID
                 {
                     Value = hid

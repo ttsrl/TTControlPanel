@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TTControlPanel.Models
 {
     public class HID
     {
         private DateTime? timestamp;
+        private string val;
 
         public int Id { get; set; }
-        public string Value { get; set; }
+        public string Value { get => val; set => val = val.ToUpper(); }
 
         public DateTime Timestamp
         {

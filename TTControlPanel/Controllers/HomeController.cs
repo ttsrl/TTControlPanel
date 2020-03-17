@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TTControlPanel.Models;
 using TTControlPanel.Services;
 

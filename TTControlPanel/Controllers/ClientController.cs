@@ -135,6 +135,7 @@ namespace TTControlPanel.Controllers
                 return View("Index", new IndexClientModel { Clients = clients, Error = 1 });
             if(c.Applications.Count > 0)
                 return View("Index", new IndexClientModel { Clients = clients, Error = 2 });
+            _db.Addresses.Remove(c.Address);
             _db.Clients.Remove(c);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");

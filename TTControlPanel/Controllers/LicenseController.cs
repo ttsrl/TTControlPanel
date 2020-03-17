@@ -8,6 +8,7 @@ using TTControlPanel.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using static TTControlPanel.Models.ProductKey;
 using TTControlPanel.Filters;
+using static TTLL.License;
 
 namespace TTControlPanel.Controllers
 {
@@ -91,7 +92,7 @@ namespace TTControlPanel.Controllers
                 if(type != PKType.Normal)
                     time = new TimeSpan(model.Days, 0, 0, 0);
                 var productkey = await utils.GenerateProdutKey(type, appv, client, time);
-                var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey };
+                var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey, Type = type };
                 var l = new License
                 {
                     Active = false,
@@ -149,7 +150,7 @@ namespace TTControlPanel.Controllers
                 if (type != PKType.Normal)
                     time = new TimeSpan(model.Days, 0, 0, 0);
                 var productkey = await utils.GenerateProdutKey(type, av, client, time);
-                var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey };
+                var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey, Type = type };
                 var l = new License
                 {
                     Active = false,
@@ -258,7 +259,7 @@ namespace TTControlPanel.Controllers
                 return View(new ConfirmCodeGetModel { License = l });
             if (string.IsNullOrEmpty(l.Hid.Value))
                 return View("Details", new DetailsLicenseModel { License = l, Error = 2 });
-            var cnfc = utils.GenerateConfirmCode(l.ProductKey, l.Hid.Value);
+            var cnfc = GetConfirmCode(l.ProductKey.Key, l.Hid.Value);
             l.ConfirmCode = cnfc;
             await _db.SaveChangesAsync();
             return RedirectToAction("Details", new { id = id });
@@ -281,7 +282,7 @@ namespace TTControlPanel.Controllers
                 return View(new ConfirmCodeGetModel { License = l, Error = 1 });
             if (l.Hid != null && l.Hid.Value == hid)
                 return View(new ConfirmCodeGetModel { License = l, Error = 2 });
-            var cnfc = utils.GenerateConfirmCode(l.ProductKey, hid);
+            var cnfc = GetConfirmCode(l.ProductKey.Key, hid);
             var h = new HID
             {
                 Value = hid

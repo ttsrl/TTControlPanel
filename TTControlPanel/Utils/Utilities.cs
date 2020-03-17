@@ -56,18 +56,5 @@ namespace TTControlPanel.Utilities
             catch { return 0; }
         }
 
-        public static string Sha256Hash(string text)
-        {
-            SHA256 _sha256 = SHA256.Create();
-            var hashedBytes = _sha256.ComputeHash(Encoding.UTF8.GetBytes(text));
-            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-        }
-
-        public static string Sha256Hash(string text, int iterations)
-        {
-            for (var i = 0; i < iterations; i++) text = Sha256Hash(text);
-            return text;
-        }
-
     }
 }
