@@ -8,7 +8,7 @@ namespace TTControlPanel.Models
         private string val;
 
         public int Id { get; set; }
-        public string Value { get => val; set => val = val.ToUpper(); }
+        public string Value { get => val; set => val = value.ToUpper(); }
 
         public DateTime Timestamp
         {
