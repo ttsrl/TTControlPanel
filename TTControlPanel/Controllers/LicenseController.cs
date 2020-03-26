@@ -14,12 +14,13 @@ namespace TTControlPanel.Controllers
 {
     public class LicenseController : Controller
     {
-
+        private readonly Utils _utils;
         private readonly DBContext _db;
 
-        public LicenseController(DBContext db)
+        public LicenseController(DBContext db, Utils utils)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
+            _utils = utils ?? throw new ArgumentNullException(nameof(utils));
         }
 
         [HttpGet]
@@ -67,7 +68,7 @@ namespace TTControlPanel.Controllers
         [HttpPost]
         [Authentication]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> New([FromServices] Utils utils, NewLicensePostModel model)
+        public async Task<IActionResult> New(NewLicensePostModel model)
         {
             var uLog = HttpContext.Items["User"] as User;
             var apps = await _db.Applications
@@ -91,7 +92,7 @@ namespace TTControlPanel.Controllers
                 TimeSpan? time = null;
                 if(type != PKType.Normal)
                     time = new TimeSpan(model.Days, 0, 0, 0);
-                var productkey = await utils.GenerateProdutKey(type, appv, client, time);
+                var productkey = await _utils.GenerateProdutKey(type, appv, client, time);
                 var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey, Type = type };
                 var l = new License
                 {
@@ -129,7 +130,7 @@ namespace TTControlPanel.Controllers
         [HttpPost]
         [Authentication]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PrecompiledNew([FromServices] Utils utils, int id, PrecompiledNewLicensePostModel model)
+        public async Task<IActionResult> PrecompiledNew(int id, PrecompiledNewLicensePostModel model)
         {
             var uLog = HttpContext.Items["User"] as User;
             var clients = await _db.Clients.ToListAsync();
@@ -149,7 +150,7 @@ namespace TTControlPanel.Controllers
                 TimeSpan? time = null;
                 if (type != PKType.Normal)
                     time = new TimeSpan(model.Days, 0, 0, 0);
-                var productkey = await utils.GenerateProdutKey(type, av, client, time);
+                var productkey = await _utils.GenerateProdutKey(type, av, client, time);
                 var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey, Type = type };
                 var l = new License
                 {
@@ -235,6 +236,7 @@ namespace TTControlPanel.Controllers
                     .ThenInclude(av => av.Application)
                 .Include(l => l.Client)
                 .Include(l => l.Hid)
+                    .ThenInclude(h => h.AddedUser)
                 .Where(l => l.Id == id)
                 .FirstOrDefaultAsync();
             return View(new DetailsLicenseModel { License = lc });
@@ -242,7 +244,7 @@ namespace TTControlPanel.Controllers
 
         [HttpGet]
         [Authentication]
-        public async Task<IActionResult> GenerateConfirmCode([FromServices] Utils utils, int id)
+        public async Task<IActionResult> AddRequestCode(int id)
         {
             var l = await _db.Licenses
                 .Include(ll => ll.ProductKey)
@@ -255,21 +257,39 @@ namespace TTControlPanel.Controllers
                 return RedirectToAction("Index");
             if (l.ProductKey == null)
                 return View("Details", new DetailsLicenseModel { License = l, Error = 1 });
-            if (l.Hid == null)
-                return View(new ConfirmCodeGetModel { License = l });
-            if (string.IsNullOrEmpty(l.Hid.Value))
+            if (l.Hid != null )
                 return View("Details", new DetailsLicenseModel { License = l, Error = 2 });
-            var cnfc = GetConfirmCode(l.ProductKey.Key, l.Hid.Value);
-            l.ConfirmCode = cnfc;
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Details", new { id = id });
+            return View(new RequestCodeGetModel { License = l });
         }
+
+
+        [HttpGet]
+        [Authentication]
+        public async Task<IActionResult> EditRequestCode(int id)
+        {
+            var l = await _db.Licenses
+               .Include(ll => ll.ProductKey)
+               .Include(ll => ll.ApplicationVersion)
+                   .ThenInclude(av => av.Application)
+               .Include(ll => ll.Client)
+               .Include(ll => ll.Hid)
+               .Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            if (l == null)
+                return RedirectToAction("Index");
+            if (l.ProductKey == null)
+                return View("Details", new DetailsLicenseModel { License = l, Error = 1 });
+            if (l.Hid == null)
+                return View("Details", new DetailsLicenseModel { License = l, Error = 3 });
+            return View("AddRequestCode", new RequestCodeGetModel { License = l });
+        }
+
 
         [HttpPost]
         [Authentication]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GenerateConfirmCode([FromServices] Utils utils, int id, string hid)
+        public async Task<IActionResult> AddRequestCode(int id, string hid)
         {
+            var uLog = HttpContext.Items["User"] as User;
             var l = await _db.Licenses
                 .Include(ll => ll.ProductKey)
                 .Include(ll => ll.Hid)
@@ -279,19 +299,17 @@ namespace TTControlPanel.Controllers
             if (l.ProductKey == null)
                 return RedirectToAction("Index");
             if (string.IsNullOrEmpty(hid))
-                return View(new ConfirmCodeGetModel { License = l, Error = 1 });
+                return View("AddRequestCode", new RequestCodeGetModel { License = l, Error = 1 });
             if (l.Hid != null && l.Hid.Value == hid)
-                return View(new ConfirmCodeGetModel { License = l, Error = 2 });
+                return View("AddRequestCode", new RequestCodeGetModel { License = l, Error = 2 });
             var cnfc = GetConfirmCode(l.ProductKey.Key, hid);
-            var h = new HID
-            {
-                Value = hid
-            };
+            var h = new HID { Value = hid, AddedUser = uLog };
             l.Hid = h;
             l.ConfirmCode = cnfc;
             await _db.SaveChangesAsync();
             return RedirectToAction("Details", new { id = id });
         }
+
 
         [HttpGet]
         [Authentication]

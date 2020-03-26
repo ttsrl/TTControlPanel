@@ -9,12 +9,15 @@
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, productkey non generato.</label>
-    <label class="error_lbl" asp-if="Model.Error == 2">Errore, codice di richiesta non inserito.</label>
-    <label class="error_lbl" asp-if="Model.Error == 3">Errore, codice di risposta non generato.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, codice di richiesta già associato.</label>
+    <label class="error_lbl" asp-if="Model.Error == 3">Errore, codice di richiesta non ancora associato.</label>
 </div>
 <div class="content">
     <label class="title">Stato:</label>
-    <label class="val license@(Model.License.Banned ? "B" : Model.License.Active ? "A" : "I")">@(Model.License.Banned ? "Bloccata" : ((Model.License.Active) ? "Attiva" : "Inattiva"))</label>
+    <label class="val license@(Model.License.Active ? "A" : "I")">@(Model.License.Active ? "Attiva" : "Inattiva")</label>
+    <br />
+    <label class="title">Permesso:</label>
+    <label class="val license@(Model.License.Banned ? "B" : "A")">@(Model.License.Banned ? "Bloccato" : "Consetito")</label>
     <br />
     <label class="title">Data Attivazione:</label>
     <label class="val">@(Model.License.ActivateDateTime == null ? "--" : ((DateTime)(Model.License.ActivateDateTime)).ToString("dd/MM/yyyy HH:mm"))</label>
@@ -42,7 +45,11 @@
         <h4>Request Code (HID)</h4>
         <label class="title">Code:</label>
         <label class="val" style="font-family: OpenSansBold; font-size: 16px;">@(Model.License.Hid == null ? "--" : Model.License.Hid.Value)</label>
-        <a asp-if="Model.License.Hid == null" class="btn" asp-controller="License" asp-action="GenerateConfirmCode" asp-route-id="@Model.License.Id" style="height: 30px;">Aggiungi</a>
+        <a asp-if="Model.License.Hid == null" class="btn" asp-controller="License" asp-action="AddRequestCode" asp-route-id="@Model.License.Id" style="height: 30px;">Aggiungi</a>
+        <a asp-if="Model.License.Hid != null" class="btn" asp-controller="License" asp-action="EditRequestCode" asp-route-id="@Model.License.Id" style="height: 30px;">Modifica</a>
+        <br />
+        <label class="title">Rilasciato Da:</label>
+        <label class="val">@Model.License.Hid.AddedUser.Username</label>
         <br />
         <label class="title">Data di rilascio:</label>
         <label class="val">@((Model.License.Hid == null) ? "--" : Model.License.Hid.Timestamp.ToString("dd/MM/yyyy"))</label>
@@ -84,9 +91,3 @@
     <br />
     <a class="btn" asp-controller="License" asp-action="OfflineActivation" asp-route-id="@Model.License.Id">Attivazione Offline</a>
 </div>
-
-@section Scripts{ 
-    <script type="text/javascript">
-
-    </script>
-}

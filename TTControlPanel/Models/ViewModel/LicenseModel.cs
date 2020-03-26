@@ -62,13 +62,13 @@ namespace TTControlPanel.Models.ViewModel
         public int Error { get; set; }
     }
 
-    public class ConfirmCodeGetModel
+    public class RequestCodeGetModel
     {
         public License License { get; set; }
         public int Error { get; set; }
     }
 
-    public class ConfirmCodePostModel
+    public class RequestCodePostModel
     {
         [Required]
         public string HID { get; set; }

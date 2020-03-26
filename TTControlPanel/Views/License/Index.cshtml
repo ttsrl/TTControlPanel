@@ -16,6 +16,7 @@
         <td>ProductKey</td>
         <td>Data Rilascio</td>
         <td>Stato</td>
+        <td>Permesso</td>
         <td>Data Attivazione</td>
         <td>Azioni</td>
     </tr>
@@ -25,11 +26,12 @@
             <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
             <td style="text-align:center">@l.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</td>
             <td class="license@(l.Active ? "A" : "I")">@(l.Active ? "Attiva" : "Inattiva")</td>
+            <td class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "Bloccato" : "Consetito")</td>
             <td style="text-align:center">@(l.ActivateDateTime == null ? "-" : ((DateTime)l.ActivateDateTime).ToString("dd/MM/yyyy HH:mm"))</td>
             <td>
                 <span asp-if="@(!l.Banned)"><a asp-controller="License" asp-action="Ban" asp-route-id="@l.Id">Blocca</a></span>
-                <span asp-if="@(l.Banned)"><a asp-controller="License" asp-action="Restore" asp-route-id="@l.Id">Sblocca</a></span>
-                <span asp-if="@(!l.Banned && !l.Active)" ><a asp-controller="License" asp-action="Delete" asp-route-id="@l.Id">Rimuovi</a></span>
+                <span asp-if="@(l.Banned)"><a asp-controller="License" asp-action="Restore" asp-route-id="@l.Id">Consenti</a></span>
+                <span asp-if="@(!l.Banned && !l.Active)"><a asp-controller="License" asp-action="Delete" asp-route-id="@l.Id">Rimuovi</a></span>
             </td>
         </tr>
     }

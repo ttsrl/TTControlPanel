@@ -1,22 +1,22 @@
-﻿@model ConfirmCodeGetModel
+﻿@model RequestCodeGetModel
 @{
-    ViewData["Title"] = "Genera codice di conferma";
+    ViewData["Title"] = "Aggiungi Codice richiesta";
 }
 <div id="explorerLink">
     <a asp-controller="License" asp-action="Index">License</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="Details" asp-route-id="@Model.License.Id">@Model.License.ProductKey.Key</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;ConfirmCode
 </div>
-<h2>Genera ConfirmCode</h2>
+<h2>Aggiungi RequestCode</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
-    <label class="error_lbl" asp-if="Model.Error == 2">Errore, codice già associato a questa licenza.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, questo codice è già associato a questa licenza.</label>
 </div>
-<form asp-antiforgery="true" asp-route="@Model.License.Id" autocomplete="off">
+<form asp-antiforgery="true" asp-route-id="@Model.License.Id" autocomplete="off">
     <label>HID:</label>
     <input type="text" name="hid" style="width:400px;" />
     <br />
     <br />
     <br />
-    <input type="submit" value="Genera" />
+    <input type="submit" value="Conferma" />
 </form>
 
