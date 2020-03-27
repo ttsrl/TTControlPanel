@@ -421,7 +421,11 @@ form label {
     }
 
 .licenseI {
-    color: #cc0000;
+    color: #e97a04;
+}
+
+.licenseS {
+    color: #d50a0a;
 }
 
 .licenseA {

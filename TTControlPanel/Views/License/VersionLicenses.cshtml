@@ -14,18 +14,24 @@
 <table class="table">
     <tr style="font-weight:bold;">
         <td>ProductKey</td>
+        <td>Tipo</td>
         <td>Data Rilascio</td>
         <td>Stato</td>
         <td>Data Attivazione</td>
+        <td>Permesso</td>
         <td>Azioni</td>
     </tr>
     @foreach (var l in Model.Licenses)
     {
+        var pk = new TTLL.Models.ProductKey(l.ProductKey.Key);
+        var exp = (pk.HoursDuration == 0) ? false : ((!l.Active) ? false : ((((DateTime)(l.ActivateDateTime)).AddHours(pk.HoursDuration) > DateTime.Now) ? true : false));
         <tr class="@(l.Banned ? "ban" : "")">
             <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
+            <td style="text-align:center">@l.ProductKey.Type.ToString()</td>
             <td style="text-align:center">@l.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</td>
-            <td class="license@(l.Active ? "A" : "I")">@(l.Active ? "Attiva" : "Inattiva")</td>
+            <td class="license@((!l.Active) ? "I" : (exp ? "S" : "A"))">@((!l.Active) ? "Pronta" : (exp ? "Scaduta" : "Attiva"))</td>
             <td style="text-align:center">@(l.ActivateDateTime == null ? "-" : ((DateTime)l.ActivateDateTime).ToString("dd/MM/yyyy HH:mm"))</td>
+            <td class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "Bloccato" : "Consetito")</td>
             <td>
                 <span asp-if="@(!l.Banned)"><a asp-controller="License" asp-action="Ban" asp-route-id="@l.Id" asp-route-mod="1">Blocca</a></span>
                 <span asp-if="@(l.Banned)"><a asp-controller="License" asp-action="Restore" asp-route-id="@l.Id" asp-route-mod="1">Sblocca</a></span>
