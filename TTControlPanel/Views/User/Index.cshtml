@@ -1,0 +1,36 @@
+﻿@model IndexUserModel
+@{
+    ViewData["Title"] = "Utenti";
+}
+<div id="explorerLink">
+    Utenti
+</div>
+<h1>Utenti</h1>
+<br />
+<table class="table">
+    <tr style="font-weight:bold;">
+        <td>Username</td>
+        <td>Nome</td>
+        <td>Cognome</td>
+        <td>Email</td>
+        <td>Azioni</td>
+    </tr>
+    @foreach (var u in Model.Users)
+    {
+        <tr>
+            <td style="text-align:center"><a asp-controller="User" asp-action="Details" asp-route-id="@u.Id">@u.Username</a></td>
+            <td>@u.Name</td>
+            <td>@u.Surname</td>
+            <td>@u.Email</td>
+            <td>
+                <span asp-if="u.Visible"><a asp-controller="User" asp-action="Ban" asp-route-id="@u.Id">Blocca</a></span>
+                <span asp-if="(!u.Visible)"><a asp-controller="User" asp-action="Restore" asp-route-id="@u.Id">Consenti</a></span>
+                <span><a asp-controller="User" asp-action="Edit" asp-route-id="@u.Id">Modifica</a></span>
+                <span><a asp-controller="User" asp-action="Delete" asp-route-id="@u.Id">Elimina</a></span>
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    <a asp-controller="User" asp-action="New"><input type="button" value="Nuovo" /></a>
+</div>

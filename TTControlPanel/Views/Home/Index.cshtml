@@ -1,8 +1,27 @@
-﻿@{
+﻿@model HomeGetModel
+@{
     ViewData["Title"] = "Home";
-}
 
+    var groupCommit = Model.Commits.GroupBy(c => new { c.Date.DateTime.Year, c.Date.DateTime.Month, c.Date.DateTime.Day }).ToList();
+}
+<div id="explorerLink">
+    Home
+</div>
+<h1>Home</h1>
+<br />
 <div>
-    <h1>Home</h1>
-    
+    @*@foreach (var g in groupCommit)
+    {
+        <div>
+            <label>@g.Key.Day/@g.Key.Month/@g.Key.Year</label>
+            @foreach (var c in g)
+            {
+                <div>
+                    <label>@c.AuthorName (@c.AuthorUsername)</label>
+                    <label>@c.Files files cambiati con @c.Additions aggiunte e @c.Deletions rimozioni</label>
+                    <label>@c.Message</label>
+                </div>
+            }
+        </div>
+    }*@
 </div>

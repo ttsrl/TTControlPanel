@@ -1,0 +1,34 @@
+﻿@model NewUserGetModel
+@{
+    ViewData["Title"] = "Nuovo Utente";
+}
+<div id="explorerLink">
+    <a asp-controller="User" asp-action="Index">Utenti</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuovo
+</div>
+<h2>Nuovo Utente</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di inserimento, controllare di aver inserito tutti i dati richiesti in modo corretto.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, questo utente risulta già inserito.</label>
+    <label class="error_lbl" asp-if="Model.Error == 3">Errore, le due password non coincidono.</label>
+</div>
+<form asp-antiforgery="true" asp-controller="User" asp-action="New" autocomplete="off" style="width:350px;">
+    <label style="margin-top:15px;">Nome:</label>
+    <input type="text" name="name" />
+    <br />
+    <label style="margin-top:15px;">Cognome:</label>
+    <input type="text" name="surname" />
+    <br />
+    <label style="margin-top:15px;">Email:</label>
+    <input type="email" name="email" />
+    <br />
+    <label style="margin-top:15px;">Password:</label>
+    <input type="text" name="password" />
+    <br />
+    <label style="margin-top:15px;">Conferma Password:</label>
+    <input type="text" name="confPassword" />
+    <br />
+    <br />
+    <br />
+    <input type="submit" value="Aggiungi" />
+</form>

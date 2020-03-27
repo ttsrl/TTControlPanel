@@ -72,10 +72,11 @@ namespace TTControlPanel.Services
                 new User
                 {
                     Role = roles[0],
+                    Name = "Francesco",
+                    Surname = "Fioravanti",
                     Password = await crypt.Argon2HashAsync("francesco1995"),
                     Username = "Administrator",
                     Email = "francesco.f@ttautomazioni.it",
-                    PhoneNumber = "3387463020",
                     Visible = true
                 }
             };

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Models
 {
@@ -7,21 +8,22 @@ namespace TTControlPanel.Models
     {
         private string _username = "";
         private DateTime? _registrationDate;
+        private string email = "";
+        private string name = "";
+        private string surname = "";
 
         public int Id { get; set; }
-        public string Barcode { get; set; }
-        //[ForeignKey("UserDataId")] 
-        //public UserData UserData { get; set; }
-        public bool? Visible { get; set; }
+        public bool Visible { get; set; }
         public string Username
         {
             get => _username;
             set => _username = value.ToLower().Replace(" ", "").Replace("'", "");
         }
+        public string Name { get => name; set => name = value.ToTitleCase(); }
+        public string Surname { get => surname; set => surname = value.ToTitleCase(); }
         public string Password { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        [ForeignKey("RoleId")] 
+        public string Email { get => email; set => email = value.ToLower(); }
+        [ForeignKey("RoleId")]
         public Role Role { get; set; }
         public DateTime RegistrationDate
         {

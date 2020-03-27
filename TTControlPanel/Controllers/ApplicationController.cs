@@ -14,13 +14,11 @@ namespace TTControlPanel.Controllers
     public class ApplicationController : Controller
     {
 
-        private readonly Cryptography _c;
         private readonly DBContext _db;
 
-        public ApplicationController(DBContext db, Cryptography c)
+        public ApplicationController(DBContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
-            _c = c ?? throw new ArgumentNullException(nameof(c));
         }
 
         [HttpGet]

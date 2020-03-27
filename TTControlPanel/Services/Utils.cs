@@ -215,5 +215,10 @@ namespace TTControlPanel.Services
             var cV = await _dB.Clients.Select(c => c.VAT).ToListAsync();
             return !cV.Contains(vat);
         }
+
+        public string GetUsername(string name, string surname)
+        {
+            return name.ToLower().Replace("'", "").Replace(" ", "") + surname.ToLower().Replace("'", "").Replace(" ", "");
+        }
     }
 }
