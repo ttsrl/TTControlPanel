@@ -505,3 +505,10 @@ form label {
                     font-size: 12px;
                     color: #484848;
                 }
+
+                #git .commitsGroup .commit .details .hour {
+                    margin: 0;
+                    float: right;
+                    font-size: 12px;
+                    color: #888d93;
+                }

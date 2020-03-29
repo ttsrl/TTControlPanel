@@ -30,9 +30,15 @@ namespace TTControlPanel.Filters
 
             if (aa != null && naa == null)
             {
-                if (user == null || !user.Role["GrantLogin"])
+                if (user == null)
                 {
-                    NotFound(context);
+                    context.Result = new RedirectToActionResult("Index", "Login", null);
+                    return;
+                }
+
+                if (!user.Role["GrantLogin"])
+                {
+                    context.Result = new RedirectToActionResult("Index", "Logout", null);
                     return;
                 }
 

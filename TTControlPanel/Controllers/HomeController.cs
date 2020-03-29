@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TTControlPanel.Filters;
 using TTControlPanel.Models;
 using TTControlPanel.Models.ViewModel;
 using TTControlPanel.Services;
@@ -21,16 +22,20 @@ namespace TTControlPanel.Controllers
             _git = git ?? throw new ArgumentNullException(nameof(git));
         }
 
+        [HttpGet]
+        [Authentication]
         public async Task<IActionResult> Index()
         {
-            var user = (User)HttpContext.Items["User"];
-            if (user is User)
-            {
-                return View(new HomeGetModel() { Commits = await _git.GetCommits() });
-            }
-            return RedirectToAction("Index", "Login");
+            //var user = (User)HttpContext.Items["User"];
+            //if (user is User)
+            //{
+            //    return View(new HomeGetModel() { Commits = await _git.GetCommits() });
+            //}
+            //return RedirectToAction("Index", "Login");
+            return View(new HomeGetModel() { Commits = await _git.GetCommits() });
         }
 
+        [HttpGet]
         public IActionResult Privacy()
         {
             return View();
