@@ -24,7 +24,8 @@
     @foreach (var l in Model.Licenses)
     {
         var pk = new TTLL.Models.ProductKey(l.ProductKey.Key);
-        var exp = (pk.HoursDuration == 0) ? false : ((!l.Active) ? false : ((((DateTime)(l.ActivateDateTime)).AddHours(pk.HoursDuration) > DateTime.Now) ? true : false));
+        var sum = ((DateTime)(l.ActivateDateTime)).AddHours(pk.HoursDuration);
+        var exp = (pk.HoursDuration == 0) ? false : ((!l.Active) ? false : ((DateTime.Now > sum) ? true : false));
         <tr class="@(l.Banned ? "ban" : "")">
             <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
             <td style="text-align:center">@l.ProductKey.Type.ToString()</td>

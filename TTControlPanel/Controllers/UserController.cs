@@ -15,11 +15,13 @@ namespace TTControlPanel.Controllers
     {
         private readonly DBContext _db;
         private readonly Cryptography _c;
+        private readonly Utils _utils;
 
-        public UserController(DBContext db, Cryptography c)
+        public UserController(DBContext db, Cryptography c, Utils u)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
             _c = c ?? throw new ArgumentNullException(nameof(c));
+            _utils = u ?? throw new ArgumentNullException(nameof(u));
         }
 
         [HttpGet]
@@ -40,11 +42,11 @@ namespace TTControlPanel.Controllers
         [HttpPost]
         [Authentication]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> New([FromServices] Utils utils, NewUserPostModel model)
+        public async Task<IActionResult> New(NewUserPostModel model)
         {
             if (ModelState.IsValid)
             {
-                var username = utils.GetUsername(model.Name, model.Surname);
+                var username = _utils.GetUsername(model.Name, model.Surname);
                 var usr = await _db.Users.Where(u => u.Email == model.Email.ToLower() || u.Username == username).FirstOrDefaultAsync();
                 if(usr != null)
                     return View(new NewUserGetModel() { Error = 2 });
@@ -78,7 +80,41 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var usr = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
+            if (usr == null)
+                return RedirectToAction("Index");
+            return View(new EditUserGetModel { User = usr });
+        }
+
+        [HttpPost]
+        [Authentication]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, EditUserPostModel model)
+        {
+            var usr = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
+            if (usr == null)
+                return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var username = _utils.GetUsername(model.Name, model.Surname);
+                var cusr = await _db.Users.Where(u => u.Email == model.Email.ToLower() || u.Username == username).FirstOrDefaultAsync();
+                if (cusr != null)
+                    return View(new EditUserGetModel() { User = usr, Error = 2 });
+                if(!string.IsNullOrEmpty(model.Password) && !string.IsNullOrEmpty(model.ConfPassword))
+                {
+                    if (model.Password != model.ConfPassword)
+                        return View(new EditUserGetModel() { User = usr, Error = 3 });
+                    else
+                        usr.Password = await _c.Argon2HashAsync(model.Password);
+                }
+                usr.Username = username;
+                usr.Name = model.Name;
+                usr.Surname = model.Surname;
+                usr.Email = model.Email;
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(new EditUserGetModel { User = usr, Error = 1 });
         }
 
         [HttpGet]

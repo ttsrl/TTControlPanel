@@ -43,9 +43,10 @@ namespace TTControlPanel
             });
             services.AddDbContext<DBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddSingleton<Services.Utils>();
+            services.AddSingleton<Utils>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<Cryptography>();
+            services.AddSingleton<GitHub>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

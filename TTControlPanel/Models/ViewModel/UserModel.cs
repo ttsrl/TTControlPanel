@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TTControlPanel.Models.ViewModel
 {
@@ -28,6 +25,25 @@ namespace TTControlPanel.Models.ViewModel
         [Required]
         public string Password { get; set; }
         [Required]
+        public string ConfPassword { get; set; }
+    }
+
+    public class EditUserGetModel
+    {
+        public User User { get; set; }
+        public int Error { get; set; }
+    }
+
+    public class EditUserPostModel
+    {
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Surname { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        public string Password { get; set; }
         public string ConfPassword { get; set; }
     }
 }
