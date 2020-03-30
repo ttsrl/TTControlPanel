@@ -10,6 +10,7 @@ namespace TTControlPanel.Controllers.Api
 {
     [Produces("application/json")]
     [Route("api/GetLicense")]
+    [ApiController]
     public class GetLicenseController : ControllerBase
     {
         private readonly DBContext _dB;

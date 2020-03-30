@@ -10,6 +10,7 @@ using static TTLL.License;
 namespace TTControlPanel.Controllers.Api
 {
     [Route("api/ActiveLicense")]
+    [ApiController]
     public class ActiveLicenseController : ControllerBase
     {
 
