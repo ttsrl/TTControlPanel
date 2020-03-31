@@ -51,7 +51,7 @@ namespace TTControlPanel.Services
             str.Append(RandomLetterUpper());
             str.Append(VersionToInt(appV.GetVersion()).ToString("000000"));
             str.Append(RandomLetterUpper());
-            str.Append(DateTime.Now.ToString("yMMdd"));
+            str.Append(DateTimeCE.Now.ToString("yMMdd"));
             str.Append(RandomLetterUpper());
             var r = RandomNumber(1, 99);
             foreach(var c in TTLL.Models.ProductKey.CryptoWord)
@@ -77,7 +77,7 @@ namespace TTControlPanel.Services
             str.Append(RandomLetterUpper());
             str.Append(VersionToInt(appV.GetVersion()).ToString("000000"));
             str.Append(RandomLetterUpper());
-            str.Append(DateTime.Now.ToString("yMMdd"));
+            str.Append(DateTimeCE.Now.ToString("yMMdd"));
             str.Append(RandomLetterUpper());
             var bits = Convert.ToInt32(endTime.TotalHours).ToBoolArray();
             Array.Reverse(bits);
@@ -111,7 +111,7 @@ namespace TTControlPanel.Services
             str.Append(RandomLetterUpper());
             str.Append(VersionToInt(appV.GetVersion()).ToString("000000"));
             str.Append(RandomLetterUpper());
-            str.Append(DateTime.Now.ToString("yMMdd"));
+            str.Append(DateTimeCE.Now.ToString("yMMdd"));
             str.Append(RandomLetterUpper());
             var bits = Convert.ToInt32(endTime.TotalHours).ToBoolArray();
             Array.Reverse(bits);

@@ -27,6 +27,7 @@ namespace TTControlPanel.Controllers.Api
             {
                 if(string.IsNullOrEmpty(productKey) || string.IsNullOrEmpty(hid))
                     return NotFound(new { });
+                hid = hid.Replace("_", "-");
                 var pk = await _dB.Licenses
                 .Include(l => l.ApplicationVersion)
                     .ThenInclude(l => l.Application)

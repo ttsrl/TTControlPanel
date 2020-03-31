@@ -1,4 +1,5 @@
 ﻿using System;
+using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Models
 {
@@ -13,7 +14,7 @@ namespace TTControlPanel.Models
 
         public DateTime Timestamp
         {
-            get => timestamp ?? DateTime.Now;
+            get => timestamp ?? DateTimeCE.Now;
             set => timestamp = value;
         }
     }

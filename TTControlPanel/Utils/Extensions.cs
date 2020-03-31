@@ -8,8 +8,37 @@ using Microsoft.AspNetCore.Http;
 
 namespace TTControlPanel.Utilities
 {
+
+    public struct DateTimeCE
+    {
+        private DateTime dateT;
+
+        public DateTimeCE(DateTime dateTime)
+        {
+            this.dateT = dateTime;
+        }
+
+        public static DateTime Now 
+        { 
+            get 
+            {
+                return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+            } 
+        }
+
+        public DateTime Get()
+        {
+            return TimeZoneInfo.ConvertTime(dateT, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+        }
+    }
+
     public static class Extensions
     {
+        public static DateTime ToDateTimeCE(this DateTime date)
+        {
+            var dtce = new DateTimeCE(date);
+            return dtce.Get();
+        }
 
         public static string ReplaceBINDigits(this string key)
         {

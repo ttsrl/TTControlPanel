@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Models
 {
@@ -18,7 +17,7 @@ namespace TTControlPanel.Models
         public List<Application> Applications { get; set; }
         public DateTime Timestamp 
         {
-            get => timestamp ?? DateTime.Now;
+            get => timestamp ?? DateTimeCE.Now;
             set => timestamp = value;
         }
     }

@@ -28,7 +28,7 @@
         if (l.Active)
         {
             var sum = ((DateTime)(l.ActivateDateTime)).AddHours(pk.HoursDuration);
-            exp = (pk.HoursDuration == 0) ? false : ((DateTime.Now > sum) ? true : false);
+            exp = (pk.HoursDuration == 0) ? false : ((DateTimeCE.Now > sum) ? true : false);
         }
         <tr class="@(l.Banned ? "ban" : "")">
             <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>

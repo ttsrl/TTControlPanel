@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TTControlPanel.Models.ViewModel;
+using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Services
 {
@@ -24,7 +25,7 @@ namespace TTControlPanel.Services
 
         public async Task<List<GitCommit>> GetCommits(int count = 10)
         {
-            if (DateTime.Now < lastUpdate.Add(IntervalTime))
+            if (DateTimeCE.Now < lastUpdate.Add(IntervalTime))
                 return this.commits;
 
             var commits = await client.Repository.Commit.GetAll("ttsrl", "TTControlPanel", new ApiOptions() { PageCount = 1, PageSize = count });
@@ -51,7 +52,7 @@ namespace TTControlPanel.Services
                 };
                 list.Add(obj);
             }
-            this.lastUpdate = DateTime.Now;
+            this.lastUpdate = DateTimeCE.Now;
             this.commits = list;
             return list;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Models
 {
@@ -13,7 +14,7 @@ namespace TTControlPanel.Models
         public User GenerateUser { get; set; }
         public DateTime GenerateDateTime
         {
-            get => generateDate ?? DateTime.Now;
+            get => generateDate ?? DateTimeCE.Now;
             set => generateDate = value;
         }
         public PKType Type { get; set; }

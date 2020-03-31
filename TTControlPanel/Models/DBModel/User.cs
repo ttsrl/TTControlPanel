@@ -27,7 +27,7 @@ namespace TTControlPanel.Models
         public Role Role { get; set; }
         public DateTime RegistrationDate
         {
-            get => _registrationDate ?? DateTime.Now;
+            get => _registrationDate ?? DateTimeCE.Now;
             set => _registrationDate = value;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Models
 {
@@ -20,7 +21,7 @@ namespace TTControlPanel.Models
         public string Notes { get; set; }
         public DateTime ReleaseDate
         {
-            get => releaseDate ?? DateTime.Now;
+            get => releaseDate ?? DateTimeCE.Now;
             set => releaseDate = value;
         }
     }

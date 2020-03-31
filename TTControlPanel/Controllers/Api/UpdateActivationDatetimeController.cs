@@ -25,7 +25,7 @@ namespace TTControlPanel.Controllers.Api
             try
             {
                 var dt = date.FromUnixTime();
-                var localDt = dt.ToLocalTime();
+                var localDt = dt.ToDateTimeCE(); //dt.ToLocalTime();
                 var lic = await _dB.Licenses
                     .Include(l => l.ProductKey)
                     .Where(l => l.ProductKey.Key == productKey && l.Active)

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using static TTControlPanel.Models.ProductKey;
 using TTControlPanel.Filters;
 using static TTLL.License;
+using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Controllers
 {
@@ -93,7 +94,7 @@ namespace TTControlPanel.Controllers
                 if(type != PKType.Normal)
                     time = new TimeSpan(model.Days, 0, 0, 0);
                 var productkey = await _utils.GenerateProdutKey(type, appv, client, time);
-                var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey, Type = type };
+                var p = new ProductKey { GenerateDateTime = DateTimeCE.Now, GenerateUser = uLog, Key = productkey, Type = type };
                 var l = new License
                 {
                     Active = false,
@@ -151,7 +152,7 @@ namespace TTControlPanel.Controllers
                 if (type != PKType.Normal)
                     time = new TimeSpan(model.Days, 0, 0, 0);
                 var productkey = await _utils.GenerateProdutKey(type, av, client, time);
-                var p = new ProductKey { GenerateDateTime = DateTime.Now, GenerateUser = uLog, Key = productkey, Type = type };
+                var p = new ProductKey { GenerateDateTime = DateTimeCE.Now, GenerateUser = uLog, Key = productkey, Type = type };
                 var l = new License
                 {
                     Active = false,
@@ -359,7 +360,7 @@ namespace TTControlPanel.Controllers
             if (string.IsNullOrEmpty(l.ConfirmCode))
                 return View("Details", new DetailsLicenseModel { License = l, Error = 3 });
             l.Active = true;
-            l.ActivateDateTime = DateTime.Now;
+            l.ActivateDateTime = DateTimeCE.Now;
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TTControlPanel.Models;
 using TTControlPanel.Services;
+using TTControlPanel.Utilities;
 using static TTLL.License;
 
 namespace TTControlPanel.Controllers.Api
@@ -22,23 +23,27 @@ namespace TTControlPanel.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] Utils utils, string productKey, string appCode, string appVersion, string hid)
+        public async Task<IActionResult> Get([FromServices] Utils utils, string productKey, string appCode, int appVersion, string hid)
         {
             try
             {
-                if(string.IsNullOrEmpty(productKey) || string.IsNullOrEmpty(appCode) || string.IsNullOrEmpty(appVersion) || string.IsNullOrEmpty(hid))
+                if(string.IsNullOrEmpty(productKey) || string.IsNullOrEmpty(appCode) || appVersion == 0 || string.IsNullOrEmpty(hid))
                     return NotFound();
-
+                var version = IntToVersion(appVersion);
+                if(version == null)
+                    return NotFound();
+                string vstr = version.Major.ToString() + "." + version.Minor.ToString();
                 var l = await _dB.Licenses
                     .Include(p => p.ProductKey)
                     .Include(p => p.Hid)
                     .Include(p => p.Client)
                     .Include(p => p.ApplicationVersion)
                         .ThenInclude(v => v.Application)
-                .Where(ll => ll.ProductKey.Key == productKey && !ll.Active && !ll.Banned && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == appVersion)
+                .Where(ll => ll.ProductKey.Key == productKey && !ll.Active && !ll.Banned && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == vstr)
                 .FirstOrDefaultAsync();
                 if (l == null)
                     return NotFound();
+                hid = hid.Replace("_", "-");
                 var cnfc = GetConfirmCode(l.ProductKey.Key, hid);
                 var h = new HID
                 {
@@ -47,7 +52,7 @@ namespace TTControlPanel.Controllers.Api
                 l.Hid = h;
                 l.ConfirmCode = cnfc;
                 l.Active = true;
-                l.ActivateDateTime = DateTime.Now;
+                l.ActivateDateTime = DateTimeCE.Now;
                 await _dB.SaveChangesAsync();
                 return Ok();
             }
