@@ -47,7 +47,7 @@
 
   <ItemGroup>
     <Reference Include="ttll">
-      <HintPath>..\..\..\LIBRERIE\ttll\ttll\bin\Release\ttll.dll</HintPath>
+      <HintPath>D:\Desktop\ttll\ttll\bin\Release\ttll.dll</HintPath>
     </Reference>
   </ItemGroup>
 
