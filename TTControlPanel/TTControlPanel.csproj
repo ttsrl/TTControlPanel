@@ -48,6 +48,8 @@
   <ItemGroup>
     <Reference Include="ttll">
       <HintPath>..\..\..\LIBRERIE\ttll\ttll\bin\Release\ttll.dll</HintPath>
+      <Private>true</Private>
+      <SpecificVersion>true</SpecificVersion>
     </Reference>
   </ItemGroup>
 
