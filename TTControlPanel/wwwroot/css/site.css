@@ -19,10 +19,6 @@
     src: url('../fonts/overpass-bold.otf');
 }
 
-html {
-    height: 100%;
-}
-
 html, body {
     padding: 0;
     margin: 0;
@@ -238,9 +234,9 @@ select {
 /* ---------------------------------- page ---------------------------------------*/
 
 main {
-    overflow: auto;
     width: 100%;
     height: auto;
+    display: inline-block;
 }
 
     main .page {
@@ -248,6 +244,7 @@ main {
         height: auto;
         margin: 0px auto;
         margin-bottom: 60px;
+        padding:0px 20px;
     }
 
         main .page .menu {
@@ -300,7 +297,7 @@ main {
     }
 
         #loginBox .loginField:hover {
-            border-color: #828689;
+            border-color: #007bff;
         }
 
     #loginBox input[type="text"], #loginBox input[type="password"] {
@@ -313,7 +310,7 @@ main {
     }
 
     #loginBox .loginField.focus {
-        border-color: #0b9dcc;
+        border-color: #007bff;
     }
 
     #loginBox .loginField .icon {
@@ -481,7 +478,7 @@ form label {
                 border: 1px solid rgba(0,0,0,0.1);
                 border-radius: 5px;
                 background-color: #F9F9F9;
-                width: 900px;
+                width: 880px;
                 display: inline-block;
             }
 

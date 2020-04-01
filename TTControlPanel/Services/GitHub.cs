@@ -14,7 +14,7 @@ namespace TTControlPanel.Services
         private List<GitCommit> commits;
         private DateTime lastUpdate;
 
-        public TimeSpan IntervalTime = new TimeSpan(0, 10, 0);
+        public TimeSpan IntervalTime = new TimeSpan(0, 20, 0);
 
         public GitHub()
         {
