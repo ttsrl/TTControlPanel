@@ -21,11 +21,19 @@
     </tr>
     @foreach (var c in Model.Clients)
     {
+        var apps = new List<string>();
+        foreach(var av in Model.AppsClient)
+        {
+            if (av.Value.Contains(c))
+            {
+                apps.Add(av.Key);
+            }
+        }
         <tr>
             <td><b>@c.Code</b></td>
             <td><b><a asp-controller="Client" asp-action="Details" asp-route-id="@c.Id">@c.Name</a></b></td>
             <td>@c.VAT</td>
-            <td>@string.Join(", ", c.Applications.Select(v => (v.Name)).ToArray())</td>
+            <td>@string.Join(", ", apps.ToArray())</td>
             <td>
                 <span><a asp-controller="Client" asp-action="Edit" asp-route-id="@c.Id">Modifica</a></span>
                 <span><a asp-controller="Client" asp-action="Delete" asp-route-id="@c.Id">Elimina</a></span>

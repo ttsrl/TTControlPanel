@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +23,13 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Index()
         {
-            var clients = await _db.Clients.Include(c => c.Applications).ToListAsync();
-            return View(new IndexClientModel { Clients = clients });
+            var clients = await _db.Clients.ToListAsync();
+            var apps = await _db.ApplicationsVersions
+                .Include(a => a.Licences)
+                    .ThenInclude(l => l.Client)
+                .Select(a => new { a.Application.Name, a.Licences })
+                .ToDictionaryAsync(a => a.Name, a => a.Licences.Select(l => l.Client).ToList());
+            return View(new IndexClientModel { Clients = clients, AppsClient = apps });
         }
 
         [HttpGet]
@@ -79,10 +85,16 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Details(int id)
         {
-            var client = await _db.Clients.Include(c => c.Applications).Include(c => c.Address).Where(c => c.Id == id).FirstOrDefaultAsync();
+            var client = await _db.Clients.Include(c => c.Address).Where(c => c.Id == id).FirstOrDefaultAsync();
             if (client == null)
                 return RedirectToAction("Index");
-            return View(new ClientDetailsGetMode { Client = client });
+            var apps = await _db.ApplicationsVersions
+                .Include(a => a.Licences)
+                    .ThenInclude(l => l.Client)
+                .Include(a => a.Application)
+                .Where(a => a.Licences.Select(l => l.Client).Contains(client))
+                .ToListAsync();
+            return View(new ClientDetailsGetMode { Client = client, Applications = apps });
         }
 
         [HttpGet]
@@ -129,11 +141,16 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Delete(int id)
         {
-            var clients = await _db.Clients.Include(cc => cc.Applications).ToListAsync();
-            var c = await _db.Clients.Include(cc => cc.Applications).Where(cc => cc.Id == id).FirstOrDefaultAsync();
+            var clients = await _db.Clients.ToListAsync();
+            var c = await _db.Clients.Where(cc => cc.Id == id).FirstOrDefaultAsync();
+            var apps = await _db.ApplicationsVersions
+                .Include(a => a.Licences)
+                    .ThenInclude(l => l.Client)
+                .Where(a => a.Licences.Select(l => l.Client).ToList().Contains(c))
+                .ToListAsync();
             if (c == null)
                 return View("Index", new IndexClientModel { Clients = clients, Error = 1 });
-            if(c.Applications.Count > 0)
+            if(apps.Count > 0)
                 return View("Index", new IndexClientModel { Clients = clients, Error = 2 });
             _db.Addresses.Remove(c.Address);
             _db.Clients.Remove(c);

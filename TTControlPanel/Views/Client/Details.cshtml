@@ -43,11 +43,11 @@
     </div>
     <div>
         <h4>Applicazioni</h4>
-        @foreach (var a in Model.Client.Applications)
+        @foreach (var a in Model.Applications)
         {
-            <label>@a.Name</label>
+            <label>@a.Application.Name</label>
             <br />
         }
-        <span asp-if="Model.Client.Applications.Count == 0">Nessuna applicazione associata a questo cliente</span>
+        <span asp-if="Model.Applications.Count == 0">Nessuna applicazione associata a questo cliente</span>
     </div>
 </div>

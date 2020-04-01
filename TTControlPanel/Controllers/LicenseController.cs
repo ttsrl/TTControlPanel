@@ -33,6 +33,7 @@ namespace TTControlPanel.Controllers
                     .ThenInclude(v => v.Application)
                 .Include(l => l.Client)
                 .Include(l => l.ProductKey)
+                .OrderByDescending(l => l.Id)
                 .ToListAsync();
             var m = new IndexLicenseModel { Licenses = licenses };
             return View(m);
@@ -80,7 +81,7 @@ namespace TTControlPanel.Controllers
             {
                 var app = await _db.Applications.Where(a => a.Id == model.Application).FirstOrDefaultAsync();
                 var appv = await _db.ApplicationsVersions.Include(v => v.Application).Where(v => v.Id == model.Version).FirstOrDefaultAsync();
-                var client = await _db.Clients.Include(c => c.Applications).Where(c => c.Id == model.Client).FirstOrDefaultAsync();
+                var client = await _db.Clients.Where(c => c.Id == model.Client).FirstOrDefaultAsync();
                 if (app == null || appv == null || client == null)
                     return View(new NewLicenseGetModel { Applications = apps, Clients = clients, Error = 2 });
                 if (appv.Application != app)
@@ -104,8 +105,6 @@ namespace TTControlPanel.Controllers
                     ProductKey = p,
                     Notes = model.Notes
                 };
-                if (!client.Applications.Contains(app))
-                    client.Applications.Add(app);
                 await _db.ProductKeys.AddAsync(p);
                 await _db.Licenses.AddAsync(l);
                 await _db.SaveChangesAsync();
@@ -140,7 +139,7 @@ namespace TTControlPanel.Controllers
                 return RedirectToAction("Index");
             if (ModelState.IsValid)
             {
-                var client = await _db.Clients.Include(c => c.Applications).Where(c => c.Id == model.Client).FirstOrDefaultAsync();
+                var client = await _db.Clients.Where(c => c.Id == model.Client).FirstOrDefaultAsync();
                 if(client == null)
                     return View(new PrecompiledNewLicenseGetModel { Clients = clients, ApplicationVersion = av, Error = 2 });
                 if (model.Type < 0 || model.Type > 2)
@@ -162,8 +161,6 @@ namespace TTControlPanel.Controllers
                     ProductKey = p,
                     Notes = model.Notes
                 };
-                if (!client.Applications.Contains(av.Application))
-                    client.Applications.Add(av.Application);
                 await _db.ProductKeys.AddAsync(p);
                 await _db.Licenses.AddAsync(l);
                 await _db.SaveChangesAsync();
@@ -208,14 +205,6 @@ namespace TTControlPanel.Controllers
 
             if (l.Hid != null)
                 _db.Hids.Remove(l.Hid);
-
-            var llc = await _db.Licenses.Include(ll => ll.Client).Where(ll => ll.Client.Id == l.Client.Id).ToListAsync();
-            if(llc.Count == 1)
-            {
-                var c = await _db.Clients.Include(cc => cc.Applications).Where(cc => cc.Id == l.Client.Id).FirstOrDefaultAsync();
-                if (c.Applications.Contains(l.ApplicationVersion.Application))
-                    c.Applications.Remove(l.ApplicationVersion.Application);
-            }
 
             _db.Licenses.Remove(l);
             await _db.SaveChangesAsync();

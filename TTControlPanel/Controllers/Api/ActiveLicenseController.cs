@@ -14,16 +14,16 @@ namespace TTControlPanel.Controllers.Api
     [ApiController]
     public class ActiveLicenseController : ControllerBase
     {
-
         private readonly DBContext _dB;
-
-        public ActiveLicenseController(DBContext dB)
+        private readonly Utils _utils;
+        public ActiveLicenseController(DBContext dB, Utils utils)
         {
             _dB = dB ?? throw new ArgumentNullException(nameof(dB));
+            _utils = utils ?? throw new ArgumentNullException(nameof(utils));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromServices] Utils utils, string productKey, string appCode, int appVersion, string hid)
+        public async Task<IActionResult> Get(string productKey, string appCode, int appVersion, string hid)
         {
             try
             {
@@ -39,10 +39,14 @@ namespace TTControlPanel.Controllers.Api
                     .Include(p => p.Client)
                     .Include(p => p.ApplicationVersion)
                         .ThenInclude(v => v.Application)
-                .Where(ll => ll.ProductKey.Key == productKey && !ll.Active && !ll.Banned && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == vstr)
+                .Where(ll => ll.ProductKey.Key == productKey && !ll.Banned && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == vstr)
                 .FirstOrDefaultAsync();
                 if (l == null)
-                    return NotFound();
+                    return Ok(ActivationResult.InvalidData);
+                if(l.Banned)
+                    return Ok(ActivationResult.Banned);
+                if (l.Active)
+                    return Ok(ActivationResult.AlreadyActive);
                 hid = hid.Replace("_", "-");
                 var cnfc = GetConfirmCode(l.ProductKey.Key, hid);
                 var h = new HID
@@ -54,7 +58,7 @@ namespace TTControlPanel.Controllers.Api
                 l.Active = true;
                 l.ActivateDateTime = DateTimeCE.Now;
                 await _dB.SaveChangesAsync();
-                return Ok();
+                return Ok(ActivationResult.Activated);
             }
             catch { return NotFound(); }
         }

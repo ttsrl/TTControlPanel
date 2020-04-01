@@ -9,6 +9,7 @@ namespace TTControlPanel.Models.ViewModel
     public class IndexClientModel
     {
         public List<Client> Clients { get; set; }
+        public Dictionary<string, List<Client>> AppsClient { get; set; }
         public int Error { get; set; }
     }
 
@@ -66,5 +67,6 @@ namespace TTControlPanel.Models.ViewModel
     public class ClientDetailsGetMode
     {
         public Client Client { get; set; }
+        public List<ApplicationVersion> Applications { get; set; }
     }
 }

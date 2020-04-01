@@ -14,7 +14,6 @@ namespace TTControlPanel.Models
         public string Name { get; set; }
         public Address Address { get; set; }
         public string VAT { get => vat; set { vat = value.ToUpper(); } }
-        public List<Application> Applications { get; set; }
         public DateTime Timestamp 
         {
             get => timestamp ?? DateTimeCE.Now;
