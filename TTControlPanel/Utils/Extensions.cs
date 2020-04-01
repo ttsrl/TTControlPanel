@@ -22,8 +22,9 @@ namespace TTControlPanel.Utilities
         { 
             get 
             {
-                return TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
-            } 
+                var dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
+                return TimeZoneInfo.ConvertTime(dt , TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+            }
         }
 
         public DateTime Get()
