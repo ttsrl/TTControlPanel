@@ -46,4 +46,12 @@ namespace TTControlPanel.Models.ViewModel
         public string Password { get; set; }
         public string ConfPassword { get; set; }
     }
+
+    public class DetailsUserGetModel
+    {
+        public User User { get; set; }
+        public List<ApplicationVersion> ApplicationVersions { get; set; }
+        public List<ProductKey> ProductKeys { get; set; }
+        public List<HID> Hids { get; set; }
+    }
 }

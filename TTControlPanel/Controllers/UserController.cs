@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +58,7 @@ namespace TTControlPanel.Controllers
                     Surname = model.Surname,
                     Email = model.Email,
                     Password = await _c.Argon2HashAsync(model.Password),
-                    Visible = true,
+                    Ban = false,
                     Role = await _db.Roles.Where(r => r.Id == 1).FirstOrDefaultAsync()
                 };
                 await _db.Users.AddAsync(newuser);
@@ -73,7 +72,22 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var user = await _db.Users.Include(u => u.Role).Where(u => u.Id == id).FirstOrDefaultAsync();
+            if (user == null)
+                return RedirectToAction("Index");
+            var apps = await _db.ApplicationsVersions
+                .Include(l =>l.AddedUser)
+                .Where(l => l.AddedUser == user)
+                .ToListAsync();
+            var prods = await _db.ProductKeys
+                .Include(p => p.GenerateUser)
+                .Where(l => l.GenerateUser == user)
+                .ToListAsync();
+            var hids = await _db.Hids
+                .Include(h => h.AddedUser)
+                .Where(h => h.AddedUser == user)
+                .ToListAsync();
+            return View(new DetailsUserGetModel { User = user, ApplicationVersions = apps, ProductKeys = prods, Hids = hids });
         }
 
         [HttpGet]
@@ -124,7 +138,7 @@ namespace TTControlPanel.Controllers
             var user = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
             if (user != null)
             {
-                user.Visible = false;
+                user.Ban = true;
                 await _db.SaveChangesAsync();
             }
             return RedirectToAction("Index");
@@ -137,23 +151,11 @@ namespace TTControlPanel.Controllers
             var user = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
             if (user != null)
             {
-                user.Visible = true;
+                user.Ban = false;
                 await _db.SaveChangesAsync();
             }
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        [Authentication]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var user = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
-            if (user != null)
-            {
-                _db.Users.Remove(user);
-                await _db.SaveChangesAsync();
-            }
-            return RedirectToAction("Index");
-        }
     }
 }

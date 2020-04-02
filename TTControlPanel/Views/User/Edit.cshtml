@@ -1,11 +1,11 @@
 ﻿@model EditUserGetModel
 @{
-    ViewData["Title"] = "Modifica " + Model.User.Username;
+    ViewData["Title"] = "Modifica Utente";
 }
 <div id="explorerLink">
     <a asp-controller="User" asp-action="Index">Utenti</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="User" asp-action="Details" asp-route-id="@Model.User.Id">@Model.User.Username</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Modifica
 </div>
-<h2>Modifica Utente</h2>
+<h2>@Model.User.Username - Modifica</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di modifica, controllare di aver inserito tutti i dati richiesti in modo corretto.</label>

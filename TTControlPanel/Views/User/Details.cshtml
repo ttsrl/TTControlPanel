@@ -1,7 +1,44 @@
-﻿
+﻿@model DetailsUserGetModel
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Dettagli Utente";
 }
-
-<h1>Details</h1>
-
+<div id="explorerLink">
+    <a asp-controller="User" asp-action="Index">Utenti</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.User.Username
+</div>
+<h2>@Model.User.Username - Dettagli</h2>
+<br />
+<div class="content">
+    <div style="margin: 15px 0px;">
+        <h4>Dati</h4>
+        <label class="title">Id:</label>
+        <label class="val">@Model.User.Id</label>
+        <br />
+        <label class="title">Nome:</label>
+        <label class="val">@Model.User.Name</label>
+        <br />
+        <label class="title">Cognome:</label>
+        <label class="val">@Model.User.Surname</label>
+        <br />
+        <label class="title">Username:</label>
+        <label class="val">@Model.User.Username</label>
+        <br />
+        <label class="title">Stato:</label>
+        <label class="val user@(Model.User.Ban ? "I" : "A")">@(Model.User.Ban ? "Bloccato" : "Attivo")</label>
+        <br />
+        <label class="title">Ruolo:</label>
+        <label class="val">@Model.User.Role.Name</label>
+        <br />
+    </div>
+    <div>
+        <h4>Elementi gestiti</h4>
+        <label class="title">Versioni App aggiunte:</label>
+        <label class="val">@(Model.ApplicationVersions.Count())</label>
+        <br />
+        <label class="title">Licenze generate:</label>
+        <label class="val">@(Model.ProductKeys.Count())</label>
+        <br />
+        <label class="title">RequestCode aggiunti:</label>
+        <label class="val">@(Model.Hids.Count())</label>
+        <br />
+    </div>
+</div>

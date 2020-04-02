@@ -17,16 +17,15 @@
     </tr>
     @foreach (var u in Model.Users)
     {
-        <tr>
+        <tr class="@(u.Ban ? "ban" : "")">
             <td style="text-align:center"><a asp-controller="User" asp-action="Details" asp-route-id="@u.Id">@u.Username</a></td>
             <td>@u.Name</td>
             <td>@u.Surname</td>
             <td>@u.Email</td>
             <td>
-                <span asp-if="u.Visible"><a asp-controller="User" asp-action="Ban" asp-route-id="@u.Id">Blocca</a></span>
-                <span asp-if="(!u.Visible)"><a asp-controller="User" asp-action="Restore" asp-route-id="@u.Id">Consenti</a></span>
+                <span asp-if="!u.Ban"><a asp-controller="User" asp-action="Ban" asp-route-id="@u.Id">Blocca</a></span>
+                <span asp-if="u.Ban"><a asp-controller="User" asp-action="Restore" asp-route-id="@u.Id">Consenti</a></span>
                 <span><a asp-controller="User" asp-action="Edit" asp-route-id="@u.Id">Modifica</a></span>
-                <span><a asp-controller="User" asp-action="Delete" asp-route-id="@u.Id">Elimina</a></span>
             </td>
         </tr>
     }

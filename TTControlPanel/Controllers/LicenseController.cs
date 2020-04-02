@@ -35,7 +35,8 @@ namespace TTControlPanel.Controllers
                 .Include(l => l.ProductKey)
                 .OrderByDescending(l => l.Id)
                 .ToListAsync();
-            var m = new IndexLicenseModel { Licenses = licenses };
+            var lls = await _db.LastLogs.Include(l => l.License).ToListAsync();
+            var m = new IndexLicenseModel { Licenses = licenses, LastLogs = lls };
             return View(m);
         }
 
@@ -52,7 +53,8 @@ namespace TTControlPanel.Controllers
                 .FirstOrDefaultAsync();
             if (version == null)
                 return RedirectToAction("Index");
-            var m = new VersionLicensesModel { ApplicationVersion = version, Licenses = version.Licences };
+            var lls = await _db.LastLogs.Include(l => l.License).ToListAsync();
+            var m = new VersionLicensesModel { ApplicationVersion = version, Licenses = version.Licences, LastLogs = lls };
             return View(m);
         }
 
@@ -173,7 +175,7 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Delete(int id, int mod)
         {
-            var l = await _db.Licenses
+            var lic = await _db.Licenses
                 .Include(ll => ll.ApplicationVersion)
                     .ThenInclude(av => av.Application)
                 .Include(ll => ll.ApplicationVersion)
@@ -187,31 +189,31 @@ namespace TTControlPanel.Controllers
                 .Include(ll => ll.Hid)
                 .Where(ll => ll.Id == id)
                 .FirstOrDefaultAsync();
-
-            if (l == null)
+            var lls = await _db.LastLogs.Include(l => l.License).ToListAsync();
+            if (lic == null)
             {
                 if (mod == 0)
-                    return View("Index", new IndexLicenseModel { Licenses = l.ApplicationVersion.Licences, Error = 1 });
+                    return View("Index", new IndexLicenseModel { Licenses = lic.ApplicationVersion.Licences, Error = 1, LastLogs = lls });
                 else
-                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = l.ApplicationVersion, Licenses = l.ApplicationVersion.Licences, Error = 1 });
+                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lic.ApplicationVersion.Licences, Error = 1, LastLogs = lls });
             }
-            if(l.Active == true)
+            if(lic.Active == true)
             {
                 if (mod == 0)
-                    return View("Index", new IndexLicenseModel { Licenses = l.ApplicationVersion.Licences, Error = 2 });
+                    return View("Index", new IndexLicenseModel { Licenses = lic.ApplicationVersion.Licences, Error = 2, LastLogs = lls });
                 else
-                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = l.ApplicationVersion, Licenses = l.ApplicationVersion.Licences, Error = 2 });
+                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lic.ApplicationVersion.Licences, Error = 2, LastLogs = lls });
             }
 
-            if (l.Hid != null)
-                _db.Hids.Remove(l.Hid);
+            if (lic.Hid != null)
+                _db.Hids.Remove(lic.Hid);
 
-            _db.Licenses.Remove(l);
+            _db.Licenses.Remove(lic);
             await _db.SaveChangesAsync();
             if (mod == 0)
-                return View("Index", new IndexLicenseModel { Licenses = l.ApplicationVersion.Licences });
+                return View("Index", new IndexLicenseModel { Licenses = lic.ApplicationVersion.Licences, LastLogs = lls });
             else
-                return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = l.ApplicationVersion, Licenses = l.ApplicationVersion.Licences });
+                return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lic.ApplicationVersion.Licences, LastLogs = lls });
         }
 
 

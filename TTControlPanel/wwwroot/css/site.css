@@ -418,7 +418,7 @@ form label {
         font-size: 16px;
     }
 
-.licenseI {
+.licenseI, userI {
     color: #e97a04;
 }
 
@@ -426,9 +426,35 @@ form label {
     color: #d50a0a;
 }
 
-.licenseA {
+.licenseA, userA {
     color: #017600;
 }
+
+.led, .led.green {
+    width: 22px;
+    height: 22px;
+    background-image: url("../images/leds.png");
+    background-position: 0px;
+    background-size: auto 22px;
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+
+    .led.red {
+        background-position: -22px;
+    }
+
+    .led.orange {
+        background-position: -44px;
+    }
+
+    .led.blue {
+        background-position: -66px;
+    }
+
+    .led.black {
+        background-position: -88px;
+    }
 
 #git {
     position: relative;

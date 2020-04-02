@@ -1,11 +1,11 @@
 ﻿@model VersionLicensesModel
 @{
-    ViewData["Title"] = Model.ApplicationVersion.Application.Name + " " + Model.ApplicationVersion.Version;
+    ViewData["Title"] = "Versioni Applicazione";
 }
 <div id="explorerLink">
     <a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Application" asp-action="Versions" asp-route-id="@Model.ApplicationVersion.Application.Id">@Model.ApplicationVersion.Application.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.ApplicationVersion.Version
 </div>
-<h2>@Model.ApplicationVersion.Application.Name @Model.ApplicationVersion.Version</h2>
+<h2>@Model.ApplicationVersion.Application.Name @Model.ApplicationVersion.Version - Licenze</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, licenza inesistente.</label>

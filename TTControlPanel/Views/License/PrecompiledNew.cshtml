@@ -1,11 +1,11 @@
 ﻿@model PrecompiledNewLicenseGetModel
 @{
-    ViewData["Title"] = "Nuova Licenza " + Model.ApplicationVersion.Application.Name + " " + Model.ApplicationVersion.Version ;
+    ViewData["Title"] = "Nuova Licenza";
 }
 <div id="explorerLink">
     <a asp-controller="Application" asp-action="Index">Applicazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Application" asp-action="Versions" asp-route-id="@Model.ApplicationVersion.Application.Id">@Model.ApplicationVersion.Application.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@Model.ApplicationVersion.Id">@Model.ApplicationVersion.Version</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova Licenza
 </div>
-<h2>@Model.ApplicationVersion.Application.Name @Model.ApplicationVersion.Version - Nuova Licenza</h2>
+<h2>Nuova Licenza</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>

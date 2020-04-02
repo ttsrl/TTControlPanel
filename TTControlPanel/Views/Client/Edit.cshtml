@@ -5,7 +5,7 @@
 <div id="explorerLink">
     <a asp-controller="Client" asp-action="Index">Clienti</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Client" asp-action="Details" asp-route-id="@Model.Client.Id">@Model.Client.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Modifica
 </div>
-<h2>Modifica Cliente</h2>
+<h2>@Model.Client.Name - Modifica</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di modifica, controllare di aver inserito tutti i dati richiesti.</label>

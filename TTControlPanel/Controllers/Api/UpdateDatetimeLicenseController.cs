@@ -3,18 +3,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TTControlPanel.Models;
 using TTControlPanel.Services;
 using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Controllers.Api
 {
-    [Route("api/UpdateActivationDatetime")]
+    [Route("api/UpdateDatetimeLicense")]
     [ApiController]
-    public class UpdateActivationDatetimeController : ControllerBase
+    public class UpdateDatetimeLicenseController : ControllerBase
     {
         private readonly DBContext _dB;
 
-        public UpdateActivationDatetimeController(DBContext dB)
+        public UpdateDatetimeLicenseController(DBContext dB)
         {
             _dB = dB ?? throw new ArgumentNullException(nameof(dB));
         }
@@ -33,10 +34,26 @@ namespace TTControlPanel.Controllers.Api
                 if(lic != null)
                 {
                     if(lic.ActivateDateTime != localDt)
-                    {
                         lic.ActivateDateTime = localDt;
-                        await _dB.SaveChangesAsync();
+
+                    //last log update
+                    var ll = await _dB.LastLogs.Include(l => l.License).Where(l => l.License.Id == lic.Id).FirstOrDefaultAsync();
+                    if (ll == null)
+                    {
+                        var l = new LastLog
+                        {
+                            Api = Models.Api.UpdateDateTimeLicense,
+                            License = lic,
+                            DateTimeUtc = DateTime.Now.ToUniversalTime()
+                        };
+                        await _dB.LastLogs.AddAsync(l);
                     }
+                    else
+                    {
+                        ll.Api = Models.Api.UpdateDateTimeLicense;
+                        ll.DateTimeUtc = DateTime.Now.ToUniversalTime();
+                    }
+                    await _dB.SaveChangesAsync();
                     return Ok();
                 }
                 return NotFound();

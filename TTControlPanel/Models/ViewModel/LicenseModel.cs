@@ -7,6 +7,7 @@ namespace TTControlPanel.Models.ViewModel
     {
         public List<License> Licenses { get; set; }
         public int Error { get; set; }
+        public List<LastLog> LastLogs { get; set; }
     }
 
     public class VersionLicensesModel
@@ -14,6 +15,7 @@ namespace TTControlPanel.Models.ViewModel
         public ApplicationVersion ApplicationVersion { get; set; }
         public List<License> Licenses { get; set; }
         public int Error { get; set; }
+        public List<LastLog> LastLogs { get; set; }
     }
 
     public class NewLicenseGetModel

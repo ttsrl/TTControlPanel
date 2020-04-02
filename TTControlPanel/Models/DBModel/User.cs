@@ -13,7 +13,7 @@ namespace TTControlPanel.Models
         private string surname = "";
 
         public int Id { get; set; }
-        public bool Visible { get; set; }
+        public bool Ban { get; set; }
         public string Username
         {
             get => _username;

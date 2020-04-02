@@ -19,6 +19,7 @@
         <td>Stato</td>
         <td>Data Attivazione</td>
         <td>Permesso</td>
+        <td>Attività</td>
         <td>Azioni</td>
     </tr>
     @foreach (var l in Model.Licenses)
@@ -30,6 +31,18 @@
             var sum = ((DateTime)(l.ActivateDateTime)).AddHours(pk.HoursDuration);
             exp = (pk.HoursDuration == 0) ? false : ((DateTimeCE.Now > sum) ? true : false);
         }
+        var llo = Model.LastLogs.Where(ll => ll.License.Id == l.Id).FirstOrDefault();
+        var resll = 0;
+        if(llo != null)
+        {
+            var dt = new DateTimeCE((DateTime)llo.DateTimeUtc).Get();
+            if (dt < DateTimeCE.Now.AddMinutes(-60))
+                resll = 1;
+            else if (dt < DateTimeCE.Now.AddMinutes(-30))
+                resll = 2;
+            else
+                resll = 3;
+        }
         <tr class="@(l.Banned ? "ban" : "")">
             <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
             <td style="text-align:center">@l.ProductKey.Type.ToString()</td>
@@ -37,6 +50,7 @@
             <td class="license@((!l.Active) ? "I" : (exp ? "S" : "A"))">@((!l.Active) ? "Pronta" : (exp ? "Scaduta" : "Attiva"))</td>
             <td style="text-align:center">@(l.ActivateDateTime == null ? "-" : ((DateTime)l.ActivateDateTime).ToString("dd/MM/yyyy HH:mm"))</td>
             <td class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "Bloccato" : "Consetito")</td>
+            <td><span title="" class="led @(resll == 0 ? "black" : resll == 1 ? "red" : resll == 2 ? "orange" : "green")"></span></td>
             <td>
                 <span asp-if="@(!l.Banned)"><a asp-controller="License" asp-action="Ban" asp-route-id="@l.Id">Blocca</a></span>
                 <span asp-if="@(l.Banned)"><a asp-controller="License" asp-action="Restore" asp-route-id="@l.Id">Consenti</a></span>

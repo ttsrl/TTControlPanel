@@ -16,6 +16,7 @@ namespace TTControlPanel.Models
         public Application Application { get; set; }
         public List<License> Licences { get; set; }
         public string Notes { get; set; }
+        public User AddedUser { get; set; }
         public DateTime ReleaseDate
         {
             get => releaseDate ?? DateTimeCE.Now;

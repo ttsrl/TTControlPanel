@@ -5,7 +5,7 @@
 <div id="explorerLink">
     <a asp-controller="License" asp-action="Index">License</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.License.ProductKey.Key
 </div>
-<h2>Dettagli Licenza</h2>
+<h2>@Model.License.ProductKey.Key - Dettagli</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, productkey non generato.</label>

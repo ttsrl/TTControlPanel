@@ -49,6 +49,7 @@ namespace TTControlPanel.Controllers
         {
             if (ModelState.IsValid)
             {
+                var uLog = HttpContext.Items["User"] as User;
                 //validate code
                 var code = "";
                 if (model.AutomaticCode)
@@ -70,7 +71,8 @@ namespace TTControlPanel.Controllers
                 var appV = new ApplicationVersion
                 {
                     ReleaseDate = model.Release,
-                    Version = version
+                    Version = version,
+                    AddedUser = uLog
                 };
                 await _db.ApplicationsVersions.AddAsync(appV);
                 var app = new Application
@@ -186,6 +188,7 @@ namespace TTControlPanel.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> NewVersion(int id, NewVersionApplicationPostModel model)
         {
+            var uLog = HttpContext.Items["User"] as User;
             //validate application
             var app = await _db.Applications.Where(a => a.Id == id).FirstOrDefaultAsync();
             if (app == null)
@@ -207,7 +210,8 @@ namespace TTControlPanel.Controllers
                     Version = strV,
                     Application = app,
                     Licences = new List<License>(),
-                    Notes = model.Notes
+                    Notes = model.Notes,
+                    AddedUser = uLog
                 };
                 await _db.ApplicationsVersions.AddAsync(appV);
                 await _db.SaveChangesAsync();

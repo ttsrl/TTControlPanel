@@ -28,6 +28,7 @@ namespace TTControlPanel.Services
         public DbSet<License> Licenses { get; set; }
         public DbSet<ProductKey> ProductKeys { get; set; }
         public DbSet<HID> Hids { get; set; }
+        public DbSet<LastLog> LastLogs { get; set; }
 
         private static DBContext _instance;
         public static DBContext Instance
@@ -49,7 +50,7 @@ namespace TTControlPanel.Services
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().Property(u => u.Visible).HasDefaultValue(true);
+           // modelBuilder.Entity<User>().Property(u => u.Visible).HasDefaultValue(true);
         }
 
         public static async Task Initialize(DBContext context, Cryptography crypt)
@@ -77,7 +78,7 @@ namespace TTControlPanel.Services
                     Password = await crypt.Argon2HashAsync("francesco1995"),
                     Username = "Administrator",
                     Email = "francesco.f@ttautomazioni.it",
-                    Visible = true
+                    Ban = false
                 }
             };
 

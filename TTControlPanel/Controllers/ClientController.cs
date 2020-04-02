@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +45,7 @@ namespace TTControlPanel.Controllers
         {
             if (ModelState.IsValid)
             {
+                var uLog = HttpContext.Items["User"] as User;
                 //validate code
                 var code = "";
                 if (model.AutomaticCode)
@@ -72,7 +72,8 @@ namespace TTControlPanel.Controllers
                     Address = addr,
                     Code = code,
                     Name = model.Name,
-                    VAT = model.VAT
+                    VAT = model.VAT,
+                    AddedUser = uLog
                 };
                 await _db.Clients.AddAsync(client);
                 await _db.SaveChangesAsync();

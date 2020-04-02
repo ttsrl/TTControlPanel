@@ -32,13 +32,13 @@ namespace TTControlPanel.Filters
             {
                 if (user == null)
                 {
-                    context.Result = new RedirectToActionResult("Index", "Login", null);
+                    Login(context);
                     return;
                 }
 
-                if (!user.Role["GrantLogin"])
+                if (!user.Role["GrantLogin"] || user.Ban)
                 {
-                    context.Result = new RedirectToActionResult("Index", "Logout", null);
+                    Logout(context);
                     return;
                 }
 
@@ -57,6 +57,16 @@ namespace TTControlPanel.Filters
         public void NotFound(AuthorizationFilterContext context)
         {
             context.Result = new NotFoundResult();
+        }
+
+        public void Logout(AuthorizationFilterContext context)
+        {
+            context.Result = new RedirectToActionResult("Index", "Logout", null);
+        }
+
+        public void Login(AuthorizationFilterContext context)
+        {
+            context.Result = new RedirectToActionResult("Index", "Login", null);
         }
     }
 

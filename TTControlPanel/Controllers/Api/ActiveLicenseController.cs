@@ -33,30 +33,48 @@ namespace TTControlPanel.Controllers.Api
                 if(version == null)
                     return NotFound();
                 string vstr = version.Major.ToString() + "." + version.Minor.ToString();
-                var l = await _dB.Licenses
+                var lic = await _dB.Licenses
                     .Include(p => p.ProductKey)
                     .Include(p => p.Hid)
                     .Include(p => p.Client)
                     .Include(p => p.ApplicationVersion)
                         .ThenInclude(v => v.Application)
-                .Where(ll => ll.ProductKey.Key == productKey && !ll.Banned && ll.ApplicationVersion.Application.Code == appCode && ll.ApplicationVersion.Version == vstr)
+                .Where(l => l.ProductKey.Key == productKey && !l.Banned && l.ApplicationVersion.Application.Code == appCode && l.ApplicationVersion.Version == vstr)
                 .FirstOrDefaultAsync();
-                if (l == null)
+                if (lic == null)
                     return Ok(ActivationResult.InvalidData);
-                if(l.Banned)
+                if(lic.Banned)
                     return Ok(ActivationResult.Banned);
-                if (l.Active)
+                if (lic.Active)
                     return Ok(ActivationResult.AlreadyActive);
                 hid = hid.Replace("_", "-");
-                var cnfc = GetConfirmCode(l.ProductKey.Key, hid);
+                var cnfc = GetConfirmCode(lic.ProductKey.Key, hid);
                 var h = new HID
                 {
                     Value = hid
                 };
-                l.Hid = h;
-                l.ConfirmCode = cnfc;
-                l.Active = true;
-                l.ActivateDateTime = DateTimeCE.Now;
+                lic.Hid = h;
+                lic.ConfirmCode = cnfc;
+                lic.Active = true;
+                lic.ActivateDateTime = DateTimeCE.Now;
+
+                //last log update
+                var ll = await _dB.LastLogs.Include(l => l.License).Where(l => l.License.Id == lic.Id).FirstOrDefaultAsync();
+                if (ll == null)
+                {
+                    var l = new LastLog
+                    {
+                        Api = Models.Api.ActiveLicense,
+                        License = lic,
+                        DateTimeUtc = DateTime.Now.ToUniversalTime()
+                    };
+                    await _dB.LastLogs.AddAsync(l);
+                }
+                else
+                {
+                    ll.Api = Models.Api.ActiveLicense;
+                    ll.DateTimeUtc = DateTime.Now.ToUniversalTime();
+                }
                 await _dB.SaveChangesAsync();
                 return Ok(ActivationResult.Activated);
             }
