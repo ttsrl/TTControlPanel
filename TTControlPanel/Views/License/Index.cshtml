@@ -36,12 +36,7 @@
         if(llo != null)
         {
             var dt = new DateTimeCE((DateTime)llo.DateTimeUtc).Get();
-            if (dt < DateTimeCE.Now.AddMinutes(-60))
-                resll = 1;
-            else if (dt < DateTimeCE.Now.AddMinutes(-30))
-                resll = 2;
-            else
-                resll = 3;
+            resll = dt < DateTimeCE.Now.AddMinutes(-60) ? 1 : dt < DateTimeCE.Now.AddMinutes(-30) ? 2 : 3;
         }
         <tr class="@(l.Banned ? "ban" : "")">
             <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
