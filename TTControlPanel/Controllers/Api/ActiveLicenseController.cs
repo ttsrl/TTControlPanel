@@ -56,7 +56,7 @@ namespace TTControlPanel.Controllers.Api
                 lic.Hid = h;
                 lic.ConfirmCode = cnfc;
                 lic.Active = true;
-                lic.ActivateDateTime = DateTimeCE.Now;
+                lic.ActivateDateTimeUtc = DateTime.Now.ToUniversalTime();
 
                 //last log update
                 var ll = await _dB.LastLogs.Include(l => l.License).Where(l => l.License.Id == lic.Id).FirstOrDefaultAsync();

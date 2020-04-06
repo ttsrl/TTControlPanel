@@ -28,24 +28,26 @@
         bool exp = false;
         if (l.Active)
         {
-            var sum = ((DateTime)(l.ActivateDateTime)).AddHours(pk.HoursDuration);
+            var sum = ((DateTime)l.ActivateDateTimeUtc).ToDateTimeCE().AddHours(pk.HoursDuration);
             exp = (pk.HoursDuration == 0) ? false : ((DateTimeCE.Now > sum) ? true : false);
         }
         var llo = Model.LastLogs.Where(ll => ll.License.Id == l.Id).FirstOrDefault();
         var resll = 0;
-        if(llo != null)
+        var title = "Nessuna attività recente";
+        if (llo != null)
         {
-            var dt = new DateTimeCE((DateTime)llo.DateTimeUtc).Get();
+            var dt = ((DateTime)(llo.DateTimeUtc)).ToDateTimeCE();
             resll = dt < DateTimeCE.Now.AddMinutes(-60) ? 1 : dt < DateTimeCE.Now.AddMinutes(-30) ? 2 : 3;
+            title = (resll == 1) ? "Nessuna attività registrata da un'ora." : (resll == 2) ? "Una attività recente registrata entro mezz'ora" : "Attualmente attivo";
         }
         <tr class="@(l.Banned ? "ban" : "")">
-            <td style="text-align:center"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
-            <td style="text-align:center">@l.ProductKey.Type.ToString()</td>
-            <td style="text-align:center">@l.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</td>
-            <td class="license@((!l.Active) ? "I" : (exp ? "S" : "A"))">@((!l.Active) ? "Pronta" : (exp ? "Scaduta" : "Attiva"))</td>
-            <td style="text-align:center">@(l.ActivateDateTime == null ? "-" : ((DateTime)l.ActivateDateTime).ToString("dd/MM/yyyy HH:mm"))</td>
-            <td class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "Bloccato" : "Consetito")</td>
-            <td><span title="" class="led @(resll == 0 ? "black" : resll == 1 ? "red" : resll == 2 ? "orange" : "green")"></span></td>
+            <td style="text-align:center; font-size: 12px;"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
+            <td style="text-align:center; font-size: 13px;">@l.ProductKey.Type.ToString()</td>
+            <td style="text-align:center; font-size: 11px;">@l.ReleaseDate.ToString("dd/MM/yy HH:mm")</td>
+            <td style="font-size: 13px;" class="license@((!l.Active) ? "I" : (exp ? "S" : "A"))">@((!l.Active) ? "Pronta" : (exp ? "Scaduta" : "Attiva"))</td>
+            <td style="text-align:center; font-size: 11px;">@(l.ActivateDateTimeUtc == null ? "-" : ((DateTime)l.ActivateDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yy HH:mm"))</td>
+            <td style="font-size: 13px;" class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "Bloccato" : "Consetito")</td>
+            <td style="text-align: center;"><span title="@title" style="vertical-align: middle;" class="led @(resll == 0 ? "black" : resll == 1 ? "red" : resll == 2 ? "orange" : "green")"></span></td>
             <td>
                 <span asp-if="@(!l.Banned)"><a asp-controller="License" asp-action="Ban" asp-route-id="@l.Id">Blocca</a></span>
                 <span asp-if="@(l.Banned)"><a asp-controller="License" asp-action="Restore" asp-route-id="@l.Id">Consenti</a></span>

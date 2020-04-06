@@ -16,7 +16,7 @@ namespace TTControlPanel.Models
         public string ConfirmCode { get => confirmCode; set => confirmCode = value.ToUpper(); }
         public bool Active { get; set; }
         public bool Banned { get; set; }
-        public DateTime? ActivateDateTime { get; set; }
+        public DateTime? ActivateDateTimeUtc { get; set; }
         public Client Client { get; set; }
         public string Notes { get; set; }
         public DateTime ReleaseDate

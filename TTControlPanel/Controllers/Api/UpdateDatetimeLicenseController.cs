@@ -25,16 +25,16 @@ namespace TTControlPanel.Controllers.Api
         {
             try
             {
-                var dt = date.FromUnixTime();
-                var localDt = dt.ToDateTimeCE(); //dt.ToLocalTime();
+                var dtUtc = date.FromUnixTime();
+                //var localDt = dt.ToDateTimeCE(); //dt.ToLocalTime();
                 var lic = await _dB.Licenses
                     .Include(l => l.ProductKey)
                     .Where(l => l.ProductKey.Key == productKey && l.Active)
                     .FirstOrDefaultAsync();
                 if(lic != null)
                 {
-                    if(lic.ActivateDateTime != localDt)
-                        lic.ActivateDateTime = localDt;
+                    if(lic.ActivateDateTimeUtc != dtUtc)
+                        lic.ActivateDateTimeUtc = dtUtc;
 
                     //last log update
                     var ll = await _dB.LastLogs.Include(l => l.License).Where(l => l.License.Id == lic.Id).FirstOrDefaultAsync();

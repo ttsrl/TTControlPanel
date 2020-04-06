@@ -20,7 +20,7 @@
     <label class="val license@(Model.License.Banned ? "B" : "A")">@(Model.License.Banned ? "Bloccato" : "Consetito")</label>
     <br />
     <label class="title">Data Attivazione:</label>
-    <label class="val">@(Model.License.ActivateDateTime == null ? "--" : ((DateTime)(Model.License.ActivateDateTime)).ToString("dd/MM/yyyy HH:mm"))</label>
+    <label class="val">@(Model.License.ActivateDateTimeUtc == null ? "--" : (((DateTime)Model.License.ActivateDateTimeUtc).ToDateTimeCE()).ToString("dd/MM/yyyy HH:mm"))</label>
     <br />
     <label class="title">Data Rilascio:</label>
     <label class="val">@Model.License.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</label>

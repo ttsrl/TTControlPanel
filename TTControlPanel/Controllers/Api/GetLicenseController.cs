@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TTControlPanel.Models;
 using TTControlPanel.Services;
+using TTControlPanel.Utilities;
 using TTLL.Models;
 
 namespace TTControlPanel.Controllers.Api
@@ -48,7 +49,8 @@ namespace TTControlPanel.Controllers.Api
                     ClientCode = lic.Client.Code,
                     ProductKey = lic.ProductKey.Key,
                     HID = lic.Hid.Value,
-                    ConfirmCode = lic.ConfirmCode
+                    ConfirmCode = lic.ConfirmCode,
+                    ActivationDateTimeUtc = lic.ActivateDateTimeUtc == null ? 0 : ((DateTime)lic.ActivateDateTimeUtc).ToUnixTime()
                 };
 
                 //last log update

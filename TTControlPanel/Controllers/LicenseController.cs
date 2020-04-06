@@ -351,7 +351,7 @@ namespace TTControlPanel.Controllers
             if (string.IsNullOrEmpty(l.ConfirmCode))
                 return View("Details", new DetailsLicenseModel { License = l, Error = 3 });
             l.Active = true;
-            l.ActivateDateTime = DateTimeCE.Now;
+            l.ActivateDateTimeUtc = DateTimeCE.Now;
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
