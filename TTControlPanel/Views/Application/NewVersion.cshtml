@@ -16,7 +16,7 @@
 </div>
 <form asp-antiforgery="true" asp-controller="application" asp-action="NewVersion" asp-route-id="@Model.Application.Id" autocomplete="off" style="width:350px;">
     <label>Data Rilascio:</label>
-    <input type="date" name="release" value="@(DateTimeCE.Now.ToString("yyyy-MM-dd"))" />
+    <input type="date" name="release" value="@(DateTime.UtcNow.ToDateTimeCE().ToString("yyyy-MM-dd"))" />
     <br />
     <label>Versione:</label>
     <input type="text" name="major" style="width:55px;" onkeypress='return EnterOnlyNumber(event);' /><span style="margin: 0px 2px 0px 6px;">.</span>

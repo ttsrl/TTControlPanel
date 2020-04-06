@@ -25,7 +25,7 @@ namespace TTControlPanel.Services
 
         public async Task<List<GitCommit>> GetCommits(int count = 10)
         {
-            if (DateTimeCE.Now < lastUpdate.Add(IntervalTime))
+            if (DateTime.UtcNow < lastUpdate.Add(IntervalTime))
                 return this.commits;
 
             var commits = await client.Repository.Commit.GetAll("ttsrl", "TTControlPanel", new ApiOptions() { PageCount = 1, PageSize = count });
@@ -52,7 +52,7 @@ namespace TTControlPanel.Services
                 };
                 list.Add(obj);
             }
-            this.lastUpdate = DateTimeCE.Now;
+            this.lastUpdate = DateTime.UtcNow;
             this.commits = list;
             return list;
         }

@@ -56,7 +56,7 @@ namespace TTControlPanel.Controllers.Api
                 lic.Hid = h;
                 lic.ConfirmCode = cnfc;
                 lic.Active = true;
-                lic.ActivateDateTimeUtc = DateTime.Now.ToUniversalTime();
+                lic.ActivationDateTimeUtc = DateTime.UtcNow.TruncateMillis();
 
                 //last log update
                 var ll = await _dB.LastLogs.Include(l => l.License).Where(l => l.License.Id == lic.Id).FirstOrDefaultAsync();
@@ -66,14 +66,14 @@ namespace TTControlPanel.Controllers.Api
                     {
                         Api = Models.Api.ActiveLicense,
                         License = lic,
-                        DateTimeUtc = DateTime.Now.ToUniversalTime()
+                        DateTimeUtc = DateTime.UtcNow.TruncateMillis()
                     };
                     await _dB.LastLogs.AddAsync(l);
                 }
                 else
                 {
                     ll.Api = Models.Api.ActiveLicense;
-                    ll.DateTimeUtc = DateTime.Now.ToUniversalTime();
+                    ll.DateTimeUtc = DateTime.UtcNow.TruncateMillis();
                 }
                 await _dB.SaveChangesAsync();
                 return Ok(ActivationResult.Activated);

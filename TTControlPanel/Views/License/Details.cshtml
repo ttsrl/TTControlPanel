@@ -20,10 +20,10 @@
     <label class="val license@(Model.License.Banned ? "B" : "A")">@(Model.License.Banned ? "Bloccato" : "Consetito")</label>
     <br />
     <label class="title">Data Attivazione:</label>
-    <label class="val">@(Model.License.ActivateDateTimeUtc == null ? "--" : (((DateTime)Model.License.ActivateDateTimeUtc).ToDateTimeCE()).ToString("dd/MM/yyyy HH:mm"))</label>
+    <label class="val">@(Model.License.ActivationDateTimeUtc == null ? "--" : (((DateTime)Model.License.ActivationDateTimeUtc).ToDateTimeCE()).ToString("dd/MM/yyyy HH:mm"))</label>
     <br />
     <label class="title">Data Rilascio:</label>
-    <label class="val">@Model.License.ReleaseDate.ToString("dd/MM/yyyy HH:mm")</label>
+    <label class="val">@Model.License.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yyyy HH:mm")</label>
     <br />
     <div style="margin: 20px 0px;">
         <h4>ProductKey</h4>
@@ -38,7 +38,7 @@
         <label class="val">@Model.License.ProductKey.GenerateUser.Username</label>
         <br />
         <label class="title">Data di rilascio:</label>
-        <label class="val">@Model.License.ProductKey.GenerateDateTime.ToString("dd/MM/yyyy HH:mm")</label>
+        <label class="val">@Model.License.ProductKey.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yyyy HH:mm")</label>
         <br />
     </div>
     <div style="margin: 20px 0px;">
@@ -52,7 +52,7 @@
         <label class="val">@((Model.License.Hid == null) ? "--" :(Model.License.Hid.AddedUser.Username))</label>
         <br />
         <label class="title">Data di rilascio:</label>
-        <label class="val">@((Model.License.Hid == null) ? "--" : Model.License.Hid.Timestamp.ToString("dd/MM/yyyy HH:mm"))</label>
+        <label class="val">@((Model.License.Hid == null) ? "--" : Model.License.Hid.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yyyy HH:mm"))</label>
         <br />
     </div>
     <div style="margin: 20px 0px;">
@@ -73,7 +73,7 @@
         <label class="val">@Model.License.ApplicationVersion.Version</label>
         <br />
         <label class="title">Rilascio versione:</label>
-        <label class="val">@Model.License.ApplicationVersion.ReleaseDate.ToString("dd/MM/yyyy")</label>
+        <label class="val">@Model.License.ApplicationVersion.ReleaseDateTimeUtc.ToString("dd/MM/yyyy")</label>
     </div>
     <div style="margin: 20px 0px;">
         <h4>Cliente</h4>

@@ -17,7 +17,7 @@
         <label class="val">@Model.Client.Name</label>
         <br />
         <label class="title">Data di inserimento:</label>
-        <label class="val">@Model.Client.Timestamp.ToString("dd/MM/yyyy HH:mm")</label>
+        <label class="val">@Model.Client.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yyyy HH:mm")</label>
         <br />
         <label class="title">Codice:</label>
         <label class="val">@Model.Client.Code</label>

@@ -8,37 +8,21 @@ using Microsoft.AspNetCore.Http;
 
 namespace TTControlPanel.Utilities
 {
-
-    public struct DateTimeCE
-    {
-        private DateTime dateT;
-
-        public DateTimeCE(DateTime dateTime)
-        {
-            this.dateT = dateTime;
-        }
-
-        public static DateTime Now 
-        { 
-            get 
-            {
-                var dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
-                return TimeZoneInfo.ConvertTime(dt , TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
-            }
-        }
-
-        public DateTime Get()
-        {
-            return TimeZoneInfo.ConvertTime(dateT, TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
-        }
-    }
-
     public static class Extensions
     {
-        public static DateTime ToDateTimeCE(this DateTime date)
+        public static DateTime ToDateTimeCE(this DateTime d)
         {
-            var dtce = new DateTimeCE(date);
-            return dtce.Get();
+            return TimeZoneInfo.ConvertTime(new DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, DateTimeKind.Utc), TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time"));
+        }
+
+        public static DateTime TruncateMillis(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Kind);
+        }
+
+        public static DateTime TruncateSeconds(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0, date.Kind);
         }
 
         public static string ReplaceBINDigits(this string key)
@@ -121,5 +105,22 @@ namespace TTControlPanel.Utilities
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return Convert.ToInt64((date - epoch).TotalSeconds);
         }
+
+        //public static DateTime ToDateTime(this DateTimeCE dtce)
+        //{
+        //    return new DateTime(dtce.Year, dtce.Month, dtce.Day, dtce.Hour, dtce.Minute, dtce.Second, DateTimeKind.Unspecified);
+        //}
+
+        //public static DateTimeCE FromUnixTime(this long unixTime)
+        //{
+        //    var epoch = new DateTimeCE(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        //    return epoch.AddSeconds(unixTime);
+        //}
+
+        //public static long ToUnixTime(this DateTimeCE date)
+        //{
+        //    var epoch = new DateTimeCE(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        //    return Convert.ToInt64((date - epoch).TotalSeconds);
+        //}
     }
 }

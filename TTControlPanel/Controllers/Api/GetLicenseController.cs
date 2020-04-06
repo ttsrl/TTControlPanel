@@ -50,7 +50,7 @@ namespace TTControlPanel.Controllers.Api
                     ProductKey = lic.ProductKey.Key,
                     HID = lic.Hid.Value,
                     ConfirmCode = lic.ConfirmCode,
-                    ActivationDateTimeUtc = lic.ActivateDateTimeUtc == null ? 0 : ((DateTime)lic.ActivateDateTimeUtc).ToUnixTime()
+                    ActivationDateTimeUtc = lic.ActivationDateTimeUtc == null ? 0 : ((DateTime)lic.ActivationDateTimeUtc).ToUnixTime()
                 };
 
                 //last log update
@@ -61,14 +61,14 @@ namespace TTControlPanel.Controllers.Api
                     {
                         Api = Models.Api.GetLicense,
                         License = lic,
-                        DateTimeUtc = DateTime.Now.ToUniversalTime()
+                        DateTimeUtc = DateTime.UtcNow.TruncateMillis()
                     };
                     await _dB.LastLogs.AddAsync(l);
                 }
                 else
                 {
                     ll.Api = Models.Api.GetLicense;
-                    ll.DateTimeUtc = DateTime.Now.ToUniversalTime();
+                    ll.DateTimeUtc = DateTime.UtcNow.TruncateMillis();
                 }
                 await _dB.SaveChangesAsync();
                 return Ok(obj);

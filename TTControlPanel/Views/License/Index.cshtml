@@ -28,24 +28,41 @@
         bool exp = false;
         if (l.Active)
         {
-            var sum = ((DateTime)l.ActivateDateTimeUtc).ToDateTimeCE().AddHours(pk.HoursDuration);
-            exp = (pk.HoursDuration == 0) ? false : ((DateTimeCE.Now > sum) ? true : false);
+            var sum = ((DateTime)l.ActivationDateTimeUtc).AddHours(pk.HoursDuration);
+            exp = (pk.HoursDuration == 0) ? false : ((DateTime.UtcNow > sum) ? true : false);
         }
         var llo = Model.LastLogs.Where(ll => ll.License.Id == l.Id).FirstOrDefault();
         var resll = 0;
-        var title = "Nessuna attività recente";
+        var title = "Nessuna attività registrata";
         if (llo != null)
         {
-            var dt = ((DateTime)(llo.DateTimeUtc)).ToDateTimeCE();
-            resll = dt < DateTimeCE.Now.AddMinutes(-60) ? 1 : dt < DateTimeCE.Now.AddMinutes(-30) ? 2 : 3;
-            title = (resll == 1) ? "Nessuna attività registrata da un'ora." : (resll == 2) ? "Una attività recente registrata entro mezz'ora" : "Attualmente attivo";
+            resll = llo.DateTimeUtc < DateTime.UtcNow.AddMinutes(-60) ? 1 : llo.DateTimeUtc < DateTime.UtcNow.AddMinutes(-30) ? 2 : 3;
+            TimeSpan missing = DateTime.UtcNow - llo.DateTimeUtc;
+            if (missing.TotalMinutes > 1380)
+            {
+                var d = (int)Math.Round(missing.TotalDays);
+                title = "Ultima attività registrata " + ((d == 1) ? "1 giorno" : d.ToString() + " giorni");
+            }
+            else if (missing.TotalMinutes > 59)
+            {
+                var h = (int)Math.Round(missing.TotalHours);
+                title = "Ultima attività registrata " + ((h == 1) ? "1 ora" : h.ToString() + " ore");
+            }
+            else if (missing.TotalMinutes >= 2)
+            {
+                title = "Ultima attività registrata " + ((int)Math.Round(missing.TotalMinutes)).ToString() + " minuti";
+            }
+            else
+            {
+                title = "Attualmente attivo";
+            }
         }
         <tr class="@(l.Banned ? "ban" : "")">
             <td style="text-align:center; font-size: 12px;"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
             <td style="text-align:center; font-size: 13px;">@l.ProductKey.Type.ToString()</td>
-            <td style="text-align:center; font-size: 11px;">@l.ReleaseDate.ToString("dd/MM/yy HH:mm")</td>
+            <td style="text-align:center; font-size: 11px;">@l.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yy HH:mm")</td>
             <td style="font-size: 13px;" class="license@((!l.Active) ? "I" : (exp ? "S" : "A"))">@((!l.Active) ? "Pronta" : (exp ? "Scaduta" : "Attiva"))</td>
-            <td style="text-align:center; font-size: 11px;">@(l.ActivateDateTimeUtc == null ? "-" : ((DateTime)l.ActivateDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yy HH:mm"))</td>
+            <td style="text-align:center; font-size: 11px;">@(l.ActivationDateTimeUtc == null ? "-" : ((DateTime)l.ActivationDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yy HH:mm"))</td>
             <td style="font-size: 13px;" class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "Bloccato" : "Consetito")</td>
             <td style="text-align: center;"><span title="@title" style="vertical-align: middle;" class="led @(resll == 0 ? "black" : resll == 1 ? "red" : resll == 2 ? "orange" : "green")"></span></td>
             <td>

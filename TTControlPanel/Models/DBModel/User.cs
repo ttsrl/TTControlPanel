@@ -7,10 +7,10 @@ namespace TTControlPanel.Models
     public class User
     {
         private string _username = "";
-        private DateTime? _registrationDate;
         private string email = "";
         private string name = "";
         private string surname = "";
+        private DateTime? timestamp;
 
         public int Id { get; set; }
         public bool Ban { get; set; }
@@ -25,10 +25,6 @@ namespace TTControlPanel.Models
         public string Email { get => email; set => email = value.ToLower(); }
         [ForeignKey("RoleId")]
         public Role Role { get; set; }
-        public DateTime RegistrationDate
-        {
-            get => _registrationDate ?? DateTimeCE.Now;
-            set => _registrationDate = value;
-        }
+        public DateTime TimestampDateTimeUtc { get => timestamp ?? DateTime.UtcNow.TruncateMillis(); set => timestamp = value; }
     }
 }

@@ -26,15 +26,14 @@ namespace TTControlPanel.Controllers.Api
             try
             {
                 var dtUtc = date.FromUnixTime();
-                //var localDt = dt.ToDateTimeCE(); //dt.ToLocalTime();
                 var lic = await _dB.Licenses
                     .Include(l => l.ProductKey)
                     .Where(l => l.ProductKey.Key == productKey && l.Active)
                     .FirstOrDefaultAsync();
                 if(lic != null)
                 {
-                    if(lic.ActivateDateTimeUtc != dtUtc)
-                        lic.ActivateDateTimeUtc = dtUtc;
+                    if(lic.ActivationDateTimeUtc != dtUtc)
+                        lic.ActivationDateTimeUtc = dtUtc;
 
                     //last log update
                     var ll = await _dB.LastLogs.Include(l => l.License).Where(l => l.License.Id == lic.Id).FirstOrDefaultAsync();
@@ -44,14 +43,14 @@ namespace TTControlPanel.Controllers.Api
                         {
                             Api = Models.Api.UpdateDateTimeLicense,
                             License = lic,
-                            DateTimeUtc = DateTime.Now.ToUniversalTime()
+                            DateTimeUtc = DateTime.UtcNow.TruncateMillis()
                         };
                         await _dB.LastLogs.AddAsync(l);
                     }
                     else
                     {
                         ll.Api = Models.Api.UpdateDateTimeLicense;
-                        ll.DateTimeUtc = DateTime.Now.ToUniversalTime();
+                        ll.DateTimeUtc = DateTime.UtcNow.TruncateMillis();
                     }
                     await _dB.SaveChangesAsync();
                     return Ok();

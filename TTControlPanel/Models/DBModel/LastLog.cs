@@ -9,6 +9,6 @@ namespace TTControlPanel.Models
         public int Id { get; set; }
         public License License { get; set; }
         public Api Api { get; set; }
-        public DateTime? DateTimeUtc { get; set; }
+        public DateTime DateTimeUtc { get; set; }
     }
 }

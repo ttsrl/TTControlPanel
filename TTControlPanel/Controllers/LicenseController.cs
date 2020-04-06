@@ -97,7 +97,7 @@ namespace TTControlPanel.Controllers
                 if(type != PKType.Normal)
                     time = new TimeSpan(model.Days, 0, 0, 0);
                 var productkey = await _utils.GenerateProdutKey(type, appv, client, time);
-                var p = new ProductKey { GenerateDateTime = DateTimeCE.Now, GenerateUser = uLog, Key = productkey, Type = type };
+                var p = new ProductKey { GenerateUser = uLog, Key = productkey, Type = type };
                 var l = new License
                 {
                     Active = false,
@@ -153,7 +153,7 @@ namespace TTControlPanel.Controllers
                 if (type != PKType.Normal)
                     time = new TimeSpan(model.Days, 0, 0, 0);
                 var productkey = await _utils.GenerateProdutKey(type, av, client, time);
-                var p = new ProductKey { GenerateDateTime = DateTimeCE.Now, GenerateUser = uLog, Key = productkey, Type = type };
+                var p = new ProductKey { GenerateUser = uLog, Key = productkey, Type = type };
                 var l = new License
                 {
                     Active = false,
@@ -351,7 +351,7 @@ namespace TTControlPanel.Controllers
             if (string.IsNullOrEmpty(l.ConfirmCode))
                 return View("Details", new DetailsLicenseModel { License = l, Error = 3 });
             l.Active = true;
-            l.ActivateDateTimeUtc = DateTimeCE.Now;
+            l.ActivationDateTimeUtc = DateTime.UtcNow.TruncateMillis();
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Models
@@ -15,10 +14,6 @@ namespace TTControlPanel.Models
         public Address Address { get; set; }
         public string VAT { get => vat; set { vat = value.ToUpper(); } }
         public User AddedUser { get; set; }
-        public DateTime Timestamp 
-        {
-            get => timestamp ?? DateTimeCE.Now;
-            set => timestamp = value;
-        }
+        public DateTime TimestampDateTimeUtc { get => timestamp ?? DateTime.UtcNow.TruncateMillis(); set => timestamp = value; }
     }
 }

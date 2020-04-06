@@ -20,7 +20,7 @@
     {
         <tr>
             <td><a asp-controller="License" asp-action="VersionLicenses" asp-route-id="@v.Id"><b>@v.Version</b></a></td>
-            <td>@v.ReleaseDate.ToString("dd/MM/yyyy")</td>
+            <td>@v.ReleaseDateTimeUtc.ToString("dd/MM/yyyy")</td>
             <td>@v.Licences.Count.ToString()</td>
             <td>@v.Licences.Select(l => l.Client).Distinct().ToList().Count.ToString()</td>
             <td>@v.Notes</td>
