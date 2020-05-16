@@ -54,7 +54,7 @@ namespace TTControlPanel.Controllers
             if (version == null)
                 return RedirectToAction("Index");
             var lls = await _db.LastLogs.Include(l => l.License).ToListAsync();
-            var m = new VersionLicensesModel { ApplicationVersion = version, Licenses = version.Licences, LastLogs = lls };
+            var m = new VersionLicensesModel { ApplicationVersion = version, Licenses = version.Licences.OrderByDescending(l => l.Id).ToList(), LastLogs = lls };
             return View(m);
         }
 
@@ -189,21 +189,22 @@ namespace TTControlPanel.Controllers
                 .Include(ll => ll.Hid)
                 .Where(ll => ll.Id == id)
                 .FirstOrDefaultAsync();
+            var lics = lic.ApplicationVersion.Licences.OrderByDescending(l => l.Id).ToList();
             var lls = await _db.LastLogs.Include(l => l.License).ToListAsync();
             if (lic == null)
             {
                 if (mod == 0)
-                    return View("Index", new IndexLicenseModel { Licenses = lic.ApplicationVersion.Licences, Error = 1, LastLogs = lls });
+                    return View("Index", new IndexLicenseModel { Licenses = lics, Error = 1, LastLogs = lls });
                 else
-                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lic.ApplicationVersion.Licences, Error = 1, LastLogs = lls });
+                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lics, Error = 1, LastLogs = lls });
             }
-            if(lic.Active == true)
-            {
-                if (mod == 0)
-                    return View("Index", new IndexLicenseModel { Licenses = lic.ApplicationVersion.Licences, Error = 2, LastLogs = lls });
-                else
-                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lic.ApplicationVersion.Licences, Error = 2, LastLogs = lls });
-            }
+            //if (lic.Active == true)
+            //{
+            //    if (mod == 0)
+            //        return View("Index", new IndexLicenseModel { Licenses = lics, Error = 2, LastLogs = lls });
+            //    else
+            //        return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lics, Error = 2, LastLogs = lls });
+            //}
 
             if (lic.Hid != null)
                 _db.Hids.Remove(lic.Hid);
@@ -211,9 +212,9 @@ namespace TTControlPanel.Controllers
             _db.Licenses.Remove(lic);
             await _db.SaveChangesAsync();
             if (mod == 0)
-                return View("Index", new IndexLicenseModel { Licenses = lic.ApplicationVersion.Licences, LastLogs = lls });
+                return View("Index", new IndexLicenseModel { Licenses = lics, LastLogs = lls });
             else
-                return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lic.ApplicationVersion.Licences, LastLogs = lls });
+                return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = lics, LastLogs = lls });
         }
 
 
