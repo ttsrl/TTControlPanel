@@ -68,7 +68,7 @@
             <td>
                 <span asp-if="@(!l.Banned)"><a asp-controller="License" asp-action="Ban" asp-route-id="@l.Id" asp-route-mod="1">Blocca</a></span>
                 <span asp-if="@(l.Banned)"><a asp-controller="License" asp-action="Restore" asp-route-id="@l.Id" asp-route-mod="1">Sblocca</a></span>
-                <span asp-if="@(!l.Banned && !l.Active)"><a asp-controller="License" asp-action="Delete" asp-route-id="@l.Id" asp-route-mod="1">Rimuovi</a></span>
+                <span><a asp-controller="License" asp-action="Delete" asp-route-id="@l.Id" asp-route-mod="1">Rimuovi</a></span>
             </td>
         </tr>
     }
