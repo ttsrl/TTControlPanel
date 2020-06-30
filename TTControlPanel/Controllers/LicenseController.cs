@@ -205,11 +205,12 @@ namespace TTControlPanel.Controllers
                 else
                     return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = appslics, Error = 1, LastLogs = lls });
             }
+            var llog = await _db.LastLogs.Include(l => l.License).Where(l => l.License.Id == id).ToListAsync();
 
             if (lic.Hid != null)
                 _db.Hids.Remove(lic.Hid);
-
             _db.Licenses.Remove(lic);
+            _db.LastLogs.RemoveRange(llog);
             await _db.SaveChangesAsync();
             if (mod == 0)
                 return RedirectToAction("Index");
@@ -355,6 +356,19 @@ namespace TTControlPanel.Controllers
             l.ActivationDateTimeUtc = DateTime.UtcNow.TruncateMillis();
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authentication]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditNotes(int id, string note)
+        {
+            var l = await _db.Licenses.Include(ll => ll.ApplicationVersion).Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            if (l == null)
+                return RedirectToAction("Index");
+            l.Notes = note;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = id });
         }
 
     }

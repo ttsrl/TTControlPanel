@@ -87,6 +87,14 @@
         <label class="val">@Model.License.Client.VAT</label>
         <br />
     </div>
+    <div style="margin: 20px 0px;">
+        <h4>Note</h4>
+        <form asp-antiforgery="true" asp-controller="License" asp-action="EditNotes" asp-route-id="@Model.License.Id" autocomplete="off">
+            <textarea name="note" style="width: 780px;margin-left: 30px;">@Model.License.Notes</textarea>
+            <br />
+            <input type="submit" class="btn" style="margin-top: 5px;margin-right: 100px;float: right;" value="Salva" />
+        </form>
+    </div>
     <br />
     <br />
     <a asp-if="@(!Model.License.Active)" class="btn" asp-controller="License" asp-action="OfflineActivation" asp-route-id="@Model.License.Id">Attivazione Offline</a>

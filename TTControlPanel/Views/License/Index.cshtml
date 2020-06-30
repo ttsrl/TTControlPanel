@@ -30,7 +30,7 @@
             var sum = ((DateTime)l.ActivationDateTimeUtc).AddHours(pk.HoursDuration);
             exp = (pk.HoursDuration == 0) ? false : ((DateTime.UtcNow > sum) ? true : false);
         }
-        var llo = Model.LastLogs.Where(ll => ll.License.Id == l.Id).FirstOrDefault();
+        var llo = Model.LastLogs.Where(ll => (ll.License != null && ll.License.Id == l.Id)).FirstOrDefault();
         var resll = 0;
         var title = "Nessuna attività registrata";
         if (llo != null)
