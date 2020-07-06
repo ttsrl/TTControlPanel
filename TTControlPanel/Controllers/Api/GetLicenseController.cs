@@ -36,10 +36,15 @@ namespace TTControlPanel.Controllers.Api
                 .Include(l => l.Hid)
                 .Include(l => l.ProductKey)
                 .Include(l => l.Client)
-                .Where(l => l.ProductKey.Key == productKey && l.Hid.Value == hid)
+                .Where(l => l.ProductKey.Key == productKey)
                 .FirstOrDefaultAsync();
                 if (lic == null)
                     return NotFound(new { });
+                if (lic.Hid.Value != hid)
+                {
+                    return Ok(ApiLicenseStructure.Empty);
+                }
+
                 var obj = new ApiLicenseStructure
                 {
                     Active = lic.Active,
