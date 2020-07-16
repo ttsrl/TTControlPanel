@@ -3,15 +3,15 @@
     ViewData["Title"] = "Aggiungi Codice richiesta";
 }
 <div id="explorerLink">
-    <a asp-controller="License" asp-action="Index">License</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="Details" asp-route-id="@Model.License.Id">@Model.License.ProductKey.Key</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;ConfirmCode
+    <a asp-controller="License" asp-action="Index">License</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="License" asp-action="Details" asp-route-id="@Model.License.Id">@Model.License.ProductKey.Key</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Aggiungi Codice di richiesta
 </div>
-<h2>@Model.License.ProductKey.Key - Aggiungi RequestCode</h2>
+<h2>Aggiungi codice di richiesta</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
-    <label class="error_lbl" asp-if="Model.Error == 2">Errore, questo codice è già associato a questa licenza.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, questa licenza ha già con codice di richiesta.</label>
 </div>
-<form asp-antiforgery="true" asp-route-id="@Model.License.Id" autocomplete="off">
+<form asp-antiforgery="true" asp-controller="License" asp-action="AddRequestCode" asp-route-id="@Model.License.Id" autocomplete="off">
     <label>HID:</label>
     <input type="text" name="hid" style="width:400px;" />
     <br />

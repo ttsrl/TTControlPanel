@@ -274,7 +274,7 @@ namespace TTControlPanel.Controllers
                 return View("Details", new DetailsLicenseModel { License = l, Error = 1 });
             if (l.Hid == null)
                 return View("Details", new DetailsLicenseModel { License = l, Error = 3 });
-            return View("AddRequestCode", new RequestCodeGetModel { License = l });
+            return View(new RequestCodeGetModel { License = l });
         }
 
 
@@ -293,11 +293,41 @@ namespace TTControlPanel.Controllers
             if (l.ProductKey == null)
                 return RedirectToAction("Index");
             if (string.IsNullOrEmpty(hid))
-                return View("AddRequestCode", new RequestCodeGetModel { License = l, Error = 1 });
-            if (l.Hid != null && l.Hid.Value == hid)
-                return View("AddRequestCode", new RequestCodeGetModel { License = l, Error = 2 });
+                return View(new RequestCodeGetModel { License = l, Error = 1 });
+            if (l.Hid != null)
+                return View(new RequestCodeGetModel { License = l, Error = 2 });
             var cnfc = GetConfirmCode(l.ProductKey.Key, hid);
             var h = new HID { Value = hid, AddedUser = uLog };
+            l.Hid = h;
+            l.ConfirmCode = cnfc;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = id });
+        }
+
+        [HttpPost]
+        [Authentication]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditRequestCode(int id, string hid)
+        {
+            var uLog = HttpContext.Items["User"] as User;
+            var l = await _db.Licenses
+                .Include(ll => ll.ProductKey)
+                .Include(ll => ll.Hid)
+                .Where(ll => ll.Id == id).FirstOrDefaultAsync();
+            if (l == null)
+                return RedirectToAction("Index");
+            if (l.ProductKey == null)
+                return RedirectToAction("Index");
+            if (string.IsNullOrEmpty(hid))
+                return View(new RequestCodeGetModel { License = l, Error = 1 });
+            if(!l.Active)
+                return View(new RequestCodeGetModel { License = l, Error = 2 });
+            var hids = await _db.Hids.Select(hh => hh.Value).ToListAsync();
+            if (hids.Contains(hid))
+                return View(new RequestCodeGetModel { License = l, Error = 3});
+            var cnfc = GetConfirmCode(l.ProductKey.Key, hid);
+            var h = new HID { Value = hid, AddedUser = uLog };
+            _db.Hids.Remove(l.Hid);
             l.Hid = h;
             l.ConfirmCode = cnfc;
             await _db.SaveChangesAsync();
