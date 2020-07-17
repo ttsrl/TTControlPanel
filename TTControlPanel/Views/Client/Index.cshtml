@@ -22,21 +22,21 @@
     @foreach (var c in Model.Clients)
     {
         var apps = new List<string>();
-        foreach(var av in Model.AppsClient)
+        foreach(var lc in c.Licenses)
         {
-            if (av.Value.Contains(c))
+            if (!apps.Contains(lc.ApplicationVersion.Application.Name))
             {
-                apps.Add(av.Key);
+                apps.Add(lc.ApplicationVersion.Application.Name);
             }
         }
         <tr>
-            <td><b>@c.Code</b></td>
-            <td><b><a asp-controller="Client" asp-action="Details" asp-route-id="@c.Id">@c.Name</a></b></td>
-            <td>@c.VAT</td>
+            <td><b>@c.Client.Code</b></td>
+            <td><b><a asp-controller="Client" asp-action="Details" asp-route-id="@c.Client.Id">@c.Client.Name</a></b></td>
+            <td>@c.Client.VAT</td>
             <td>@string.Join(", ", apps.ToArray())</td>
             <td>
-                <span><a asp-controller="Client" asp-action="Edit" asp-route-id="@c.Id">Modifica</a></span>
-                <span><a asp-controller="Client" asp-action="Delete" asp-route-id="@c.Id">Elimina</a></span>
+                <span><a asp-controller="Client" asp-action="Edit" asp-route-id="@c.Client.Id">Modifica</a></span>
+                <span><a asp-controller="Client" asp-action="Delete" asp-route-id="@c.Client.Id">Elimina</a></span>
             </td>
         </tr>
     }

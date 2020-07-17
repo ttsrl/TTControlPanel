@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +22,29 @@ namespace TTControlPanel.Controllers
 
         [Authentication]
         public async Task<IActionResult> Index()
-        {
+        {            //var apps = await _db.ApplicationsVersions
+            //    .Include(a => a.Licences)
+            //        .ThenInclude(l => l.Client)
+            //    .Select(a => new { a.Application.Name, a.Licences })
+            //    .ToDictionaryAsync(a => a.Name, a => a.Licences.Select(l => l.Client).ToList());
             var clients = await _db.Clients.ToListAsync();
-            var apps = await _db.ApplicationsVersions
-                .Include(a => a.Licences)
-                    .ThenInclude(l => l.Client)
-                .Select(a => new { a.Application.Name, a.Licences })
-                .ToDictionaryAsync(a => a.Name, a => a.Licences.Select(l => l.Client).ToList());
-            return View(new IndexClientModel { Clients = clients, AppsClient = apps });
+            List<IndexClientModel.ClientApps> list = new List<IndexClientModel.ClientApps>();
+            foreach (var c in clients)
+            {
+                var apps = await _db.Licenses
+                    .Include(l => l.Client)
+                    .Include(l => l.ApplicationVersion)
+                        .ThenInclude(av => av.Application)
+                    .Where(l => l.Client.Id == c.Id)
+                    .ToListAsync();
+                var ca = new IndexClientModel.ClientApps()
+                {
+                    Client = c,
+                    Licenses = apps
+                };
+                list.Add(ca);
+            }
+            return View(new IndexClientModel { Clients = list /*Clients = clients, AppsClient = apps*/ });
         }
 
         [HttpGet]
@@ -142,17 +158,29 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Delete(int id)
         {
-            var clients = await _db.Clients.ToListAsync();
             var c = await _db.Clients.Where(cc => cc.Id == id).FirstOrDefaultAsync();
-            var apps = await _db.ApplicationsVersions
-                .Include(a => a.Licences)
-                    .ThenInclude(l => l.Client)
-                .Where(a => a.Licences.Select(l => l.Client).ToList().Contains(c))
-                .ToListAsync();
+            var clients = await _db.Clients.ToListAsync();
+            List<IndexClientModel.ClientApps> list = new List<IndexClientModel.ClientApps>();
+            foreach (var cc in clients)
+            {
+                var apps = await _db.Licenses
+                    .Include(l => l.Client)
+                    .Include(l => l.ApplicationVersion)
+                        .ThenInclude(av => av.Application)
+                    .Where(l => l.Client.Id == cc.Id)
+                    .ToListAsync();
+                var ca = new IndexClientModel.ClientApps()
+                {
+                    Client = cc,
+                    Licenses = apps
+                };
+                list.Add(ca);
+            }
             if (c == null)
-                return View("Index", new IndexClientModel { Clients = clients, Error = 1 });
-            if(apps.Count > 0)
-                return View("Index", new IndexClientModel { Clients = clients, Error = 2 });
+                return View("Index", new IndexClientModel { Clients = list, Error = 1 });
+            var appsc = list.Where(cccc => cccc.Client == c).FirstOrDefault();
+            if (appsc.Licenses.Count > 0)
+                return View("Index", new IndexClientModel { Clients = list, Error = 2 });
             _db.Addresses.Remove(c.Address);
             _db.Clients.Remove(c);
             await _db.SaveChangesAsync();

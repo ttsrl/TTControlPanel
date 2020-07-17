@@ -1,16 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TTControlPanel.Models.ViewModel
 {
     public class IndexClientModel
     {
-        public List<Client> Clients { get; set; }
-        public Dictionary<string, List<Client>> AppsClient { get; set; }
+        //public List<Client> Clients { get; set; }
+        //public Dictionary<string, List<Client>> AppsClient { get; set; }
+        public List<ClientApps> Clients { get; set; } 
         public int Error { get; set; }
+
+        public class ClientApps
+        {
+            public Client Client { get; set; }
+            public List<License> Licenses { get; set; } 
+        }
     }
 
     public class NewClientGetModel
