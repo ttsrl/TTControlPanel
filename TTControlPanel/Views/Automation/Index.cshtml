@@ -1,0 +1,129 @@
+﻿@model IndexAutomationModel
+@{
+    ViewData["Title"] = "Automazioni";
+}
+<div id="explorerLink">
+    Automazioni
+</div>
+<h2>Automazioni</h2>
+<br />
+<div class="automations" style="margin:0px 50px;">
+    <div id="automation1" class="automation-item">
+        <h4>Luce ufficio:</h4>
+        <label></label>
+        <label class="switch" style="float: right;">
+            <input type="checkbox" id="automation1-check" asp-checked="(Model.Automation1.RelayValue && Model.Automation1.State == AutomationState.Online)" asp-disabled="(Model.Automation1.State == AutomationState.Offline)" />
+            <span class="slider"></span>
+        </label>
+        <span class="automation-alert @(Model.Automation1.State == AutomationState.Offline ? "visible" : "hidden")"></span>
+        <span class="automation-loading hidden"></span>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var checkStatusTimer;
+        var automation1Online = false;
+        var automation1AtGetStatus = false;
+        var automation1AtControl = false;
+
+        $(document).ready(function () {
+            checkStatusTimer = setInterval(GetAutomationsStatus, 5000);
+            if ("@(Model.Automation1.State == AutomationState.Online)" == "True")
+                window.automation1Online = true;
+        });
+
+        function GetAutomationsStatus() {
+            if (window.automation1AtControl)
+                return;
+            window.automation1AtGetStatus = true;
+            var req = $.ajax({
+                type: 'POST',
+                url: 'https://shelly-15-eu.shelly.cloud/device/status',
+                data: 'id=68c63afb5933&auth_key=MTU4MjB1aWQBA532C5A185416F68277C9D27FE067B08AC8E8EA106E6D2E74572AD6100804A5E900152E2C8E6809',
+                contentType: "application/x-www-form-urlencoded",
+                dataType: 'json',
+                cache: false
+            }).done(function (data) {
+                if (!window.automation1AtControl) {
+                    var isok = data.isok;
+                    var online = data.data.online;
+                    var power = data.data.device_status.relays[0].ison;
+                    if (!isok || !online) {
+                        setStatus("automation1", -1);
+                    } else {
+                        if (power) {
+                            setStatus("automation1", 1);
+                        } else {
+                            setStatus("automation1", 0);
+                        }
+                    }
+                }
+            }).fail(function () {
+                if (!window.automation1AtControl)
+                    setStatus("automation1", -1);
+            }).always(function () {
+                window.automation1AtGetStatus = false;
+            });
+            setTimeout(function () { req.abort(); }, 4000);
+        }
+
+        function setStatus(id, status) {
+            if (status == -1) {
+                $("#" + id + " .automation-alert").removeClass("hidden").addClass("visible");
+                $("#" + id + " input").prop('disabled', true);
+                window.automation1Online = false;
+            } else {
+                $("#" + id + " .automation-alert").removeClass("visible").addClass("hidden");
+                $("#" + id + " input").prop('disabled', false);
+                window.automation1Online = true;
+            }
+            if (status == 1) {
+                $("#" + id + " input").prop('checked', true);
+            } else {
+                $("#" + id + " input").prop('checked', false);
+            }
+        }
+
+        $('#automation1-check').click(function (event) {
+            var $checkbox = $(this);
+            setTimeout(function () { $checkbox.removeAttr('checked'); }, 0);
+            event.preventDefault();
+            event.stopPropagation();
+            if (window.automation1Online && !window.automation1AtGetStatus) {
+                var checked = $checkbox.is(':checked');
+                SendAutomationRequest(checked);
+            }
+        });
+
+        function SendAutomationRequest(on) {
+            if (window.automation1AtGetStatus)
+                return;
+            $("#automation1 .automation-loading").removeClass("hidden").addClass("visible");
+            window.automation1AtControl = true;
+            var state = (on) ? "on" : "off";
+            var req = $.ajax({
+                type: 'POST',
+                url: 'https://shelly-15-eu.shelly.cloud/device/relay/control/',
+                data: 'channel=0&turn=' + state +'&id=68c63afb5933&auth_key=MTU4MjB1aWQBA532C5A185416F68277C9D27FE067B08AC8E8EA106E6D2E74572AD6100804A5E900152E2C8E6809',
+                contentType: "application/x-www-form-urlencoded",
+                dataType: 'json',
+                cache: false
+            }).done(function (data) {
+                var isok = data.isok;
+                if (isok) {
+                    if (on)
+                        setStatus("automation1", 1);
+                    else
+                        setStatus("automation1", 0);
+                }
+            }).always(function () {
+                window.automation1AtControl = false;
+                $("#automation1 .automation-loading").removeClass("visible").addClass("hidden");
+            });
+            setTimeout(function () { req.abort(); }, 5000);
+        }
+
+    </script>
+}
