@@ -321,7 +321,7 @@ select {
     }
 
     main .page {
-        width: 980px;
+        width: 1000px;
         height: auto;
         margin: 0px auto;
         margin-bottom: 60px;
@@ -344,22 +344,28 @@ select {
 
                 main .page .menu ul li {
                     display: inline-block;
-                    padding: 5px 20px;
+                    padding: 5px 18px;
                 }
 
+                    main .page .menu ul li:first-of-type {
+                        padding: 5px 18px 5px 0px;
+                    }
 
-/* ------------------------------- login ------------------------------------------*/
+                    main .page .menu ul li:last-of-type {
+                        padding: 5px 0px 5px 40px;
+                    }
 
-#loginBox {
-    width: 500px;
-    height: auto;
-    display: block;
-    margin: 50px auto;
-    padding: 30px;
-    background-color: white;
-    border: 1px solid rgba(0,0,0,0.1);
-    color: #50575b;
-}
+                    /* ------------------------------- login ------------------------------------------*/
+                    #loginBox {
+                        width: 500px;
+                        height: auto;
+                        display: block;
+                        margin: 50px auto;
+                        padding: 30px;
+                        background-color: white;
+                        border: 1px solid rgba(0,0,0,0.1);
+                        color: #50575b;
+                    }
 
     #loginBox .logo {
         width: 180px;
