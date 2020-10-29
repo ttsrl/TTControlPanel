@@ -8,17 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace TTControlPanel.Controllers.Api
 {
     [Produces("application/json")]
-    [Route("api/TestTimerRequest")]
+    [Route("api/TimerRequest")]
     [ApiController]
-    public class TestTimerRequestController : ControllerBase
+    public class TimerRequestController : ControllerBase
     {
 
         [HttpGet]
-        public async Task<IActionResult> Get(int returnValue)
+        public async Task<IActionResult> Get(int returnCode = 200, int timer = 5000)
         {
-            await Task.Delay(10000);
-            if (returnValue == 200)
-                return Ok();
+            await Task.Delay(timer);
+            if (returnCode == 200)
+                return Ok(new { });
             else
                 return NotFound();
         }
