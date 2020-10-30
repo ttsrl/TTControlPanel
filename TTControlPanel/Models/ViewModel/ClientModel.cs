@@ -71,6 +71,7 @@ namespace TTControlPanel.Models.ViewModel
     public class ClientDetailsGetMode
     {
         public Client Client { get; set; }
-        public List<ApplicationVersion> Applications { get; set; }
+        public List<Application> Applications { get; set; }
+        public List<License> Licenses { get; set; }
     }
 }

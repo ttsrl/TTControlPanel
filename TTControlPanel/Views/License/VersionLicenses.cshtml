@@ -12,13 +12,13 @@
 </div>
 <table class="table">
     <tr style="font-weight:bold;">
-        <td>ProductKey</td>
-        <td>Tipo</td>
-        <td>Data Rilascio</td>
-        <td>Stato</td>
-        <td>Data Attivazione</td>
-        <td>Permesso</td>
-        <td>Attività</td>
+        <td style="width:315px;">ProductKey</td>
+        <td style="width:50px;">Tipo</td>
+        <td style="width:100px;">Data Rilascio</td>
+        <td style="width:75px;">Stato</td>
+        <td style="width:100px;">Data Attivazione</td>
+        <td style="width:82px;">Permesso</td>
+        <td style="width:70px;">Attività</td>
         <td>Azioni</td>
     </tr>
     @foreach (var l in Model.Licenses)
@@ -56,13 +56,15 @@
                 title = "Attualmente attivo";
             }
         }
+        var stringt = (l.ActivationDateTimeUtc == null) ? "-" : ((DateTime)l.ActivationDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yy") + "<br />" + ((DateTime)l.ActivationDateTimeUtc).ToDateTimeCE().ToString("HH:mm");
+        var typet = (l.ProductKey.Type == ProductKey.PKType.Normal) ? "N" : ((l.ProductKey.Type == ProductKey.PKType.Time) ? "T" : "P");
         <tr class="@(l.Banned ? "ban" : "")">
-            <td style="text-align:center; font-size: 12px;"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
-            <td style="text-align:center; font-size: 13px;">@l.ProductKey.Type.ToString()</td>
-            <td style="text-align:center; font-size: 11px;">@l.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yy HH:mm")</td>
+            <td class="justify" style="font-size: 12px; font-weight: bold;"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
+            <td style="text-align:center; font-size: 12px; font-weight: bold;">@typet</td>
+            <td style="font-size: 11px;">@l.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yy")<br />@l.TimestampDateTimeUtc.ToDateTimeCE().ToString("HH:mm")</td>
             <td style="font-size: 13px;" class="license@((!l.Active) ? "I" : (exp ? "S" : "A"))">@((!l.Active) ? "Pronta" : (exp ? "Scaduta" : "Attiva"))</td>
-            <td style="text-align:center; font-size: 11px;">@(l.ActivationDateTimeUtc == null ? "-" : ((DateTime)l.ActivationDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yy HH:mm"))</td>
-            <td style="font-size: 13px;" class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "Bloccato" : "Consetito")</td>
+            <td style="font-size: 11px;">@Html.Raw(stringt)</td>
+            <td style="text-align: center; font-size: 13px;" class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "NO" : "SI")</td>
             <td style="text-align: center;"><span title="@title" style="vertical-align: middle;" class="led @(resll == 0 ? "black" : resll == 1 ? "red" : resll == 2 ? "orange" : "green")"></span></td>
             <td>
                 <span asp-if="@(!l.Banned)"><a asp-controller="License" asp-action="Ban" asp-route-id="@l.Id" asp-route-mod="1">Blocca</a></span>

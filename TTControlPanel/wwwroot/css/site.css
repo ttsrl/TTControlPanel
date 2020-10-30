@@ -466,12 +466,32 @@ form label {
 }
 
 .table tr.ban {
-    background-color: #e1e1e1;
+    background-color: #e8e8e8;
 }
 
 .table td {
     vertical-align: middle;
 }
+
+    .table td.justify {
+        overflow: hidden;
+    }
+
+        .table td.justify a {
+            text-align: justify;
+            display: inline-block;
+            width: 100%;
+            text-justify: inter-character;
+            text-align-last: center;
+            height: 0px;
+            line-height: 0px;
+        }
+
+        .table td.justify a:after {
+            content: "";
+            display: inline-block;
+            width: 100%;
+        }
 
 #explorerLink {
     border-bottom: 1px solid #e1e1e1;

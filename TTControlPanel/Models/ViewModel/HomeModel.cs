@@ -20,4 +20,11 @@ namespace TTControlPanel.Models.ViewModel
         public int Additions { get; set; }
         public int Deletions { get; set; }
     }
+
+    public class GroupGitCommit
+    {
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public int Day { get; set; }
+    }
 }

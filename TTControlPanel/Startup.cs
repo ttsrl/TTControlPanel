@@ -33,6 +33,8 @@ namespace TTControlPanel
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddCors(c => { c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()); });
+
 
             services.AddMvc(options => { options.Filters.Add<AuthenticationFilter>(); }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDistributedMemoryCache();
@@ -65,6 +67,8 @@ namespace TTControlPanel
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 //app.UseHsts();
             }
+
+            app.UseCors(options => options.AllowAnyOrigin());
 
             app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
 

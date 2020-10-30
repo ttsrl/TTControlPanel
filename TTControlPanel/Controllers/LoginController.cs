@@ -41,6 +41,8 @@ namespace TTControlPanel.Controllers
             var user = await _db.Users.FirstOrDefaultAsync(u => (u.Username.ToLower() == username.ToLower() || u.Email.ToLower() == username.ToLower()) && u.Password == password);
             if (user != null)
             {
+                if(user.Ban)
+                    return View("Index", new LoginModel { Error = LoginError.Banned });
                 await _db.Entry(user).Reference(u => u.Role).LoadAsync();
                 if (user.Role.GrantLogin)
                 {

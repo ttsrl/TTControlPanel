@@ -41,13 +41,24 @@
         <label class="val">@Model.Client.VAT</label>
         <br />
     </div>
+    <br />
     <div>
         <h4>Applicazioni</h4>
         @foreach (var a in Model.Applications)
         {
-            <label>@a.Application.Name</label>
+            <label style="font-size:16px; margin: 5px 0px 5px 30px;"><span style="display:inline-block; width:40px; text-align:right; margin-right:20px;">@a.Id:</span><a style="font-weight:bold;" asp-controller="Application" asp-action="Versions" asp-route-id="@a.Id">@a.Name</a></label>
             <br />
         }
         <span asp-if="Model.Applications.Count == 0">Nessuna applicazione associata a questo cliente</span>
+    </div>
+    <br />
+    <div>
+        <h4>Licenze</h4>
+        @foreach (var l in Model.Licenses)
+        {
+            <label style="font-size:14px; margin: 5px 0px 5px 30px;"><span style="display:inline-block; width:40px; text-align:right; margin-right:20px;">@l.Id:</span><a style="font-weight:bold;" asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></label>
+            <br />
+        }
+        <span asp-if="Model.Applications.Count == 0">Nessuna licenza associata a questo cliente</span>
     </div>
 </div>

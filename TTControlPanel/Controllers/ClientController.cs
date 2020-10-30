@@ -110,8 +110,15 @@ namespace TTControlPanel.Controllers
                     .ThenInclude(l => l.Client)
                 .Include(a => a.Application)
                 .Where(a => a.Licences.Select(l => l.Client).Contains(client))
+                .Select(a => a.Application)
+                .Distinct()
                 .ToListAsync();
-            return View(new ClientDetailsGetMode { Client = client, Applications = apps });
+            var lics = await _db.Licenses
+                .Include(l => l.Client)
+                .Include(l => l.ProductKey)
+                .Where(l => l.Client.Id == id)
+                .ToListAsync();
+            return View(new ClientDetailsGetMode { Client = client, Applications = apps, Licenses = lics });
         }
 
         [HttpGet]

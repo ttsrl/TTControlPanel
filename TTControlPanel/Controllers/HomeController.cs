@@ -26,13 +26,8 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Index()
         {
-            //var user = (User)HttpContext.Items["User"];
-            //if (user is User)
-            //{
-            //    return View(new HomeGetModel() { Commits = await _git.GetCommits() });
-            //}
-            //return RedirectToAction("Index", "Login");
-            return View(new HomeGetModel() { Commits = await _git.GetCommits() });
+            var list = await _git.GetCommits(6);
+            return View(new HomeGetModel() { Commits = list });
         }
 
         [HttpGet]

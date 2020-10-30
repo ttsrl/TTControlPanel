@@ -3,32 +3,47 @@
 @{
     ViewData["Title"] = "Home";
 
-    var groupCommit = Model.Commits.GroupBy(c => new { c.Date.DateTime.Year, c.Date.DateTime.Month, c.Date.DateTime.Day }).ToList();
+    List<IGrouping<GroupGitCommit, GitCommit>> groupCommit = null;
+
+    if (Model.Commits != null && Model.Commits.Count > 0)
+    {
+        groupCommit = Model.Commits.GroupBy(c => new GroupGitCommit { Year = c.Date.DateTime.Year, Month = c.Date.DateTime.Month, Day = c.Date.DateTime.Day }).ToList();
+    }
+
 }
 <div id="explorerLink">
     Home
 </div>
 <h1>Home</h1>
 <br />
-<div id="git">
-    @foreach (var g in groupCommit)
-    {
-    <div class="commitsGroup">
-        <label class="data">@g.Key.Day/@g.Key.Month/@g.Key.Year</label>
-        @foreach (var c in g)
+@if (groupCommit == null)
+{
+    <div>
+        <label style="display: block; margin: 10px auto; text-align: center; font-style: italic; color: #a6a6a6;">Non è presente alcun git oppure non è stato possibile caricarne qualcuno correttamente.</label>
+    </div>
+}
+else
+{
+    <div id="git">
+        @foreach (var g in groupCommit)
         {
-            <div class="commit">
-                <div class="octicon">
-                    <svg viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M10.86 7c-.45-1.72-2-3-3.86-3-1.86 0-3.41 1.28-3.86 3H0v2h3.14c.45 1.72 2 3 3.86 3 1.86 0 3.41-1.28 3.86-3H14V7h-3.14zM7 10.2c-1.22 0-2.2-.98-2.2-2.2 0-1.22.98-2.2 2.2-2.2 1.22 0 2.2.98 2.2 2.2 0 1.22-.98 2.2-2.2 2.2z"></path></svg>
-                </div>
-                <div class="details">
-                    <label class="hour">@c.Date.ToString("HH:mm")</label>
-                    <label class="author">@c.AuthorName (@c.AuthorUsername)</label>
-                    <label class="changes">@c.Files files cambiati con @c.Additions aggiunte e @c.Deletions rimozioni</label>
-                    <label class="message">@c.Message</label>
-                </div>
+            <div class="commitsGroup">
+                <label class="data">@g.Key.Day/@g.Key.Month/@g.Key.Year</label>
+                @foreach (var c in g)
+                {
+                    <div class="commit">
+                        <div class="octicon">
+                            <svg viewBox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M10.86 7c-.45-1.72-2-3-3.86-3-1.86 0-3.41 1.28-3.86 3H0v2h3.14c.45 1.72 2 3 3.86 3 1.86 0 3.41-1.28 3.86-3H14V7h-3.14zM7 10.2c-1.22 0-2.2-.98-2.2-2.2 0-1.22.98-2.2 2.2-2.2 1.22 0 2.2.98 2.2 2.2 0 1.22-.98 2.2-2.2 2.2z"></path></svg>
+                        </div>
+                        <div class="details">
+                            <label class="hour">@c.Date.ToString("HH:mm")</label>
+                            <label class="author">@c.AuthorName (@c.AuthorUsername)</label>
+                            <label class="changes">@c.Files files cambiati con @c.Additions aggiunte e @c.Deletions rimozioni</label>
+                            <label class="message">@c.Message</label>
+                        </div>
+                    </div>
+                }
             </div>
         }
     </div>
-    }
-</div>
+}
