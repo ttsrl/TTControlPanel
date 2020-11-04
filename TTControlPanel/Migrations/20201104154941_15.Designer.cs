@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TTControlPanel.Services;
 
 namespace TTControlPanel.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20201104154941_15")]
+    partial class _15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,7 +130,7 @@ namespace TTControlPanel.Migrations
                     b.ToTable("Hids");
                 });
 
-            modelBuilder.Entity("TTControlPanel.Models.Invoice", b =>
+            modelBuilder.Entity("TTControlPanel.Models.Invoce", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -138,7 +140,7 @@ namespace TTControlPanel.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoces");
                 });
 
             modelBuilder.Entity("TTControlPanel.Models.LastLog", b =>
@@ -433,7 +435,7 @@ namespace TTControlPanel.Migrations
                         .WithMany()
                         .HasForeignKey("ClientId");
 
-                    b.HasOne("TTControlPanel.Models.Invoice", "Invoice")
+                    b.HasOne("TTControlPanel.Models.Invoce", "Invoice")
                         .WithMany()
                         .HasForeignKey("InvoiceId");
                 });

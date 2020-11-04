@@ -31,7 +31,7 @@ namespace TTControlPanel.Services
         public DbSet<LastLog> LastLogs { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Invoce> Invoces { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Working> Workings { get; set; }
 
         private static DBContext _instance;

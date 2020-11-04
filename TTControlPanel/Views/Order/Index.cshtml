@@ -8,7 +8,7 @@
 <h2>Commesse</h2>
 <br />
 <div style="text-align:right; margin: 0px 0px 30px 0px;">
-    <a asp-action="New" asp-controller="Product"><input type="button" value="Nuovo" /></a>
+    <a asp-action="New" asp-controller="Order"><input type="button" value="Nuovo" /></a>
     <form style="float:left;">
         <label style="width: 55px; display: inline-block; text-align:left;">Ordina:</label>
         <select id="orderby" name="orderby" style="margin: 0px !important; width:200px;">
@@ -22,20 +22,31 @@
 </div>
 <table class="table">
     <tr style="font-weight:bold;">
-        <td style="width:120px;">Numero</td>
-        <td style="width:200px;">Nome</td>
+        <td style="width:90px;">Numero</td>
+        <td style="width:150px;">Nome</td>
         <td style="width:150px;">Cliente</td>
         <td style="width:200px;">Descrizione</td>
-        <td style="width:150px;">Fattura</td>
+        <td style="width:130px;">Fattura</td>
+        <td style="width:90px;">Data Consegna</td>
+        <td style="width:70px;">In lavoro</td>
         <td>Azioni</td>
     </tr>
     @foreach (var o in Model.Orders)
     {
+        var work = Model.Workings.Where(w => w.Order.Id == o.Id).FirstOrDefault();
+        var aw = 0;
+        if (work != null && work.AtProgress)
+        {
+            aw = 1;
+        }
         <tr>
             <td style="font-weight:bold;">@o.Number</td>
             <td>@o.Name</td>
             <td>@o.Client.Name</td>
             <td>@o.Description</td>
+            <td>@o.Invoice.Code</td>
+            <td style="font-size: 11px;"></td>
+            <td style="text-align:center;"><span style="vertical-align: middle;" class="led @(aw == 0 ? "red" : "green")"></span></td>
             <td>
                 <span><a asp-controller="Order" asp-action="Edit" asp-route-id="@o.Id">Modifica</a></span>
                 <span><a asp-controller="Order" asp-action="Delete" asp-route-id="@o.Id">Rimuovi</a></span>
@@ -43,6 +54,6 @@
         </tr>
     }
     <tr asp-if="Model.Orders.Count == 0">
-        <td colspan="6" style="text-align:center">Nessun prodotto presente</td>
+        <td colspan="7" style="text-align:center">Nessun prodotto presente</td>
     </tr>
 </table>
