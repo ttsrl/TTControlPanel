@@ -1,0 +1,80 @@
+﻿@model IndexProductModel
+@{
+    ViewData["Title"] = "Prodotti";
+}
+<div id="explorerLink">
+    <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Prodotti
+</div>
+<h2>Prodotti</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, file selezionato non valido.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore, estenzione del file selezionato non valida.</label>
+    <label class="error_lbl" asp-if="Model.Error == 3">Errore durante la lettura del file. Ricontrollare che il file sia un tipo valido.</label>
+    <label class="error_lbl" asp-if="Model.Error == 4">Errore, la tabella contenuta del file non ha una struttura correttamente riconosciuta.</label>
+</div>
+<div style="text-align:right; margin: 0px 0px 30px 0px;">
+    <form method="post" id="importXlsForm" enctype="multipart/form-data" asp-controller="Product" asp-action="Import" asp-antiforgery="true" autocomplete="off" style="width: 120px; float: right; ">
+        <input type="file" name="file" id="xlsFile" style="display: block; visibility: hidden; width: 0; height: 0;" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+        <input type="button" value="Importa" id="importXls" />
+        <input type="submit" style="display: block; visibility: hidden; width: 0px; height: 0px; margin: 0px; padding: 0px;" />
+    </form>
+    <a asp-action="New" asp-controller="Product"><input type="button" value="Nuovo" /></a>
+    <form style="float:left;">
+        <label style="width: 55px; display: inline-block; text-align:left;">Ordina:</label>
+        <select id="orderby" name="orderby" style="margin: 0px !important; width:200px;">
+            <option asp-selected="@(Model.OrderBy == "id")" value="id">Primo inserito</option>
+            <option asp-selected="@(Model.OrderBy == "-id")" value="-id">Ultimo inserito</option>
+            <option asp-selected="@(Model.OrderBy == "code")" value="code">Codice</option>
+            <option asp-selected="@(Model.OrderBy == "name")" value="name">Nome</option>
+        </select>
+    </form>
+</div>
+<table class="table">
+    <tr style="font-weight:bold;">
+        <td style="width:250px;">Codice</td>
+        <td style="width:370px;">Nome</td>
+        <td style="width:90px; text-align:left;">Prezzo vendita</td>
+        <td style="width:90px; text-align:left;">Costo<br />medio</td>
+        <td>Azioni</td>
+    </tr>
+    @foreach (var prod in Model.Products)
+    {
+<tr>
+    <td style="font-weight:bold;">@prod.Code</td>
+    <td>@prod.Name</td>
+    <td >&euro;&nbsp;@prod.SellingPrice.ToString("F2")</td>
+    <td >&euro;&nbsp;@prod.AveragePrice.ToString("F2")</td>
+    <td>
+        <span><a asp-controller="Product" asp-action="Edit" asp-route-id="@prod.Id">Modifica</a></span>
+        <span><a asp-controller="Product" asp-action="Delete" asp-route-id="@prod.Id">Rimuovi</a></span>
+    </td>
+</tr>
+    }
+    <tr asp-if="Model.Products.Count == 0">
+        <td colspan="3" style="text-align:center">Nessun prodotto presente</td>
+    </tr>
+</table>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#orderby').on('change', function () {
+                $(this).closest('form').submit();
+            });
+        });
+
+        //open file dialog from button
+        $("#importXls").click(function () {
+            $('#xlsFile').click();
+        });
+
+        //send submit
+        $("#xlsFile").change(function () {
+            var fileName = $(this).val();
+            $("#importXlsForm").submit();
+        });
+
+    </script>
+}

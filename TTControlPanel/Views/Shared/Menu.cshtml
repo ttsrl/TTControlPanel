@@ -1,4 +1,7 @@
-﻿@{ var user = Context.Items["User"] as User; }
+﻿@{
+    var user = Context.Items["User"] as User;
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+}
 
 <div asp-if="@(user != null)" class="menu">
     <ul>
@@ -8,8 +11,13 @@
         <li><a asp-action="Index" asp-controller="Application">Applicazioni</a></li>
         <li><a asp-action="Index" asp-controller="License">Licenze</a></li>
         <li><a asp-action="Index" asp-controller="Automation">Automazioni</a></li>
-        <li><a asp-action="Index" asp-controller="Orders">Commesse</a></li>
+        <li><a asp-action="Index" asp-controller="Order">Commesse</a></li>
         <li></li>
         <li><label style="color: #3e3e3e;">@user.Username</label>&nbsp;&nbsp;<a asp-action="Index" asp-controller="Logout">Esci</a></li>
+    </ul>
+</div>
+<div asp-if="@(controller == "Product" || controller == "Order")" class="menu">
+    <ul>
+        <li><a asp-action="Index" asp-controller="Product">Prodotti</a></li>
     </ul>
 </div>

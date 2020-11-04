@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TTControlPanel.Services;
 
 namespace TTControlPanel.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20201030113915_12")]
+    partial class _12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,6 +111,60 @@ namespace TTControlPanel.Migrations
                     b.ToTable("Clients");
                 });
 
+            modelBuilder.Entity("TTControlPanel.Models.DBModel.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ClientId");
+
+                    b.Property<DateTime>("DeliveryDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Invoice");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Number");
+
+                    b.Property<DateTime>("StartDate");
+
+                    b.Property<DateTime>("TimestampDateTimeUtc");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("TTControlPanel.Models.DBModel.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("AveragePrice");
+
+                    b.Property<string>("Code");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("OrderId");
+
+                    b.Property<double>("SellingPrice");
+
+                    b.Property<int>("VAT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Products");
+                });
+
             modelBuilder.Entity("TTControlPanel.Models.HID", b =>
                 {
                     b.Property<int>("Id")
@@ -184,62 +240,6 @@ namespace TTControlPanel.Migrations
                     b.HasIndex("ProductKeyId");
 
                     b.ToTable("Licenses");
-                });
-
-            modelBuilder.Entity("TTControlPanel.Models.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ClientId");
-
-                    b.Property<DateTime>("DeliveryDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Invoice");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("Number");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.Property<DateTime>("TimestampDateTimeUtc");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("TTControlPanel.Models.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("AveragePrice");
-
-                    b.Property<string>("Code");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int?>("OrderId");
-
-                    b.Property<double>("SellingPrice");
-
-                    b.Property<DateTime>("TimestampDateTimeUtc");
-
-                    b.Property<int>("VAT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("TTControlPanel.Models.ProductKey", b =>
@@ -331,6 +331,20 @@ namespace TTControlPanel.Migrations
                         .HasForeignKey("AddressId");
                 });
 
+            modelBuilder.Entity("TTControlPanel.Models.DBModel.Order", b =>
+                {
+                    b.HasOne("TTControlPanel.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+                });
+
+            modelBuilder.Entity("TTControlPanel.Models.DBModel.Product", b =>
+                {
+                    b.HasOne("TTControlPanel.Models.DBModel.Order")
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
+                });
+
             modelBuilder.Entity("TTControlPanel.Models.HID", b =>
                 {
                     b.HasOne("TTControlPanel.Models.User", "AddedUser")
@@ -362,20 +376,6 @@ namespace TTControlPanel.Migrations
                     b.HasOne("TTControlPanel.Models.ProductKey", "ProductKey")
                         .WithMany()
                         .HasForeignKey("ProductKeyId");
-                });
-
-            modelBuilder.Entity("TTControlPanel.Models.Order", b =>
-                {
-                    b.HasOne("TTControlPanel.Models.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-                });
-
-            modelBuilder.Entity("TTControlPanel.Models.Product", b =>
-                {
-                    b.HasOne("TTControlPanel.Models.Order")
-                        .WithMany("Products")
-                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("TTControlPanel.Models.ProductKey", b =>

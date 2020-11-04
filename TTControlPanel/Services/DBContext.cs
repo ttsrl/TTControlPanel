@@ -29,6 +29,8 @@ namespace TTControlPanel.Services
         public DbSet<ProductKey> ProductKeys { get; set; }
         public DbSet<HID> Hids { get; set; }
         public DbSet<LastLog> LastLogs { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         private static DBContext _instance;
         public static DBContext Instance

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TTControlPanel.Controllers
 {
-    public class OrdersController : Controller
+    public class OrderController : Controller
     {
         public async Task<IActionResult> Index()
         {

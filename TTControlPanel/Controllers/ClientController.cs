@@ -22,11 +22,7 @@ namespace TTControlPanel.Controllers
 
         [Authentication]
         public async Task<IActionResult> Index()
-        {            //var apps = await _db.ApplicationsVersions
-            //    .Include(a => a.Licences)
-            //        .ThenInclude(l => l.Client)
-            //    .Select(a => new { a.Application.Name, a.Licences })
-            //    .ToDictionaryAsync(a => a.Name, a => a.Licences.Select(l => l.Client).ToList());
+        {
             var clients = await _db.Clients.ToListAsync();
             List<IndexClientModel.ClientApps> list = new List<IndexClientModel.ClientApps>();
             foreach (var c in clients)

@@ -1,0 +1,63 @@
+﻿@model NewProductGetModel
+@{
+    ViewData["Title"] = "Nuovo Prodotto";
+}
+<div id="explorerLink">
+    <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Product" asp-action="Index">Prodotti</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuovo
+</div>
+<h2>Nuovo Prodotto</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di inserimento, controllare di aver inserito tutti i dati richiesti.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Prodotto già presente nel database.</label>
+</div>
+<form asp-antiforgery="true" asp-controller="Product" asp-action="New" autocomplete="off" style="width:450px;">
+    <label>Codice:</label>
+    <input type="text" name="code" id="code" style="width:450px;" />
+    <br />
+    <label style="margin-top:15px;">Nome:</label>
+    <textarea name="name" style="width:450px;"></textarea>
+    <br />
+    <label style="margin-top:15px;">IVA:</label>
+    <input type="text" name="vat" style="width:160px; text-align:right;" value="22" onkeypress="return EnterOnlyNumber(event);" />&nbsp;&nbsp;%
+    <br />
+    <label style="margin-top:15px;">Prezzo vendita:</label>
+    <input type="text" name="sellingPrice" style="width:160px; text-align:right;" value="0,00" onfocus="focusPrice(this);" onblur="lostFocusPrice(this);" onkeypress="return EnterOnlyNumber(event);" />&nbsp;&nbsp;&euro;
+    <br />
+    <label style="margin-top:15px;">Costo Medio:</label>
+    <input type="text" name="averagePrice" style="width:160px; text-align:right;" value="0,00" onfocus="focusPrice(this);" onblur="lostFocusPrice(this);" onkeypress="return EnterOnlyNumber(event);" />&nbsp;&nbsp;&euro;
+    <br />
+    <br />
+    <input type="submit" value="Aggiungi" name="submit" style="margin-top:20px;" />
+</form>
+
+@section Scripts{ 
+    <script type="text/javascript">
+
+        function focusPrice(item) {
+            if ($(item).val() == "0,00")
+                $(item).val("");
+        }
+
+        function lostFocusPrice(item) {
+            var original = $(item).val();
+            original = original.replace(".", ",");
+            var tmp = $(item).val();
+            tmp = tmp.replace(".", "").replace(",", "");
+            if (tmp == "") {
+                $(item).val("0,00");
+                return;
+            } else {
+                if (parseInt(tmp) == 0) {
+                    $(item).val("0,00");
+                    return;
+                }
+            }
+            if (original.indexOf(",") < 0) {
+                original = original + ",00";
+            }
+            $(item).val(original);
+        }
+
+    </script>
+}
