@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IndexOrderGetModel
+@{
     ViewData["Title"] = "Commesse";
 }
 <div id="explorerLink">
@@ -6,3 +7,42 @@
 </div>
 <h2>Commesse</h2>
 <br />
+<div style="text-align:right; margin: 0px 0px 30px 0px;">
+    <a asp-action="New" asp-controller="Product"><input type="button" value="Nuovo" /></a>
+    <form style="float:left;">
+        <label style="width: 55px; display: inline-block; text-align:left;">Ordina:</label>
+        <select id="orderby" name="orderby" style="margin: 0px !important; width:200px;">
+            <option asp-selected="@(Model.OrderBy == "id")" value="id">Primo inserito</option>
+            <option asp-selected="@(Model.OrderBy == "-id")" value="-id">Ultimo inserito</option>
+            <option asp-selected="@(Model.OrderBy == "number")" value="number">Codice</option>
+            <option asp-selected="@(Model.OrderBy == "name")" value="name">Nome</option>
+            <option asp-selected="@(Model.OrderBy == "enddate")" value="name">Data Fine</option>
+        </select>
+    </form>
+</div>
+<table class="table">
+    <tr style="font-weight:bold;">
+        <td style="width:120px;">Numero</td>
+        <td style="width:200px;">Nome</td>
+        <td style="width:150px;">Cliente</td>
+        <td style="width:200px;">Descrizione</td>
+        <td style="width:150px;">Fattura</td>
+        <td>Azioni</td>
+    </tr>
+    @foreach (var o in Model.Orders)
+    {
+        <tr>
+            <td style="font-weight:bold;">@o.Number</td>
+            <td>@o.Name</td>
+            <td>@o.Client.Name</td>
+            <td>@o.Description</td>
+            <td>
+                <span><a asp-controller="Order" asp-action="Edit" asp-route-id="@o.Id">Modifica</a></span>
+                <span><a asp-controller="Order" asp-action="Delete" asp-route-id="@o.Id">Rimuovi</a></span>
+            </td>
+        </tr>
+    }
+    <tr asp-if="Model.Orders.Count == 0">
+        <td colspan="6" style="text-align:center">Nessun prodotto presente</td>
+    </tr>
+</table>

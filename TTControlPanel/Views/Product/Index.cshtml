@@ -21,14 +21,18 @@
     </form>
     <a asp-action="New" asp-controller="Product"><input type="button" value="Nuovo" /></a>
     <form style="float:left;">
-        <label style="width: 55px; display: inline-block; text-align:left;">Ordina:</label>
-        <select id="orderby" name="orderby" style="margin: 0px !important; width:200px;">
+        <label style="width: 55px; display: inline-block; text-align:right;">Ordina:&nbsp;&nbsp;</label>
+        <select id="orderby" name="orderby" style="margin: 0px !important; width:160px;">
             <option asp-selected="@(Model.OrderBy == "id")" value="id">Primo inserito</option>
             <option asp-selected="@(Model.OrderBy == "-id")" value="-id">Ultimo inserito</option>
             <option asp-selected="@(Model.OrderBy == "code")" value="code">Codice</option>
             <option asp-selected="@(Model.OrderBy == "name")" value="name">Nome</option>
         </select>
     </form>
+    <div style="display: inline-block; float:left;">
+        <label for="searchBar" style="width: 55px; text-align:right;">Cerca:&nbsp;&nbsp;</label>
+        <input type="text" id="txtSearch" value="" style="margin: 0 !important; width: 240px;" placeholder="Codice, Nome" onkeyup="filterSearch(event)" autocomplete="off" autofocus />
+    </div>
 </div>
 <table class="table">
     <tr style="font-weight:bold;">
@@ -40,23 +44,26 @@
     </tr>
     @foreach (var prod in Model.Products)
     {
-<tr>
-    <td style="font-weight:bold;">@prod.Code</td>
-    <td>@prod.Name</td>
-    <td >&euro;&nbsp;@prod.SellingPrice.ToString("F2")</td>
-    <td >&euro;&nbsp;@prod.AveragePrice.ToString("F2")</td>
-    <td>
-        <span><a asp-controller="Product" asp-action="Edit" asp-route-id="@prod.Id">Modifica</a></span>
-        <span><a asp-controller="Product" asp-action="Delete" asp-route-id="@prod.Id">Rimuovi</a></span>
-    </td>
-</tr>
+        <tr data-code="@prod.Code">
+            <td style="font-weight:bold;">@prod.Code</td>
+            <td>@prod.Name</td>
+            <td >&euro;&nbsp;@prod.SellingPrice.ToString("F2")</td>
+            <td >&euro;&nbsp;@prod.AveragePrice.ToString("F2")</td>
+            <td>
+                <span><a asp-controller="Product" asp-action="Edit" asp-route-id="@prod.Id">Modifica</a></span>
+                <span><a asp-controller="Product" asp-action="Delete" asp-route-id="@prod.Id">Rimuovi</a></span>
+            </td>
+        </tr>
     }
     <tr asp-if="Model.Products.Count == 0">
-        <td colspan="3" style="text-align:center">Nessun prodotto presente</td>
+        <td colspan="5" style="text-align:center">Nessun prodotto presente</td>
     </tr>
 </table>
 
 @section Scripts{
+    <script class="inject-json" data-name="products" type="application/json">
+        @Html.Raw(JsonConvert.SerializeObject(Model.Products))
+    </script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -75,6 +82,33 @@
             var fileName = $(this).val();
             $("#importXlsForm").submit();
         });
+
+        function filterSearch(e) {
+            var val = e.currentTarget.value;
+            var words = val.split(' ');
+            for (var i = 0; i < words.length; i++) {
+                var word = words[i].toLowerCase();
+                $(products).each(function (index, item) {
+                    var cd = item.Code.toString().toLowerCase();
+                    var nm = item.Name.toString().toLowerCase();
+                    if (i == 0) { //prima parola
+                        if (cd.contains(word) || nm.contains(word)) {
+                            $("tr[data-code='" + item.Code.toString() + "']").css("display", "");
+                        } else {
+                            $("tr[data-code='" + item.Code.toString() + "']").css("display", "none");
+                        }
+                    } else {
+                        if ($("tr[data-code='" + item.Code.toString() + "']").css("display") != "none") {
+                            if (cd.contains(word) || nm.contains(word)) {
+                                $("tr[data-code='" + item.Code.toString() + "']").css("display", "");
+                            } else {
+                                $("tr[data-code='" + item.Code.toString() + "']").css("display", "none");
+                            }
+                        }
+                    }
+                });
+            }
+        }
 
     </script>
 }

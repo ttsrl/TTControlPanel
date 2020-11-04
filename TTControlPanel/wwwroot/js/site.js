@@ -19,6 +19,13 @@ function EnterOnlyNumber(event) {
     }
 }
 
+String.prototype.contains = function (search) {
+    if (this.indexOf(search) >= 0)
+        return true;
+    else
+        return false;
+};
+
 $(document).ready(function () {
 
     var clipboard = new ClipboardJS('.clipboard');
