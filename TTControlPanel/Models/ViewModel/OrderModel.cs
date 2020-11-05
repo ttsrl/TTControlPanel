@@ -9,6 +9,7 @@ namespace TTControlPanel.Models.ViewModel
         public List<Order> Orders { get; set; }
         public List<Working> Workings { get; set; }
         public string OrderBy { get; set; }
+        public int Error { get; set; }
     }
 
     public class DetailsOrderGetModel

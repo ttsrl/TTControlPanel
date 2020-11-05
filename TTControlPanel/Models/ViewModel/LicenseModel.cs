@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TTControlPanel.Models.ViewModel
 {
-    public class IndexLicenseModel
+    public class IndexLicenseGetModel
     {
         public List<License> Licenses { get; set; }
         public int Error { get; set; }
         public List<LastLog> LastLogs { get; set; }
     }
 
-    public class VersionLicensesModel
+    public class VersionLicensesGetModel
     {
         public ApplicationVersion ApplicationVersion { get; set; }
         public List<License> Licenses { get; set; }
@@ -58,7 +58,7 @@ namespace TTControlPanel.Models.ViewModel
         public string Notes { get; set; }
     }
 
-    public class DetailsLicenseModel
+    public class DetailsLicenseGetModel
     {
         public License License { get; set; }
         public int Error { get; set; }

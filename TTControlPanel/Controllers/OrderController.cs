@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +65,22 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Details(int id)
         {
-            return View();
+            var order = await _db.Orders
+                .Include(o => o.Client)
+                .Include(o => o.Invoice)
+                .Where(o => o.Id == id).FirstOrDefaultAsync();
+            if (order == null)
+                return RedirectToAction("Index");
+            var work = await _db.Workings
+                .Include(w => w.FinalClient)
+                .Include(w => w.Order)
+                .Include(w => w.Items)
+                    .ThenInclude(i => i.Product)
+                .Include(w => w.Items)
+                    .ThenInclude(i => i.Operator)
+                .Where(w => w.Order.Id == id)
+                .FirstOrDefaultAsync();
+            return View(new DetailsOrderGetModel { Order = order, Working = work });
         }
 
         [HttpGet]
@@ -163,6 +177,29 @@ namespace TTControlPanel.Controllers
                 return RedirectToAction("Index");
             }
             return View(new EditOrderGetModel { Clients = clients, Invoices = invs, Order = order, Error = 1 });
+        }
+
+        [HttpGet]
+        [Authentication]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var ords = await _db.Orders
+               .Include(o => o.Client)
+               .Include(o => o.Invoice)
+               .Where(o => o.Id > 0)
+               .ToListAsync();
+            var works = await _db.Workings
+                .Include(w => w.Order)
+                .ToListAsync();
+            var ord = await _db.Orders.Where(cc => cc.Id == id).FirstOrDefaultAsync();
+            if (ord == null)
+                return View("Index", new IndexOrderGetModel { Orders = ords, Error = 1, Workings = works });
+            var ww = works.Where(w => w.Order.Id == id).FirstOrDefault();
+            if (ww != null)
+                return View("Index", new IndexOrderGetModel { Orders = ords, Error = 2, Workings = works });
+            _db.Orders.Remove(ord);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }

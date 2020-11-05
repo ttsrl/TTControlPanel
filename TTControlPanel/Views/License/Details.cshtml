@@ -1,4 +1,4 @@
-﻿@model DetailsLicenseModel
+﻿@model DetailsLicenseGetModel
 @{
     ViewData["Title"] = "Dettagli Licenza";
 }
@@ -17,7 +17,7 @@
     <label class="val license@(Model.License.Active ? "A" : "I")">@(Model.License.Active ? "Attiva" : "Inattiva")</label>
     <br />
     <label class="title">Permesso:</label>
-    <label class="val license@(Model.License.Banned ? "B" : "A")">@(Model.License.Banned ? "Bloccato" : "Consetito")</label>
+    <label class="val license@(Model.License.Banned ? "B" : "A")">@(Model.License.Banned ? "NO" : "SI")</label>
     <br />
     <label class="title">Data Attivazione:</label>
     <label class="val">@(Model.License.ActivationDateTimeUtc == null ? "--" : (((DateTime)Model.License.ActivationDateTimeUtc).ToDateTimeCE()).ToString("dd/MM/yyyy HH:mm"))</label>

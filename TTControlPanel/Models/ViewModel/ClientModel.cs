@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TTControlPanel.Models.ViewModel
 {
-    public class IndexClientModel
+    public class IndexClientGetModel
     {
-        //public List<Client> Clients { get; set; }
-        //public Dictionary<string, List<Client>> AppsClient { get; set; }
         public List<ClientApps> Clients { get; set; } 
         public int Error { get; set; }
 

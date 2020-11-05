@@ -36,7 +36,7 @@ namespace TTControlPanel.Controllers
                 .OrderByDescending(l => l.Id)
                 .ToListAsync();
             var lls = await _db.LastLogs.Include(l => l.License).ToListAsync();
-            var m = new IndexLicenseModel { Licenses = licenses, LastLogs = lls };
+            var m = new IndexLicenseGetModel { Licenses = licenses, LastLogs = lls };
             return View(m);
         }
 
@@ -54,7 +54,7 @@ namespace TTControlPanel.Controllers
             if (version == null)
                 return RedirectToAction("Index");
             var lls = await _db.LastLogs.Include(l => l.License).ToListAsync();
-            var m = new VersionLicensesModel { ApplicationVersion = version, Licenses = version.Licences.OrderByDescending(l => l.Id).ToList(), LastLogs = lls };
+            var m = new VersionLicensesGetModel { ApplicationVersion = version, Licenses = version.Licences.OrderByDescending(l => l.Id).ToList(), LastLogs = lls };
             return View(m);
         }
 
@@ -201,9 +201,9 @@ namespace TTControlPanel.Controllers
             if (lic == null)
             {
                 if (mod == 0)
-                    return View("Index", new IndexLicenseModel { Licenses = licenses, Error = 1, LastLogs = lls });
+                    return View("Index", new IndexLicenseGetModel { Licenses = licenses, Error = 1, LastLogs = lls });
                 else
-                    return View("VersionLicenses", new VersionLicensesModel { ApplicationVersion = lic.ApplicationVersion, Licenses = appslics, Error = 1, LastLogs = lls });
+                    return View("VersionLicenses", new VersionLicensesGetModel { ApplicationVersion = lic.ApplicationVersion, Licenses = appslics, Error = 1, LastLogs = lls });
             }
             var llog = await _db.LastLogs.Include(l => l.License).Where(l => l.License.Id == id).ToListAsync();
 
@@ -233,7 +233,7 @@ namespace TTControlPanel.Controllers
                     .ThenInclude(h => h.AddedUser)
                 .Where(l => l.Id == id)
                 .FirstOrDefaultAsync();
-            return View(new DetailsLicenseModel { License = lc });
+            return View(new DetailsLicenseGetModel { License = lc });
         }
 
         [HttpGet]
@@ -250,9 +250,9 @@ namespace TTControlPanel.Controllers
             if (l == null)
                 return RedirectToAction("Index");
             if (l.ProductKey == null)
-                return View("Details", new DetailsLicenseModel { License = l, Error = 1 });
+                return View("Details", new DetailsLicenseGetModel { License = l, Error = 1 });
             if (l.Hid != null )
-                return View("Details", new DetailsLicenseModel { License = l, Error = 2 });
+                return View("Details", new DetailsLicenseGetModel { License = l, Error = 2 });
             return View(new RequestCodeGetModel { License = l });
         }
 
@@ -271,9 +271,9 @@ namespace TTControlPanel.Controllers
             if (l == null)
                 return RedirectToAction("Index");
             if (l.ProductKey == null)
-                return View("Details", new DetailsLicenseModel { License = l, Error = 1 });
+                return View("Details", new DetailsLicenseGetModel { License = l, Error = 1 });
             if (l.Hid == null)
-                return View("Details", new DetailsLicenseModel { License = l, Error = 3 });
+                return View("Details", new DetailsLicenseGetModel { License = l, Error = 3 });
             return View(new RequestCodeGetModel { License = l });
         }
 
@@ -379,9 +379,9 @@ namespace TTControlPanel.Controllers
             if (l == null)
                 return RedirectToAction("Index");
             if (l.Hid == null)
-                return View("Details", new DetailsLicenseModel { License = l, Error = 2 });
+                return View("Details", new DetailsLicenseGetModel { License = l, Error = 2 });
             if (string.IsNullOrEmpty(l.ConfirmCode))
-                return View("Details", new DetailsLicenseModel { License = l, Error = 3 });
+                return View("Details", new DetailsLicenseGetModel { License = l, Error = 3 });
             l.Active = true;
             l.ActivationDateTimeUtc = DateTime.UtcNow.TruncateMillis();
             await _db.SaveChangesAsync();

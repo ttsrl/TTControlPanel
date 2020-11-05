@@ -24,7 +24,7 @@ namespace TTControlPanel.Controllers
         public async Task<IActionResult> Index()
         {
             var clients = await _db.Clients.ToListAsync();
-            List<IndexClientModel.ClientApps> list = new List<IndexClientModel.ClientApps>();
+            List<IndexClientGetModel.ClientApps> list = new List<IndexClientGetModel.ClientApps>();
             foreach (var c in clients)
             {
                 var apps = await _db.Licenses
@@ -33,14 +33,14 @@ namespace TTControlPanel.Controllers
                         .ThenInclude(av => av.Application)
                     .Where(l => l.Client.Id == c.Id)
                     .ToListAsync();
-                var ca = new IndexClientModel.ClientApps()
+                var ca = new IndexClientGetModel.ClientApps()
                 {
                     Client = c,
                     Licenses = apps
                 };
                 list.Add(ca);
             }
-            return View(new IndexClientModel { Clients = list /*Clients = clients, AppsClient = apps*/ });
+            return View(new IndexClientGetModel { Clients = list /*Clients = clients, AppsClient = apps*/ });
         }
 
         [HttpGet]
@@ -163,7 +163,7 @@ namespace TTControlPanel.Controllers
         {
             var c = await _db.Clients.Where(cc => cc.Id == id).FirstOrDefaultAsync();
             var clients = await _db.Clients.ToListAsync();
-            List<IndexClientModel.ClientApps> list = new List<IndexClientModel.ClientApps>();
+            List<IndexClientGetModel.ClientApps> list = new List<IndexClientGetModel.ClientApps>();
             foreach (var cc in clients)
             {
                 var apps = await _db.Licenses
@@ -172,7 +172,7 @@ namespace TTControlPanel.Controllers
                         .ThenInclude(av => av.Application)
                     .Where(l => l.Client.Id == cc.Id)
                     .ToListAsync();
-                var ca = new IndexClientModel.ClientApps()
+                var ca = new IndexClientGetModel.ClientApps()
                 {
                     Client = cc,
                     Licenses = apps
@@ -180,10 +180,10 @@ namespace TTControlPanel.Controllers
                 list.Add(ca);
             }
             if (c == null)
-                return View("Index", new IndexClientModel { Clients = list, Error = 1 });
+                return View("Index", new IndexClientGetModel { Clients = list, Error = 1 });
             var appsc = list.Where(cccc => cccc.Client == c).FirstOrDefault();
             if (appsc.Licenses.Count > 0)
-                return View("Index", new IndexClientModel { Clients = list, Error = 2 });
+                return View("Index", new IndexClientGetModel { Clients = list, Error = 2 });
             _db.Addresses.Remove(c.Address);
             _db.Clients.Remove(c);
             await _db.SaveChangesAsync();

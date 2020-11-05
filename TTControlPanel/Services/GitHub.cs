@@ -9,7 +9,7 @@ namespace TTControlPanel.Services
 {
     public class GitHub
     {
-        private Credentials credential;
+        //private Credentials credential;
         private GitHubClient client;
         private List<GitCommit> commits;
         private DateTime lastUpdate;
@@ -18,8 +18,9 @@ namespace TTControlPanel.Services
 
         public GitHub()
         {
-            credential = new Credentials("ttsrl", "TTsrl092017");
-            client = new GitHubClient(new ProductHeaderValue("ttsrl")) { Credentials = credential };
+            //credential = new Credentials("ttsrl", "TTsrl092017");
+            //client = new GitHubClient(new ProductHeaderValue("ttsrl")) { Credentials = credential };
+            client = new GitHubClient(new ProductHeaderValue("TTControlPanel"));
             client.SetRequestTimeout(TimeSpan.FromSeconds(3));
             commits = new List<GitCommit>();
         }

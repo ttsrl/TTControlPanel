@@ -8,5 +8,40 @@
 <h2>@Model.Order.Name - Dettagli</h2>
 <br />
 <div class="content">
-
+    <div style="margin: 15px 0px;">
+        <h4>Dati</h4>
+        <label class="title">Id:</label>
+        <label class="val">@Model.Order.Id</label>
+        <br />
+        <label class="title">Numero:</label>
+        <label class="val">@Model.Order.Number</label>
+        <br />
+        <label class="title">Nome:</label>
+        <label class="val">@Model.Order.Name</label>
+        <br />
+        <label class="title">Descrizione:</label>
+        <label class="val">@Model.Order.Description</label>
+        <br />
+        <label class="title">Cliente:</label>
+        <label class="val"><a asp-controller="Client" asp-action="Details" asp-route-id="@Model.Order.Client.Id">@Model.Order.Client.Name</a></label>
+        <br />
+        <label class="title">Lavorazione:</label>
+        <label class="val">
+            @if(Model.Working == null)
+            {
+                Html.Raw("--");
+            }
+            else
+            {
+                <a asp-controller="Working" asp-action="Details" asp-route-id="@Model.Working.Id"></a>
+            }
+        </label>
+        <br />
+        <label class="title">Data Consegna:</label>
+        <label class="val">@Model.Order.DeliveryDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yyyy HH:mm")</label>
+        <br />
+        <label class="title">Data Creazione:</label>
+        <label class="val">@Model.Order.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yyyy HH:mm")</label>
+        <br />
+    </div>
 </div>

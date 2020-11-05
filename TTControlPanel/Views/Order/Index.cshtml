@@ -7,6 +7,10 @@
 </div>
 <h2>Commesse</h2>
 <br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, commassa inesistente.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Impossibile cancellare una commassa a cui è stata associata una lavorazione.</label>
+</div>
 <div style="text-align:right; margin: 0px 0px 30px 0px;">
     <a asp-action="New" asp-controller="Order"><input type="button" value="Nuovo" /></a>
     <form style="float:left;">
