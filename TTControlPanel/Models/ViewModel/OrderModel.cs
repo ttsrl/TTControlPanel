@@ -11,6 +11,12 @@ namespace TTControlPanel.Models.ViewModel
         public string OrderBy { get; set; }
     }
 
+    public class DetailsOrderGetModel
+    {
+        public Order Order { get; set; }
+        public Working Working { get; set; }
+    }
+
     public class NewOrderGetModel
     {
         public int Error { get; set; }

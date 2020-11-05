@@ -64,6 +64,13 @@ namespace TTControlPanel.Controllers
 
         [HttpGet]
         [Authentication]
+        public async Task<IActionResult> Details(int id)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Authentication]
         public async Task<IActionResult> New()
         {
             var clients = await _db.Clients.ToListAsync();

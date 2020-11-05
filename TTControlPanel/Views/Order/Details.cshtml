@@ -1,0 +1,12 @@
+﻿@model DetailsOrderGetModel
+@{
+    ViewData["Title"] = "Dettagli Commessa";
+}
+<div id="explorerLink">
+    <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.Order.Name
+</div>
+<h2>@Model.Order.Name - Dettagli</h2>
+<br />
+<div class="content">
+
+</div>

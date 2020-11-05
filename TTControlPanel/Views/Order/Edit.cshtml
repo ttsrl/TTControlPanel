@@ -1,11 +1,11 @@
 ﻿@model EditOrderGetModel
 @{
-    ViewData["Title"] = "Modifica Ordine";
+    ViewData["Title"] = "Modifica Commessa";
 }
 <div id="explorerLink">
-    <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.Order.Number
+    <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Order" asp-action="Deatails" asp-route-id="@Model.Order.Id">@Model.Order.Name</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Modifica
 </div>
-<h2>Modifica Ordine</h2>
+<h2>@Model.Order.Name - Modifica</h2>
 <br />
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di modifica, controllare di aver inserito tutti i dati richiesti in modo corretto.</label>

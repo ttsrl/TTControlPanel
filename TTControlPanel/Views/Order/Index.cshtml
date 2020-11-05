@@ -26,8 +26,8 @@
         <td style="width:150px;">Nome</td>
         <td style="width:150px;">Cliente</td>
         <td style="width:200px;">Descrizione</td>
-        <td style="width:130px;">Fattura</td>
         <td style="width:90px;">Data Consegna</td>
+        <td style="width:70px;">Fattura</td>
         <td style="width:70px;">In lavoro</td>
         <td>Azioni</td>
     </tr>
@@ -40,14 +40,15 @@
             aw = 1;
         }
         <tr>
-            <td style="font-weight:bold;">@o.Number</td>
+            <td style="font-weight:bold;"><a asp-controller="Order" asp-action="Details" asp-route-id="@o.Id">@o.Number</a></td>
             <td>@o.Name</td>
             <td>@o.Client.Name</td>
             <td>@o.Description</td>
-            <td>@o.Invoice.Code</td>
-            <td style="font-size: 11px;"></td>
+            <td></td>
+            <td></td>
             <td style="text-align:center;"><span style="vertical-align: middle;" class="led @(aw == 0 ? "red" : "green")"></span></td>
             <td>
+                <span><a asp-controller="Working" asp-action="Details" asp-route-id="">Lavorazione</a></span>
                 <span><a asp-controller="Order" asp-action="Edit" asp-route-id="@o.Id">Modifica</a></span>
                 <span><a asp-controller="Order" asp-action="Delete" asp-route-id="@o.Id">Rimuovi</a></span>
             </td>
