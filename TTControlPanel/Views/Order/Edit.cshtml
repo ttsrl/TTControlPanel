@@ -1,0 +1,46 @@
+﻿@model EditOrderGetModel
+@{
+    ViewData["Title"] = "Modifica Ordine";
+}
+<div id="explorerLink">
+    <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.Order.Number
+</div>
+<h2>Modifica Ordine</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di modifica, controllare di aver inserito tutti i dati richiesti in modo corretto.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Errore durante la procedura di modifica, un ordine con questo numero o nome è già presente nel database.</label>
+</div>
+<form asp-antiforgery="true" asp-controller="Order" asp-action="Edit" asp-route-id="@Model.Order.Id" autocomplete="off" style="width:450px;">
+    <label>Numero:*</label>
+    <input type="text" name="number" id="number" style="width:200px;" value="@Model.Order.Number" onkeypress="return EnterOnlyNumber(event);" />
+    <br />
+    <label style="margin-top:15px;">Nome:*</label>
+    <input type="text" name="name" style="width:450px;" value="@Model.Order.Name" />
+    <br />
+    <label style="margin-top:15px;">Committente:*</label>
+    <select name="client" style="width:450px;">
+        @foreach (var c in Model.Clients)
+        {
+            <option value="@c.Id" asp-selected="@(Model.Order.Client.Id == c.Id)">@c.Name</option>
+        }
+    </select>
+    <br />
+    <label style="margin-top:15px;">Descrizione:</label>
+    <textarea name="description" style="width:450px;">@Model.Order.Description</textarea>
+    <br />
+    <label style="margin-top:15px;">Riferimento fattura:</label>
+    <input type="text" name="invoice" list="invoices" value="@Model.Order.Invoice.Code" />
+    <datalist id="invoices">
+        @foreach (var i in Model.Invoices)
+        {
+            <option value="@i.Id">@i.Code</option>
+        }
+    </datalist>
+    <br />
+    <label>Data di consegna:*</label>
+    <input type="date" name="deliveryDate" value="@(Model.Order.DeliveryDateTimeUtc.ToDateTimeCE().ToString("yyyy-MM-dd"))" />
+    <br />
+    <br />
+    <input type="submit" value="Modifica" name="submit" style="margin-top:20px;" />
+</form>

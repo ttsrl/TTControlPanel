@@ -14,7 +14,7 @@ namespace TTControlPanel.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public Invoice Invoice { get; set; }
-        public DateTime DeliveryDate { get; set; }
+        public DateTime DeliveryDateTimeUtc { get; set; }
         public DateTime TimestampDateTimeUtc { get => timestamp ?? DateTime.UtcNow.TruncateMillis(); set => timestamp = value; }
     }
 }

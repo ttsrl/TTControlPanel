@@ -1,6 +1,6 @@
 ﻿@model EditProductGetModel
 @{
-    ViewData["Title"] = "Modifica";
+    ViewData["Title"] = "Modifica Prodotto";
 }
 <div id="explorerLink">
     <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Product" asp-action="Index">Prodotti</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;@Model.Product.Code
@@ -10,7 +10,7 @@
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di modifica, controllare di aver inserito tutti i dati richiesti in modo corretto.</label>
 </div>
-<form asp-antiforgery="true" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.Id" autocomplete="off" style="width:350px;">
+<form asp-antiforgery="true" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.Id" autocomplete="off" style="width:450px;">
     <label>Codice:</label>
     <input type="text" name="code" id="code" value="@Model.Product.Code" style="width:450px;" />
     <br />

@@ -55,7 +55,7 @@ namespace TTControlPanel.Controllers
                 else if (orderby == "enddate")
                 {
                     order = "enddate";
-                    query = query.OrderByDescending(q => q.DeliveryDate.TruncateSeconds());
+                    query = query.OrderByDescending(q => q.DeliveryDateTimeUtc.TruncateSeconds());
                 }
             }
             var ords = await query.ToListAsync();
@@ -97,7 +97,7 @@ namespace TTControlPanel.Controllers
                     Description = model.Description,
                     Invoice = inv ?? new Invoice { Code = model.Invoice },
                     Client = client,
-                    DeliveryDate = model.DeliveryDate
+                    DeliveryDateTimeUtc = model.DeliveryDate.ToUniversalTime()
                 };
                 await _db.Orders.AddAsync(order);
                 await _db.SaveChangesAsync();
@@ -106,5 +106,56 @@ namespace TTControlPanel.Controllers
             return View(new NewOrderGetModel { Clients = clients, Number = numb + 1, Error = 1, Invoices = invs });
         }
 
+        [HttpGet]
+        [Authentication]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var clients = await _db.Clients.ToListAsync();
+            var invs = await _db.Invoices.ToListAsync();
+            var order = await _db.Orders
+                .Include(o => o.Client)
+                .Include(o => o.Invoice)
+                .Where(o => o.Id == id)
+                .FirstOrDefaultAsync();
+            if (order == null)
+                return RedirectToAction("Index");
+            return View(new EditOrderGetModel { Clients = clients, Invoices = invs, Order = order });
+        }
+
+        [HttpPost]
+        [Authentication]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, EditOrderPostModel model)
+        {
+            var clients = await _db.Clients.ToListAsync();
+            var invs = await _db.Invoices.ToListAsync();
+            var order = await _db.Orders
+                .Include(o => o.Client)
+                .Include(o => o.Invoice)
+                .Where(o => o.Id == id)
+                .FirstOrDefaultAsync();
+            if (order == null)
+                return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var searchNum = await _db.Orders.Where(o => o.Number == model.Number).FirstOrDefaultAsync();
+                var searchNm = await _db.Orders.Where(o => o.Name == model.Name).FirstOrDefaultAsync();
+                if (searchNum != null || searchNm != null)
+                    return View(new EditOrderGetModel { Clients = clients, Invoices = invs, Order = order, Error = 2 });
+                var client = clients.Where(c => c.Id == model.Client).FirstOrDefault();
+                if (client == null)
+                    return View(new EditOrderGetModel { Clients = clients, Invoices = invs, Order = order, Error = 1 });
+                var inv = await _db.Invoices.Where(i => i.Code == model.Invoice).FirstOrDefaultAsync();
+                order.Number = model.Number;
+                order.Name = model.Name;
+                order.Description = model.Description;
+                order.Invoice = inv ?? new Invoice { Code = model.Invoice };
+                order.Client = client;
+                order.DeliveryDateTimeUtc = model.DeliveryDate.ToUniversalTime();
+                await _db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View(new EditOrderGetModel { Clients = clients, Invoices = invs, Order = order, Error = 1 });
+        }
     }
 }

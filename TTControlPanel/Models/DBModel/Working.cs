@@ -13,8 +13,8 @@ namespace TTControlPanel.Models
         public Client FinalClient { get; set; }
         public List<WorkingItem> Items { get; set; }
         public bool AtProgress { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime? StartDateTimeUtc { get; set; }
+        public DateTime? EndDateTimeUtc { get; set; }
         public DateTime TimestampDateTimeUtc { get => timestamp ?? DateTime.UtcNow.TruncateMillis(); set => timestamp = value; }
     }
 }

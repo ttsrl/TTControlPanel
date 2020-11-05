@@ -71,7 +71,7 @@ namespace TTControlPanel.Controllers
                     return View(new NewApplicationGetModel { Error = 4 });
                 var appV = new ApplicationVersion
                 {
-                    ReleaseDateTimeUtc = model.Release,
+                    ReleaseDateTimeUtc = model.Release.ToUniversalTime(),
                     Version = version,
                     AddedUser = uLog
                 };
@@ -207,7 +207,7 @@ namespace TTControlPanel.Controllers
                     return View(new NewVersionApplicationGetModel { Application = app, Error = 4 });
                 var appV = new ApplicationVersion
                 {
-                    ReleaseDateTimeUtc = model.Release,
+                    ReleaseDateTimeUtc = model.Release.ToUniversalTime(),
                     Version = strV,
                     Application = app,
                     Licences = new List<License>(),
