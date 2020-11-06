@@ -16,11 +16,11 @@
     <form style="float:left;">
         <label style="width: 55px; display: inline-block; text-align:left;">Ordina:</label>
         <select id="orderby" name="orderby" style="margin: 0px !important; width:200px;">
-            <option asp-selected="@(Model.OrderBy == "id")" value="id">Primo inserito</option>
             <option asp-selected="@(Model.OrderBy == "-id")" value="-id">Ultimo inserito</option>
+            <option asp-selected="@(Model.OrderBy == "id")" value="id">Primo inserito</option>
             <option asp-selected="@(Model.OrderBy == "number")" value="number">Codice</option>
             <option asp-selected="@(Model.OrderBy == "name")" value="name">Nome</option>
-            <option asp-selected="@(Model.OrderBy == "enddate")" value="name">Data Fine</option>
+            <option asp-selected="@(Model.OrderBy == "enddate")" value="enddate">Data Fine</option>
         </select>
     </form>
 </div>
@@ -28,7 +28,7 @@
     <tr style="font-weight:bold;">
         <td style="width:90px;">Numero</td>
         <td style="width:220px;">Nome</td>
-        <td style="width:160px;">Cliente</td>
+        <td style="width:170px;">Cliente</td>
         <td style="width:100px;">Data Consegna</td>
         <td style="width:74px;">Fattura</td>
         <td style="width:74px;">In Lavoraz.</td>
@@ -60,3 +60,15 @@
         <td colspan="7" style="text-align:center">Nessun prodotto presente</td>
     </tr>
 </table>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#orderby').on('change', function () {
+                $(this).closest('form').submit();
+            });
+        });
+
+    </script>
+}

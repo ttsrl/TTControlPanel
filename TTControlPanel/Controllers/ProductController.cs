@@ -35,22 +35,21 @@ namespace TTControlPanel.Controllers
             var query = _db.Products.Where(d => d.Id > 0);
             var order = "id";
             if (!string.IsNullOrEmpty(orderby))
+                order = orderby;
+            else
             {
-                if (orderby == "-id")
-                {
-                    order = "-id";
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("ProductOrderBy")))
+                    order = HttpContext.Session.GetString("ProductOrderBy");
+            }
+            if (!string.IsNullOrEmpty(order))
+            {
+                if (order == "-id")
                     query = query.OrderByDescending(q => q.Id);
-                }
-                if (orderby == "code")
-                {
-                    order = "code";
+                if (order == "code")
                     query = query.OrderBy(q => q.Code);
-                }
-                if (orderby == "name")
-                {
-                    order = "name";
+                if (order == "name")
                     query = query.OrderBy(q => q.Name);
-                }
+                HttpContext.Session.SetString("ProductOrderBy", order);
             }
             var prods = await query.ToListAsync();
             return View(new IndexProductModel { Error = error, Products = prods, OrderBy = order });

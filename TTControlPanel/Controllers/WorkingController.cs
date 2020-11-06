@@ -8,6 +8,7 @@ using TTControlPanel.Filters;
 using TTControlPanel.Models.ViewModel;
 using TTControlPanel.Services;
 using TTControlPanel.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace TTControlPanel.Controllers
 {
@@ -29,20 +30,30 @@ namespace TTControlPanel.Controllers
             var query = _db.Workings
                 .Include(w => w.FinalClient)
                 .Where(w => w.Id > 0);
-            if (string.IsNullOrEmpty(orderby))
+            var order = "-id";
+            if (!string.IsNullOrEmpty(orderby))
+                order = orderby;
+            else
             {
-                if (orderby == "id")
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("WorkingOrderBy")))
+                    order = HttpContext.Session.GetString("WorkingOrderBy");
+            }
+
+            if (string.IsNullOrEmpty(order))
+            {
+                if (order == "id")
                     query = query.OrderBy(i => i.Id);
-                else if (orderby == "enddate")
+                else if (order == "enddate")
                     query = query.OrderBy(i => i.EndDateTimeUtc);
-                else if (orderby == "-enddate")
+                else if (order == "-enddate")
                     query = query.OrderByDescending(i => i.EndDateTimeUtc);
+                HttpContext.Session.SetString("WorkingOrderBy", orderby);
             }
             else
                 query = query.OrderByDescending(i => i.Id);
             var works = await query.ToListAsync();
             var ordes = await _db.Orders.Include(o => o.Working).ToListAsync();
-            return View( new IndexWorkingGetModel { Workings = works, OrderBy = orderby, Orders = ordes });
+            return View( new IndexWorkingGetModel { Workings = works, OrderBy = order, Orders = ordes });
         }
 
         [HttpGet]
@@ -99,6 +110,13 @@ namespace TTControlPanel.Controllers
         [HttpGet]
         [Authentication]
         public async Task<IActionResult> Details()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Authentication]
+        public async Task<IActionResult> Start()
         {
             return View();
         }

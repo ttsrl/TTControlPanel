@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TTControlPanel.Filters;
@@ -31,19 +32,28 @@ namespace TTControlPanel.Controllers
                 .Include(o => o.Invoice)
                 .Include(o => o.Working)
                 .Where(o => o.Id > 0);
+            var order = "-id";
             if (!string.IsNullOrEmpty(orderby))
+                order = orderby;
+            else
             {
-                if (orderby == "-id")
+                if (!string.IsNullOrEmpty(HttpContext.Session.GetString("OrderOrderBy")))
+                    order = HttpContext.Session.GetString("OrderOrderBy");
+            }
+            if (!string.IsNullOrEmpty(order))
+            {
+                if (order == "id")
                     query = query.OrderByDescending(q => q.Id);
-                else if (orderby == "number")
+                else if (order == "number")
                     query = query.OrderByDescending(q => q.Number);
-                else if (orderby == "name")
+                else if (order == "name")
                     query = query.OrderBy(q => q.Name);
-                else if (orderby == "enddate")
+                else if (order == "enddate")
                     query = query.OrderByDescending(q => q.DeliveryDateTimeUtc.TruncateSeconds());
+                HttpContext.Session.SetString("OrderOrderBy", order);
             }
             var ords = await query.ToListAsync();
-            return View(new IndexOrderGetModel { Orders = ords, OrderBy = orderby });
+            return View(new IndexOrderGetModel { Orders = ords, OrderBy = order });
         }
 
         [HttpGet]

@@ -18,15 +18,15 @@
         <select id="orderby" name="orderby" style="margin: 0px !important; width:200px;">
             <option asp-selected="@(Model.OrderBy == "-id")" value="-id">Ultimo inserito</option>
             <option asp-selected="@(Model.OrderBy == "id")" value="id">Primo inserito</option>
-            <option asp-selected="@(Model.OrderBy == "enddate")" value="name">Data Inizio</option>
-            <option asp-selected="@(Model.OrderBy == "-enddate")" value="name">Data Fine</option>
+            <option asp-selected="@(Model.OrderBy == "enddate")" value="enddate">Data Inizio</option>
+            <option asp-selected="@(Model.OrderBy == "-enddate")" value="-enddate">Data Fine</option>
         </select>
     </form>
 </div>
 <table class="table">
     <tr style="font-weight:bold;">
         <td style="width:90px;">Codice</td>
-        <td style="width:140px;">Ordine</td>
+        <td style="width:160px;">Ordine</td>
         <td style="width:200px;">Cliente Finale</td>
         <td style="width:56px;">Stato</td>
         <td style="width:100px;">Data Inizio</td>
@@ -46,7 +46,8 @@
             <td>@((w.EndDateTimeUtc == null) ? "--" : (((DateTime)w.EndDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yyyy")))</td>
             <td style="text-align: center;">@(w.Items == null ? "0" : w.Items.Count.ToString())</td>
             <td>
-                <span><a asp-controller="Working" asp-action="Start" asp-route-id="@w.Id">Inizia</a></span>
+                <span asp-if="@(w.State == WorkingState.Await)"><a asp-controller="Working" asp-action="Start" asp-route-id="@w.Id">Inizia</a></span>
+                <span asp-if="@(w.State == WorkingState.Started)"><a asp-controller="Working" asp-action="Start" asp-route-id="@w.Id">Termina</a></span>
                 <span><a asp-controller="Working" asp-action="Delete" asp-route-id="@w.Id">Rimuovi</a></span>
             </td>
         </tr>
@@ -55,3 +56,15 @@
         <td colspan="8" style="text-align:center">Nessua lavorazione presente</td>
     </tr>
 </table>
+
+@section Scripts{ 
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#orderby').on('change', function () {
+                $(this).closest('form').submit();
+            });
+        });
+
+    </script>
+}
