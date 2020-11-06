@@ -161,9 +161,25 @@ namespace TTControlPanel.Services
             return o;
         }
 
-        private string generateCode()
+        private string generateCode(int lenght)
         {
-           return RandomCifre().ToString() + RandomCifre().ToString() + RandomCifre().ToString() + RandomCifre().ToString();
+            string out_ = "";
+            for(var i = 0; i < lenght; i++)
+            {
+                out_ += RandomCifre().ToString();
+            }
+            return out_;
+        }
+
+        public async Task<string> GenerateWorkingCode()
+        {
+            var appC = await _dB.Workings.Select(p => p.Code).ToListAsync();
+            while (true)
+            {
+                var tmpC = generateCode(8);
+                if (!appC.Contains(tmpC))
+                    return tmpC;
+            }
         }
 
         public async Task<string> GenerateApplicationCode()
@@ -171,7 +187,7 @@ namespace TTControlPanel.Services
             var appC = await _dB.Applications.Select(p => p.Code).ToListAsync();
             while (true)
             {
-                var tmpC = generateCode();
+                var tmpC = generateCode(4);
                 if (!appC.Contains(tmpC))
                     return tmpC;
             }
@@ -182,7 +198,7 @@ namespace TTControlPanel.Services
             var cC = await _dB.Clients.Select(p => p.Code).ToListAsync();
             while (true)
             {
-                var tmpC = generateCode();
+                var tmpC = generateCode(4);
                 if (!cC.Contains(tmpC))
                     return tmpC;
             }

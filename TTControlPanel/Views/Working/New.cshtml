@@ -1,0 +1,55 @@
+﻿@model NewWorkingGetModel
+@{
+    ViewData["Title"] = "Nuova Lavorazione";
+}
+<div id="explorerLink">
+    <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;<a asp-controller="Working" asp-action="Index">Lavorazioni</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Nuova
+</div>
+<h2>Nuova Lavorazione</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di inserimento, controllare di aver inserito tutti i dati richiesti.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Lavorazione già presente nel database.</label>
+</div>
+<form asp-antiforgery="true" asp-controller="Working" asp-action="New" autocomplete="off" style="width:450px;">
+    <label style="margin-top:15px;">Ordine:*</label>
+    <select name="order" style="width:450px;" onchange="selectClient(this);">
+        <option value="">--</option>
+        @foreach (var o in Model.Orders)
+        {
+            <option asp-selected="@(Model.Selected != null && Model.Selected.Id == o.Id)" value="@o.Id">@o.Number - @o.Name</option>
+        }
+    </select>
+    <br />
+    <label style="margin-top:15px;">Cliente Finale:*</label>
+    <select name="client" id="client" style="width:450px;">
+        <option value="">--</option>
+        @foreach (var c in Model.Clients)
+        {
+            <option asp-selected="@(Model.Selected != null && Model.Selected.Client.Id == c.Id)" value="@c.Id">@c.Name</option>
+        }
+    </select>
+    <br />
+    <br />
+    <input type="submit" value="Crea" name="submit" style="margin-top:20px;" />
+</form>
+
+@section Scripts{
+    <script class="inject-json" data-name="orders" type="application/json">
+        @Html.Raw(JsonConvert.SerializeObject(Model.Orders))
+    </script>
+    <script type="text/javascript">
+
+        function selectClient(obj) {
+            var sel = parseInt($(obj).val());
+            $(orders).each(function (index, item) {
+                var id = item.Id;
+                if (id == sel) {
+                    var client = item.Client.Id;
+                    $("#client").val(client);
+                }
+            });
+        }
+
+    </script>
+}

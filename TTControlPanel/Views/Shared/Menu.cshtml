@@ -3,22 +3,24 @@
     var controller = ViewContext.RouteData.Values["controller"].ToString();
 }
 
-<div asp-if="@(user != null)" class="menu">
-    <ul>
-        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-        <li><a asp-action="Index" asp-controller="User">Utenti</a></li>
-        <li><a asp-action="Index" asp-controller="Client">Clienti</a></li>
-        <li><a asp-action="Index" asp-controller="Application">Applicazioni</a></li>
-        <li><a asp-action="Index" asp-controller="License">Licenze</a></li>
-        <li><a asp-action="Index" asp-controller="Automation">Automazioni</a></li>
-        <li><a asp-action="Index" asp-controller="Order">Commesse</a></li>
-        <li></li>
-        <li><label style="color: #3e3e3e;">@user.Username</label>&nbsp;&nbsp;<a asp-action="Index" asp-controller="Logout">Esci</a></li>
-    </ul>
-</div>
-<div asp-if="@(controller == "Product" || controller == "Order")" class="menu">
-    <ul>
-        <li><a asp-action="Index" asp-controller="Product">Prodotti</a></li>
-        <li><a asp-action="Index" asp-controller="Working">Lavorazioni</a></li>
-    </ul>
+<div id="pg-hd">
+    <div asp-if="@(user != null)" class="menu">
+        <ul>
+            <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+            <li><a asp-action="Index" asp-controller="User">Utenti</a></li>
+            <li><a asp-action="Index" asp-controller="Client">Clienti</a></li>
+            <li><a asp-action="Index" asp-controller="Application">Applicazioni</a></li>
+            <li><a asp-action="Index" asp-controller="License">Licenze</a></li>
+            <li><a asp-action="Index" asp-controller="Automation">Automazioni</a></li>
+            <li><a asp-action="Index" asp-controller="Order">Commesse</a></li>
+            <li></li>
+            <li><label style="color: #3e3e3e;">@user.Username</label>&nbsp;&nbsp;<a asp-action="Index" asp-controller="Logout">Esci</a></li>
+        </ul>
+    </div>
+    <div asp-if="@(controller == "Product" || controller == "Order" || controller == "Working")" class="menu" style="text-align:left;">
+        <ul>
+            <li><a asp-action="Index" asp-controller="Product">Prodotti</a></li>
+            <li><a asp-action="Index" asp-controller="Working">Lavorazioni</a></li>
+        </ul>
+    </div>
 </div>

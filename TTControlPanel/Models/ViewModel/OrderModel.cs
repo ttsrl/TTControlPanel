@@ -7,7 +7,6 @@ namespace TTControlPanel.Models.ViewModel
     public class IndexOrderGetModel
     {
         public List<Order> Orders { get; set; }
-        public List<Working> Workings { get; set; }
         public string OrderBy { get; set; }
         public int Error { get; set; }
     }
@@ -15,7 +14,6 @@ namespace TTControlPanel.Models.ViewModel
     public class DetailsOrderGetModel
     {
         public Order Order { get; set; }
-        public Working Working { get; set; }
     }
 
     public class NewOrderGetModel

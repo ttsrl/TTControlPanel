@@ -1,7 +1,57 @@
-﻿
+﻿@model IndexWorkingGetModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lavorazioni";
 }
-
-<h1>Index</h1>
-
+<div id="explorerLink">
+    <a asp-controller="Order" asp-action="Index">Commesse</a>&nbsp;&nbsp;&gt;&nbsp;&nbsp;Lavorazioni
+</div>
+<h2>Lavorazioni</h2>
+<br />
+<div asp-if="Model.Error != 0">
+    <label class="error_lbl" asp-if="Model.Error == 1">Errore, lavorazione inesistente.</label>
+    <label class="error_lbl" asp-if="Model.Error == 2">Impossibile cancellare una lavorazione a cui sono stati aggiunti dei record.</label>
+</div>
+<div style="text-align:right; margin: 0px 0px 30px 0px;">
+    <a asp-action="New" asp-controller="Working"><input type="button" value="Nuova" /></a>
+    <form style="float:left;">
+        <label style="width: 55px; display: inline-block; text-align:left;">Ordina:</label>
+        <select id="orderby" name="orderby" style="margin: 0px !important; width:200px;">
+            <option asp-selected="@(Model.OrderBy == "-id")" value="-id">Ultimo inserito</option>
+            <option asp-selected="@(Model.OrderBy == "id")" value="id">Primo inserito</option>
+            <option asp-selected="@(Model.OrderBy == "enddate")" value="name">Data Inizio</option>
+            <option asp-selected="@(Model.OrderBy == "-enddate")" value="name">Data Fine</option>
+        </select>
+    </form>
+</div>
+<table class="table">
+    <tr style="font-weight:bold;">
+        <td style="width:90px;">Codice</td>
+        <td style="width:140px;">Ordine</td>
+        <td style="width:200px;">Cliente Finale</td>
+        <td style="width:56px;">Stato</td>
+        <td style="width:100px;">Data Inizio</td>
+        <td style="width:100px;">Data Fine</td>
+        <td style="width:65px;">Oggetti</td>
+        <td>Azioni</td>
+    </tr>
+    @foreach (var w in Model.Workings)
+    {
+        var ord = Model.Orders.Where(o => o.Working.Id == w.Id).FirstOrDefault();
+        <tr>
+            <td style="font-weight:bold;"><a asp-controller="Working" asp-action="Details" asp-route-id="@w.Id">@w.Code</a></td>
+            <td><a asp-controller="Order" asp-action="Details" asp-route-id="@ord.Id">@ord.Name</a></td>
+            <td>@w.FinalClient.Name</td>
+            <td style="text-align: center;"><span style="vertical-align: middle;" class="led @(w.State == WorkingState.Await ? "red" : (w.State == WorkingState.Started ? "orange" : "green"))"></span></td>
+            <td>@((w.StartDateTimeUtc == null) ? "--" : (((DateTime)w.StartDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yyyy")))</td>
+            <td>@((w.EndDateTimeUtc == null) ? "--" : (((DateTime)w.EndDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yyyy")))</td>
+            <td style="text-align: center;">@(w.Items == null ? "0" : w.Items.Count.ToString())</td>
+            <td>
+                <span><a asp-controller="Working" asp-action="Start" asp-route-id="@w.Id">Inizia</a></span>
+                <span><a asp-controller="Working" asp-action="Delete" asp-route-id="@w.Id">Rimuovi</a></span>
+            </td>
+        </tr>
+    }
+    <tr asp-if="Model.Workings.Count == 0">
+        <td colspan="8" style="text-align:center">Nessua lavorazione presente</td>
+    </tr>
+</table>

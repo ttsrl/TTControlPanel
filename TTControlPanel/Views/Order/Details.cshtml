@@ -27,13 +27,13 @@
         <br />
         <label class="title">Lavorazione:</label>
         <label class="val">
-            @if(Model.Working == null)
+            @if(Model.Order.Working == null)
             {
                 Html.Raw("--");
             }
             else
             {
-                <a asp-controller="Working" asp-action="Details" asp-route-id="@Model.Working.Id"></a>
+                <a asp-controller="Working" asp-action="Details" asp-route-id="@Model.Order.Working.Id">@Model.Order.Working.Code</a>
             }
         </label>
         <br />

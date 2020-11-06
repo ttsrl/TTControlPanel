@@ -328,10 +328,14 @@ select {
         padding: 0px 20px;
     }
 
-        main .page .menu {
+        main .page #pg-hd .menu {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
         }
+
+            main .page #pg-hd div:last-of-type {
+                margin-bottom: 30px;
+            }
 
             main .page .menu ul {
                 list-style: none;
@@ -351,7 +355,7 @@ select {
                         padding: 5px 18px 5px 0px;
                     }
 
-                    main .page .menu ul li:last-of-type {
+                    main .page #pg-hd div:first-of-type ul li:last-of-type {
                         padding: 5px 0px 5px 40px;
                     }
 

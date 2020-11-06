@@ -29,36 +29,21 @@ namespace TTControlPanel.Controllers
             var query = _db.Orders
                 .Include(o => o.Client)
                 .Include(o => o.Invoice)
+                .Include(o => o.Working)
                 .Where(o => o.Id > 0);
-            var works = await _db.Workings
-                .Include(w => w.Order)
-                .ToListAsync();
-            var order = "id";
             if (!string.IsNullOrEmpty(orderby))
             {
                 if (orderby == "-id")
-                {
-                    order = "-id";
                     query = query.OrderByDescending(q => q.Id);
-                }
                 else if (orderby == "number")
-                {
-                    order = "number";
                     query = query.OrderByDescending(q => q.Number);
-                }
                 else if (orderby == "name")
-                {
-                    order = "name";
                     query = query.OrderBy(q => q.Name);
-                }
                 else if (orderby == "enddate")
-                {
-                    order = "enddate";
                     query = query.OrderByDescending(q => q.DeliveryDateTimeUtc.TruncateSeconds());
-                }
             }
             var ords = await query.ToListAsync();
-            return View(new IndexOrderGetModel { Orders = ords, OrderBy = order, Workings = works });
+            return View(new IndexOrderGetModel { Orders = ords, OrderBy = orderby });
         }
 
         [HttpGet]
@@ -68,19 +53,11 @@ namespace TTControlPanel.Controllers
             var order = await _db.Orders
                 .Include(o => o.Client)
                 .Include(o => o.Invoice)
+                .Include(o => o.Working)
                 .Where(o => o.Id == id).FirstOrDefaultAsync();
             if (order == null)
                 return RedirectToAction("Index");
-            var work = await _db.Workings
-                .Include(w => w.FinalClient)
-                .Include(w => w.Order)
-                .Include(w => w.Items)
-                    .ThenInclude(i => i.Product)
-                .Include(w => w.Items)
-                    .ThenInclude(i => i.Operator)
-                .Where(w => w.Order.Id == id)
-                .FirstOrDefaultAsync();
-            return View(new DetailsOrderGetModel { Order = order, Working = work });
+            return View(new DetailsOrderGetModel { Order = order });
         }
 
         [HttpGet]
@@ -110,13 +87,15 @@ namespace TTControlPanel.Controllers
                 var client = clients.Where(c => c.Id == model.Client).FirstOrDefault();
                 if (client == null)
                     return View(new NewOrderGetModel { Clients = clients, Number = numb + 1, Error = 1, Invoices = invs });
-                var inv = await _db.Invoices.Where(i => i.Code == model.Invoice).FirstOrDefaultAsync();
+                Invoice inv = null;
+                if(!string.IsNullOrEmpty(model.Invoice))
+                    inv = await _db.Invoices.Where(i => i.Code == model.Invoice).FirstOrDefaultAsync();
                 var order = new Order
                 {
                     Number = model.Number,
                     Name = model.Name,
                     Description = model.Description,
-                    Invoice = inv ?? new Invoice { Code = model.Invoice },
+                    Invoice = string.IsNullOrEmpty(model.Invoice) ? null : (inv ?? new Invoice { Code = model.Invoice }),
                     Client = client,
                     DeliveryDateTimeUtc = model.DeliveryDate.ToUniversalTime()
                 };
@@ -186,17 +165,14 @@ namespace TTControlPanel.Controllers
             var ords = await _db.Orders
                .Include(o => o.Client)
                .Include(o => o.Invoice)
+               .Include(o => o.Working)
                .Where(o => o.Id > 0)
                .ToListAsync();
-            var works = await _db.Workings
-                .Include(w => w.Order)
-                .ToListAsync();
-            var ord = await _db.Orders.Where(cc => cc.Id == id).FirstOrDefaultAsync();
+            var ord = await _db.Orders.Include(o => o.Working).Where(cc => cc.Id == id).FirstOrDefaultAsync();
             if (ord == null)
-                return View("Index", new IndexOrderGetModel { Orders = ords, Error = 1, Workings = works });
-            var ww = works.Where(w => w.Order.Id == id).FirstOrDefault();
-            if (ww != null)
-                return View("Index", new IndexOrderGetModel { Orders = ords, Error = 2, Workings = works });
+                return View("Index", new IndexOrderGetModel { Orders = ords, Error = 1 });
+            if (ord.Working != null)
+                return View("Index", new IndexOrderGetModel { Orders = ords, Error = 2 });
             _db.Orders.Remove(ord);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");

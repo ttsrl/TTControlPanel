@@ -27,19 +27,17 @@
 <table class="table">
     <tr style="font-weight:bold;">
         <td style="width:90px;">Numero</td>
-        <td style="width:150px;">Nome</td>
-        <td style="width:150px;">Cliente</td>
-        <td style="width:200px;">Descrizione</td>
-        <td style="width:90px;">Data Consegna</td>
-        <td style="width:70px;">Fattura</td>
-        <td style="width:70px;">In lavoro</td>
+        <td style="width:220px;">Nome</td>
+        <td style="width:160px;">Cliente</td>
+        <td style="width:100px;">Data Consegna</td>
+        <td style="width:74px;">Fattura</td>
+        <td style="width:74px;">In Lavoraz.</td>
         <td>Azioni</td>
     </tr>
     @foreach (var o in Model.Orders)
     {
-        var work = Model.Workings.Where(w => w.Order.Id == o.Id).FirstOrDefault();
         var aw = 0;
-        if (work != null && work.AtProgress)
+        if (o.Working != null && o.Working.State == WorkingState.Started)
         {
             aw = 1;
         }
@@ -47,12 +45,12 @@
             <td style="font-weight:bold;"><a asp-controller="Order" asp-action="Details" asp-route-id="@o.Id">@o.Number</a></td>
             <td>@o.Name</td>
             <td>@o.Client.Name</td>
-            <td>@o.Description</td>
-            <td></td>
-            <td></td>
+            <td style="font-size: 11px;">@o.DeliveryDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yy")</td>
+            <td style="text-align:center;"><span style="vertical-align: middle;" class="led @(o.Invoice == null ? "red" : "green")"></span></td>
             <td style="text-align:center;"><span style="vertical-align: middle;" class="led @(aw == 0 ? "red" : "green")"></span></td>
             <td>
-                <span><a asp-controller="Working" asp-action="Details" asp-route-id="">Lavorazione</a></span>
+                <span asp-if="o.Working != null"><a asp-controller="Working" asp-action="Details" asp-route-id="@o.Working.Id">Lavorazione</a></span>
+                <span asp-if="o.Working == null"><a asp-controller="Working" asp-action="New" asp-route-order="@o.Id">Lavora</a></span>
                 <span><a asp-controller="Order" asp-action="Edit" asp-route-id="@o.Id">Modifica</a></span>
                 <span><a asp-controller="Order" asp-action="Delete" asp-route-id="@o.Id">Rimuovi</a></span>
             </td>

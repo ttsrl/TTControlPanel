@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TTControlPanel.Services;
 
 namespace TTControlPanel.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20201106100420_18")]
+    partial class _18
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,15 +221,11 @@ namespace TTControlPanel.Migrations
 
                     b.Property<DateTime>("TimestampDateTimeUtc");
 
-                    b.Property<int?>("WorkingId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
 
                     b.HasIndex("InvoiceId");
-
-                    b.HasIndex("WorkingId");
 
                     b.ToTable("Orders");
                 });
@@ -334,6 +332,8 @@ namespace TTControlPanel.Migrations
 
                     b.Property<int?>("FinalClientId");
 
+                    b.Property<int?>("OrderId");
+
                     b.Property<DateTime?>("StartDateTimeUtc");
 
                     b.Property<int>("State");
@@ -343,6 +343,8 @@ namespace TTControlPanel.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("FinalClientId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Workings");
                 });
@@ -438,10 +440,6 @@ namespace TTControlPanel.Migrations
                     b.HasOne("TTControlPanel.Models.Invoice", "Invoice")
                         .WithMany()
                         .HasForeignKey("InvoiceId");
-
-                    b.HasOne("TTControlPanel.Models.Working", "Working")
-                        .WithMany()
-                        .HasForeignKey("WorkingId");
                 });
 
             modelBuilder.Entity("TTControlPanel.Models.ProductKey", b =>
@@ -463,6 +461,10 @@ namespace TTControlPanel.Migrations
                     b.HasOne("TTControlPanel.Models.Client", "FinalClient")
                         .WithMany()
                         .HasForeignKey("FinalClientId");
+
+                    b.HasOne("TTControlPanel.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("TTControlPanel.Models.WorkingItem", b =>
