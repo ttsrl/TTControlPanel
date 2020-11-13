@@ -7,8 +7,6 @@ using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TTControlPanel.Filters;
 using TTControlPanel.Models;
 using TTControlPanel.Models.ViewModel;
