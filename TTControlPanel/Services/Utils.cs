@@ -13,18 +13,19 @@ namespace TTControlPanel.Services
 {
     public class Utils
     {
-        private readonly DBContext _dB;
+        private readonly DBContext _db;
 
-        public Utils()
+        public Utils(DBContext db)
         {
-            _dB = DBContext.Instance;
+            //_dB = DBContext.Instance;
+            _db = db ?? throw new ArgumentNullException(nameof(db));
         }
 
         public async Task<string> GenerateProdutKey(PKType type, ApplicationVersion appV, Client client, TimeSpan? time = null)
         {
             try
             {
-                var prods = await _dB.ProductKeys.Select(p => p.Key).ToListAsync();
+                var prods = await _db.ProductKeys.Select(p => p.Key).ToListAsync();
                 while (true)
                 {
                     var pk = "";
@@ -38,7 +39,7 @@ namespace TTControlPanel.Services
                         return pk;
                 }
             }
-            catch { return null; }
+            catch(Exception ex) { Console.WriteLine(ex.Message); return null; }
         }
 
         private string generatePkNormal(ApplicationVersion appV, Client client)
@@ -173,7 +174,7 @@ namespace TTControlPanel.Services
 
         public async Task<string> GenerateWorkingCode()
         {
-            var appC = await _dB.Workings.Select(p => p.Code).ToListAsync();
+            var appC = await _db.Workings.Select(p => p.Code).ToListAsync();
             while (true)
             {
                 var tmpC = generateCode(8);
@@ -184,7 +185,7 @@ namespace TTControlPanel.Services
 
         public async Task<string> GenerateApplicationCode()
         {
-            var appC = await _dB.Applications.Select(p => p.Code).ToListAsync();
+            var appC = await _db.Applications.Select(p => p.Code).ToListAsync();
             while (true)
             {
                 var tmpC = generateCode(4);
@@ -195,7 +196,7 @@ namespace TTControlPanel.Services
 
         public async Task<string> GenerateClientCode()
         {
-            var cC = await _dB.Clients.Select(p => p.Code).ToListAsync();
+            var cC = await _db.Clients.Select(p => p.Code).ToListAsync();
             while (true)
             {
                 var tmpC = generateCode(4);
@@ -206,7 +207,7 @@ namespace TTControlPanel.Services
 
         public async Task<bool> ValidateClientCode(string code)
         {
-            var cC = await _dB.Clients.Select(p => p.Code).ToListAsync();
+            var cC = await _db.Clients.Select(p => p.Code).ToListAsync();
             return !cC.Contains(code) && code.Length == 4;
         }
 
@@ -216,19 +217,19 @@ namespace TTControlPanel.Services
             var r = int.TryParse(code, out i);
             if (!r)
                 return false;
-            var appC = await _dB.Applications.Select(p => p.Code).ToListAsync();
+            var appC = await _db.Applications.Select(p => p.Code).ToListAsync();
             return !appC.Contains(code) && code.Length == 4;
         }
 
         public async Task<bool> ValidateApplicationName(string name)
         {
-            var appC = await _dB.Applications.Select(p => p.Name.ToLower()).ToListAsync();
+            var appC = await _db.Applications.Select(p => p.Name.ToLower()).ToListAsync();
             return !appC.Contains(name.ToLower());
         }
 
         public async Task<bool> ValidateVAT(string vat)
         {
-            var cV = await _dB.Clients.Select(c => c.VAT).ToListAsync();
+            var cV = await _db.Clients.Select(c => c.VAT).ToListAsync();
             return !cV.Contains(vat);
         }
 

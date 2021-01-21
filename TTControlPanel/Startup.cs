@@ -43,7 +43,8 @@ namespace TTControlPanel
                 s.Cookie.Name = "cpanelTT_Session";
             });
 
-            services.AddDbContext<DBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<DBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DBContext>( options => { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); }, ServiceLifetime.Singleton);
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddSingleton<Utils>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

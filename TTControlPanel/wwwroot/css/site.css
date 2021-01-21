@@ -54,6 +54,10 @@ header {
         display: inline-block;
     }
 
+#pg-hd {
+    margin-top:20px;
+}
+
 .error_lbl {
     margin: 0px 0px 20px 0px;
     font-family: OpenSansBold;
@@ -97,9 +101,20 @@ header {
         position: relative;
     }
 
+.cookie-banner {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+    background-color: #464646;
+    color: white;
+}
+
+    .cookie-banner #cookieConsent {
+        padding: 20px;
+    }
 
 /* -------------------- controlli  ----------------------- */
-
 a, a:link, a:visited {
     color: #007bff;
     font-weight: normal;
@@ -433,7 +448,7 @@ select {
 
 
     #loginBox .button {
-        margin-top: 40px;
+        margin-top: 30px;
         width: 100%;
         height: 38px;
     }

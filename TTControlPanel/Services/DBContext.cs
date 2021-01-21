@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TTControlPanel.Models;
@@ -33,23 +32,6 @@ namespace TTControlPanel.Services
         public DbSet<Order> Orders { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Working> Workings { get; set; }
-
-        private static DBContext _instance;
-        public static DBContext Instance
-        {
-            get
-            {
-                if (started)
-                {
-                    if (_instance == null)
-                    {
-                        _instance = new DBContext(Options);
-                    }
-                    return _instance;
-                }
-                return null;
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -9,16 +9,16 @@
 @if (showBanner)
 {
     <div id="cookieConsent" class="alert alert-info alert-dismissible fade show" role="alert">
-        Questo sito utilizza sessioni e cookie. <a asp-controller="Home" asp-action="Privacy">Leggi altro</a>.
-        <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString" style="font-size: 16px;padding: 13px 20px;">
-            <span aria-hidden="true">Accetta</span>
-        </button>
+        Utilizziamo cookie e altre tecnologie per poter utilizzare correttamente il sistema di gestione e per poter creare la tua autenticazione e la sessione.
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" class="accept-policy close" data-cookie-string="@cookieString" value="Accetta" />
     </div>
     <script>
         (function () {
-            var button = document.querySelector("#cookieConsent button[data-cookie-string]");
+            var button = document.querySelector("#cookieConsent input[data-cookie-string]");
             button.addEventListener("click", function (event) {
                 document.cookie = button.dataset.cookieString;
+                $("#cookieConsent").css("display", "none");
             }, false);
         })();
     </script>

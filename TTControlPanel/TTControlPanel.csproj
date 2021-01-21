@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>TTControlPanel</RootNamespace>
     <LangVersion>8.0</LangVersion>
+    <UserSecretsId>aa681dfd-7c31-47fb-ae62-95ea9631beba</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

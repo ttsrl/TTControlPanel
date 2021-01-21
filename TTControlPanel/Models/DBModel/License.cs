@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using TTControlPanel.Utilities;
 
 namespace TTControlPanel.Models
@@ -10,6 +11,7 @@ namespace TTControlPanel.Models
 
         public int Id { get; set; }
         public ProductKey ProductKey { get; set; }
+        [JsonIgnore]
         public ApplicationVersion ApplicationVersion { get; set; }
         public HID Hid { get; set; }
         public string ConfirmCode { get => confirmCode; set => confirmCode = value.ToUpper(); }

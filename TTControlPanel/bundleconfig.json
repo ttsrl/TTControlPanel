@@ -28,5 +28,11 @@
     "inputFiles": [
       "wwwroot/lib/jquery/dist/jquery.js"
     ]
+  },
+  {
+    "outputFileName": "wwwroot/css/bootstrap.min.css",
+    "inputFiles": [
+      "wwwroot/css/bootstrap.css"
+    ]
   }
 ]
