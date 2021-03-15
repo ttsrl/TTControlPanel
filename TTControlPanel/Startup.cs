@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 using TTControlPanel.Filters;
 using TTControlPanel.Services;
 
@@ -28,20 +29,28 @@ namespace TTControlPanel
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
+
+            //add response caching for quicker responses
 
             services.AddCors(c => { c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()); });
-            services.AddControllersWithViews(options => { options.Filters.Add<AuthenticationFilter>(); });
-            services.AddDistributedMemoryCache();
+            services.AddControllersWithViews(options => { options.Filters.Add<AuthenticationFilter>(); }).AddRazorPagesOptions(o => { o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()); });
+            //services.AddDistributedMemoryCache();
+
             services.AddSession(s =>
             {
                 s.IdleTimeout = TimeSpan.FromMinutes(20);
                 s.Cookie.Name = "cpanelTT_Session";
+                s.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                s.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                s.Cookie.IsEssential = true;
             });
+
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            //{
+            //    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            //    options.Cookie.IsEssential = true;
+            //});
 
             //services.AddDbContext<DBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<DBContext>( options => { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); }, ServiceLifetime.Singleton);
@@ -65,13 +74,15 @@ namespace TTControlPanel
                 app.UseExceptionHandler("/Home/Error");
                 app.UseDatabaseErrorPage();
             }
+
             app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
-            app.UseStaticFiles();
             app.UseSession();
             app.UseCookiePolicy();
             app.UseRouting();
             app.UseAuthorization();
             app.UseCors(options => options.AllowAnyOrigin());
+            app.UseResponseCaching();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -97,6 +108,15 @@ namespace TTControlPanel
                     cultureInfo
                 }
             });
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers[HeaderNames.CacheControl] = "immutable,max-age=" + TimeSpan.FromDays(365).TotalSeconds;
+                }
+            });
+
         }
     }
 }

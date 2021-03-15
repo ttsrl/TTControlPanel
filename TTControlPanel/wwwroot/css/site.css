@@ -1,4 +1,5 @@
-﻿
+﻿@charset "UTF-8";
+
 @font-face {
     font-family: OpenSansRegular;
     src: url('../fonts/overpass-regular.otf');
@@ -55,7 +56,7 @@ header {
     }
 
 #pg-hd {
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .error_lbl {
@@ -173,6 +174,8 @@ input[type="text"], input[type="password"], input[type="date"], input[type="emai
     padding: 0 12px;
     width: 100%;
 }
+
+
 
 textarea {
     padding: 6px 10px;
@@ -309,18 +312,18 @@ select {
         border-radius: 34px;
     }
 
-    .switch input:disabled + .slider:before {
-        position: absolute;
-        content: "";
-        height: 28px;
-        width: 28px;
-        left: 5px;
-        bottom: 5px;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-        border-radius: 50%;
-    }
+        .switch input:disabled + .slider:before {
+            position: absolute;
+            content: "";
+            height: 28px;
+            width: 28px;
+            left: 5px;
+            bottom: 5px;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
 
     .switch input:checked + .slider:before {
         -webkit-transform: translateX(36px);
@@ -328,12 +331,12 @@ select {
         transform: translateX(36px);
     }
 
-    /* ---------------------------------- page ---------------------------------------*/
-    main {
-        width: 100%;
-        height: auto;
-        display: inline-block;
-    }
+/* ---------------------------------- page ---------------------------------------*/
+main {
+    width: 100%;
+    height: auto;
+    display: inline-block;
+}
 
     main .page {
         width: 1000px;
@@ -348,43 +351,43 @@ select {
             margin-bottom: 0px;
         }
 
-            main .page #pg-hd div:last-of-type {
-                margin-bottom: 30px;
-            }
+        main .page #pg-hd div:last-of-type {
+            margin-bottom: 30px;
+        }
 
-            main .page .menu ul {
-                list-style: none;
-                width: auto;
+        main .page .menu ul {
+            list-style: none;
+            width: auto;
+            display: inline-block;
+            padding: 0;
+            margin: 0;
+            font-size: 16px;
+        }
+
+            main .page .menu ul li {
                 display: inline-block;
-                padding: 0;
-                margin: 0;
-                font-size: 16px;
+                padding: 5px 18px;
             }
 
-                main .page .menu ul li {
-                    display: inline-block;
-                    padding: 5px 18px;
+                main .page .menu ul li:first-of-type {
+                    padding: 5px 18px 5px 0px;
                 }
 
-                    main .page .menu ul li:first-of-type {
-                        padding: 5px 18px 5px 0px;
-                    }
+        main .page #pg-hd div:first-of-type ul li:last-of-type {
+            padding: 5px 0px 5px 40px;
+        }
 
-                    main .page #pg-hd div:first-of-type ul li:last-of-type {
-                        padding: 5px 0px 5px 40px;
-                    }
-
-                    /* ------------------------------- login ------------------------------------------*/
-                    #loginBox {
-                        width: 500px;
-                        height: auto;
-                        display: block;
-                        margin: 50px auto;
-                        padding: 30px;
-                        background-color: white;
-                        border: 1px solid rgba(0,0,0,0.1);
-                        color: #50575b;
-                    }
+/* ------------------------------- login ------------------------------------------*/
+#loginBox {
+    width: 500px;
+    height: auto;
+    display: block;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: white;
+    border: 1px solid rgba(0,0,0,0.1);
+    color: #50575b;
+}
 
     #loginBox .logo {
         width: 180px;
@@ -413,7 +416,13 @@ select {
         line-height: 36px;
         padding: 0;
         width: 395px;
+        outline: 0;
     }
+
+        #loginBox input[type="text"]:hover, #loginBox input[type="password"]:hover {
+            border: none;
+            outline: 0;
+        }
 
     #loginBox .loginField.focus {
         border-color: #007bff;
@@ -501,16 +510,15 @@ form label {
             display: inline-block;
             width: 100%;
             text-justify: inter-character;
-            text-align-last: center;
             height: 0px;
             line-height: 0px;
         }
 
-        .table td.justify a:after {
-            content: "";
-            display: inline-block;
-            width: 100%;
-        }
+            .table td.justify a:after {
+                content: "";
+                display: inline-block;
+                width: 100%;
+            }
 
 #explorerLink {
     border-bottom: 1px solid #e1e1e1;
