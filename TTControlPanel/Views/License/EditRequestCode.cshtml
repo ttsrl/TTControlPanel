@@ -10,7 +10,7 @@
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, si prega di inserire correttamente tutti i campi richiesti.</label>
     <label class="error_lbl" asp-if="Model.Error == 2">Errore, questa licenza non risulta ancora attiva.</label>
-    <label class="error_lbl" asp-if="Model.Error == 3">Errore, questo codice è già associato a questa licenza.</label>
+    <label class="error_lbl" asp-if="Model.Error == 3">Errore, questo codice è già associato ad una licenza.</label>
 </div>
 <form asp-antiforgery="true" asp-controller="License" asp-action="EditRequestCode" asp-route-id="@Model.License.Id" autocomplete="off">
     <label>HID:</label>

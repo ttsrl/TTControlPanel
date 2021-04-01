@@ -18,7 +18,7 @@ namespace TTControlPanel.Services
         public Utils(DBContext db)
         {
             //_dB = DBContext.Instance;
-            _db = db ?? throw new ArgumentNullException(nameof(db));
+            _db = db;
         }
 
         public async Task<string> GenerateProdutKey(PKType type, ApplicationVersion appV, Client client, TimeSpan? time = null)

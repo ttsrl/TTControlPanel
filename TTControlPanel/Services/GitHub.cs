@@ -21,7 +21,7 @@ namespace TTControlPanel.Services
             //credential = new Credentials("ttsrl", "TTsrl092017");
             //client = new GitHubClient(new ProductHeaderValue("ttsrl")) { Credentials = credential };
             client = new GitHubClient(new ProductHeaderValue("TTControlPanel"));
-            client.SetRequestTimeout(TimeSpan.FromSeconds(3));
+            client.SetRequestTimeout(TimeSpan.FromSeconds(5));
             commits = new List<GitCommit>();
         }
 
@@ -46,7 +46,7 @@ namespace TTControlPanel.Services
                     }
                     var obj = new GitCommit
                     {
-                        AuthorUsername = c.Author.Login,
+                        //AuthorUsername = c.Author.Login,
                         AuthorName = c.Commit.Author.Name,
                         Date = c.Commit.Author.Date,
                         Message = c.Commit.Message,

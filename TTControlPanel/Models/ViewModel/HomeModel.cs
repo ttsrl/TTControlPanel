@@ -13,7 +13,6 @@ namespace TTControlPanel.Models.ViewModel
     public class GitCommit
     {
         public string AuthorName { get; set; }
-        public string AuthorUsername { get; set; }
         public DateTimeOffset Date { get; set; }
         public string Message { get; set; }
         public int Files { get; set; }

@@ -30,32 +30,23 @@ namespace TTControlPanel
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //add response caching for quicker responses
-
             services.AddCors(c => { c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()); });
-            services.AddControllersWithViews(options => { options.Filters.Add<AuthenticationFilter>(); }).AddRazorPagesOptions(o => { o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()); });
-            //services.AddDistributedMemoryCache();
 
-            services.AddSession(s =>
+            services.AddMemoryCache();
+            services.AddResponseCaching();
+            services.AddControllersWithViews(o => o.Filters.Add<AuthenticationFilter>()).AddRazorPagesOptions(o => { o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()); });
+
+            //session
+            services.AddSession(options =>
             {
-                s.IdleTimeout = TimeSpan.FromMinutes(20);
-                s.Cookie.Name = "cpanelTT_Session";
-                s.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
-                s.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                s.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.Name = "TTMMC_Session";
             });
 
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-            //{
-            //    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
-            //    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            //    options.Cookie.IsEssential = true;
-            //});
-
             //services.AddDbContext<DBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<DBContext>( options => { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); }, ServiceLifetime.Singleton);
+            services.AddDbContext<DBContext>( options => { options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")); }/*, ServiceLifetime.Singleton*/);
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddSingleton<Utils>();
+            services.AddScoped<Utils>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<Cryptography>();
             services.AddSingleton<GitHub>();
@@ -64,24 +55,55 @@ namespace TTControlPanel
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseDatabaseErrorPage();
+                app.UseExceptionHandler("/Error/Index");
             }
 
-            app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
-            app.UseSession();
-            app.UseCookiePolicy();
+            app.UseStatusCodePagesWithReExecute("/Error/Index/{0}");
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    if (ctx.Context.Response.Headers.ContainsKey(HeaderNames.ContentType) && ctx.Context.Response.Headers[HeaderNames.ContentType] == "application/javascript")
+                    {
+                        ctx.Context.Response.Headers.Remove(HeaderNames.ContentType);
+                        ctx.Context.Response.Headers.Add(HeaderNames.ContentType, "text/javascript; charset=utf-8");
+                    }
+                    if (ctx.Context.Response.Headers.ContainsKey(HeaderNames.ContentType) && ctx.Context.Response.Headers[HeaderNames.ContentType] == "text/css")
+                    {
+                        ctx.Context.Response.Headers.Remove(HeaderNames.ContentType);
+                        ctx.Context.Response.Headers.Add(HeaderNames.ContentType, "text/css; charset=utf-8");
+                    }
+                    if (!ctx.Context.Response.Headers.ContainsKey("X-Content-Type-Options"))
+                        ctx.Context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                    ctx.Context.Response.Headers[HeaderNames.CacheControl] = "immutable,max-age=" + TimeSpan.FromDays(365).TotalSeconds;
+                }
+            });
+
             app.UseRouting();
-            app.UseAuthorization();
-            app.UseCors(options => options.AllowAnyOrigin());
+
             app.UseResponseCaching();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
+            app.UseSession();
+
+            app.Use(async (context, next) =>
+            {
+                if (!context.Response.Headers.ContainsKey("X-Content-Type-Options"))
+                    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                await next();
+            });
 
             app.UseEndpoints(endpoints =>
             {
@@ -90,12 +112,10 @@ namespace TTControlPanel
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-
             var cultureInfo = new CultureInfo("it-IT");
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             CultureInfo.CurrentCulture = cultureInfo;
-            // Configure the Localization middleware
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture(cultureInfo),
@@ -106,14 +126,6 @@ namespace TTControlPanel
                 SupportedUICultures = new List<CultureInfo>
                 {
                     cultureInfo
-                }
-            });
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers[HeaderNames.CacheControl] = "immutable,max-age=" + TimeSpan.FromDays(365).TotalSeconds;
                 }
             });
 

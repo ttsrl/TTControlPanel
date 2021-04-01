@@ -13,7 +13,7 @@ namespace TTControlPanel.Filters
     {
         private readonly DBContext _db;
 
-        public AuthenticationFilter(DBContext db )
+        public AuthenticationFilter(DBContext db)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
         }
