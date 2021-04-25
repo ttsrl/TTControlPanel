@@ -34,13 +34,13 @@ namespace TTControlPanel
 
             services.AddMemoryCache();
             services.AddResponseCaching();
-            services.AddControllersWithViews(o => o.Filters.Add<AuthenticationFilter>()).AddRazorPagesOptions(o => { o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()); });
+            services.AddControllersWithViews(o => o.Filters.Add<AuthenticationFilter>());
 
             //session
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
-                options.Cookie.Name = "TTMMC_Session";
+                options.Cookie.Name = "TTcp_Session";
             });
 
             //services.AddDbContext<DBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));

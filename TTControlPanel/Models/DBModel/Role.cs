@@ -13,6 +13,9 @@ namespace TTControlPanel.Models
         /*------------------------ VIEW PAGE GRANTS ------------------------*/
         public bool GrantLogin { get; set; }
 
+        public bool GrantUseCPanel { get; set; }
+        public bool GrantUseGit { get; set; }
+
         [NotMapped]
         public bool this[string grant]
         {

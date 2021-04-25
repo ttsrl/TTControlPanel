@@ -153,6 +153,7 @@ input[type="button"], input[type="submit"], .btn {
     vertical-align: middle;
     font-family: OpenSansBold, Arial, Helvetica, sans-serif;
     transition: color .1s ease-out,background-color .1s ease-out,border-color .1s ease-out;
+    outline: 0;
 }
 
     input[type="button"]:hover, input[type="submit"]:hover, .btn:hover {
@@ -160,6 +161,7 @@ input[type="button"], input[type="submit"], .btn {
         border: 1px solid #0881ba;
         cursor: pointer;
         color: #fff !important;
+        outline: 0;
     }
 
 input[type="text"], input[type="password"], input[type="date"], input[type="email"], input[type="number"], textarea, select, number, email {
@@ -173,14 +175,18 @@ input[type="text"], input[type="password"], input[type="date"], input[type="emai
     height: 36px;
     padding: 0 12px;
     width: 100%;
+    outline: 0;
 }
 
+    input[type="text"]:hover, input[type="password"]:hover, input[type="date"]:hover, input[type="email"]:hover, input[type="number"]:hover, textarea:hover, select:hover, number:hover, email:hover {
+        outline: 0;
+    }
 
 
-textarea {
-    padding: 6px 10px;
-    min-height: 108px;
-}
+    textarea {
+        padding: 6px 10px;
+        min-height: 108px;
+    }
 
 select {
     width: 300px;

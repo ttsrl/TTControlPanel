@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using TTControlPanel.Utilities;
+using TTGitServer.Models;
 
 namespace TTControlPanel.Models
 {
     public class User
     {
+        public User()
+        {
+            this.AuthorizationLogs = new List<AuthorizationLog>();
+            this.SshKeys = new List<SshKey>();
+            this.UserTeamRoles = new List<UserTeamRole>();
+        }
+
         private string _username = "";
         private string email = "";
         private string name = "";
@@ -26,5 +35,9 @@ namespace TTControlPanel.Models
         [ForeignKey("RoleId")]
         public Role Role { get; set; }
         public DateTime TimestampDateTimeUtc { get => timestamp ?? DateTime.UtcNow.TruncateMillis(); set => timestamp = value; }
+
+        public virtual ICollection<AuthorizationLog> AuthorizationLogs { get; set; }
+        public virtual ICollection<SshKey> SshKeys { get; set; }
+        public virtual ICollection<UserTeamRole> UserTeamRoles { get; set; }
     }
 }

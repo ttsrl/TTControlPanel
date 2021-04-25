@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TTControlPanel.Models;
+using TTGitServer.Models;
 
 namespace TTControlPanel.Services
 {
@@ -33,10 +34,22 @@ namespace TTControlPanel.Services
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Working> Workings { get; set; }
 
+
+        public DbSet<AuthorizationLog> AuthorizationLogs { get; set; }
+        public DbSet<Repository> Repositories { get; set; }
+        public DbSet<SshKey> SshKeys { get; set; }
+        public DbSet<TeamRepositoryRole> TeamRepositoryRoles { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<UserTeamRole> UserTeamRoles { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-           // modelBuilder.Entity<User>().Property(u => u.Visible).HasDefaultValue(true);
+            // modelBuilder.Entity<User>().Property(u => u.Visible).HasDefaultValue(true);
+
+
+            //modelBuilder.Entity<TeamRepositoryRole>().HasKey(t => new { t.Team.ID, t.Repository.ID });
+            //modelBuilder.Entity<UserTeamRole>().HasKey(t => new { t.User.Id, t.Team.ID });
         }
 
         public static async Task Initialize(DBContext context, Cryptography crypt)

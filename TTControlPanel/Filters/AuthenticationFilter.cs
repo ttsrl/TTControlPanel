@@ -36,7 +36,7 @@ namespace TTControlPanel.Filters
                     return;
                 }
 
-                if (!user.Role["GrantLogin"] || user.Ban)
+                if (!user.Role["GrantLogin"] || user.Ban  || !user.Role["GrantUseCPanel"])
                 {
                     Logout(context);
                     return;

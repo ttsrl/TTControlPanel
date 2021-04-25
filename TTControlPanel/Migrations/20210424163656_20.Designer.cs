@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TTControlPanel.Services;
 
 namespace TTControlPanel.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20210424163656_20")]
+    partial class _20
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -352,12 +354,6 @@ namespace TTControlPanel.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("GrantLogin")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("GrantUseCPanel")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("GrantUseGit")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")

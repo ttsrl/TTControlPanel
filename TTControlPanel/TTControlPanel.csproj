@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210424160148_20.cs" />
+    <Compile Remove="Migrations\20210424160148_20.Designer.cs" />
+    <Compile Remove="Migrations\20210424160947_20.cs" />
+    <Compile Remove="Migrations\20210424160947_20.Designer.cs" />
+    <Compile Remove="Migrations\20210424161633_20.cs" />
+    <Compile Remove="Migrations\20210424161633_20.Designer.cs" />
+    <Compile Remove="Migrations\20210424161814_20.cs" />
+    <Compile Remove="Migrations\20210424161814_20.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />
@@ -17,6 +28,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Octokit" Version="0.48.0" />
   </ItemGroup>

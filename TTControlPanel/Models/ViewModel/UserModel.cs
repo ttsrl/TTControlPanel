@@ -6,10 +6,12 @@ namespace TTControlPanel.Models.ViewModel
     public class IndexUserModel
     {
         public List<User> Users { get; set; }
+        public List<Role> Roles { get; set; }
     }
 
     public class NewUserGetModel
     {
+        public List<Role> Roles { get; set; }
         public int Error { get; set; }
     }
 
@@ -23,6 +25,8 @@ namespace TTControlPanel.Models.ViewModel
         [EmailAddress]
         public string Email { get; set; }
         [Required]
+        public string Role { get; set; }
+        [Required]
         public string Password { get; set; }
         [Required]
         public string ConfPassword { get; set; }
@@ -30,6 +34,7 @@ namespace TTControlPanel.Models.ViewModel
 
     public class EditUserGetModel
     {
+        public List<Role> Roles { get; set; }
         public User User { get; set; }
         public int Error { get; set; }
     }
@@ -43,6 +48,8 @@ namespace TTControlPanel.Models.ViewModel
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        [Required]
+        public string Role { get; set; }
         public string Password { get; set; }
         public string ConfPassword { get; set; }
     }

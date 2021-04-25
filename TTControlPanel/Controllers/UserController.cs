@@ -28,14 +28,16 @@ namespace TTControlPanel.Controllers
         public async Task<IActionResult> Index()
         {
             var users = await _db.Users.ToListAsync();
-            return View(new IndexUserModel() { Users = users });
+            var roles = await _db.Roles.ToListAsync();
+            return View(new IndexUserModel() { Users = users, Roles = roles });
         }
 
         [HttpGet]
         [Authentication]
-        public IActionResult New()
+        public async Task<IActionResult> New()
         {
-            return View(new NewUserGetModel() { Error = 0 });
+            var roles = await _db.Roles.ToListAsync();
+            return View(new NewUserGetModel() { Roles = roles, Error = 0 });
         }
 
         [HttpPost]
@@ -43,14 +45,18 @@ namespace TTControlPanel.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New(NewUserPostModel model)
         {
+            var roles = await _db.Roles.ToListAsync();
             if (ModelState.IsValid)
             {
                 var username = _utils.GetUsername(model.Name, model.Surname);
                 var usr = await _db.Users.Where(u => u.Email == model.Email.ToLower() || u.Username == username).FirstOrDefaultAsync();
                 if(usr != null)
-                    return View(new NewUserGetModel() { Error = 2 });
+                    return View(new NewUserGetModel() { Roles = roles, Error = 2 });
                 if(model.Password != model.ConfPassword)
-                    return View(new NewUserGetModel() { Error = 3 });
+                    return View(new NewUserGetModel() { Roles = roles, Error = 3 });
+                var ro = await _db.Roles.Where(r => r.Name == model.Role).FirstOrDefaultAsync();
+                if (ro == null)
+                    return View(new NewUserGetModel() { Roles = roles, Error = 4 });
                 var newuser = new User
                 {
                     Username = username,
@@ -59,7 +65,7 @@ namespace TTControlPanel.Controllers
                     Email = model.Email,
                     Password = await _c.Argon2HashAsync(model.Password),
                     Ban = false,
-                    Role = await _db.Roles.Where(r => r.Id == 1).FirstOrDefaultAsync()
+                    Role = ro
                 };
                 await _db.Users.AddAsync(newuser);
                 await _db.SaveChangesAsync();
@@ -94,10 +100,11 @@ namespace TTControlPanel.Controllers
         [Authentication]
         public async Task<IActionResult> Edit(int id)
         {
+            var roles = await _db.Roles.ToListAsync();
             var usr = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
             if (usr == null)
                 return RedirectToAction("Index");
-            return View(new EditUserGetModel { User = usr });
+            return View(new EditUserGetModel { User = usr, Roles = roles });
         }
 
         [HttpPost]
@@ -105,6 +112,7 @@ namespace TTControlPanel.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditUserPostModel model)
         {
+            var roles = await _db.Roles.ToListAsync();
             var usr = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
             if (usr == null)
                 return RedirectToAction("Index");
@@ -113,14 +121,21 @@ namespace TTControlPanel.Controllers
                 var username = _utils.GetUsername(model.Name, model.Surname);
                 var cusr = await _db.Users.Where(u => u.Email == model.Email.ToLower() || u.Username == username).FirstOrDefaultAsync();
                 if (cusr != null)
-                    return View(new EditUserGetModel() { User = usr, Error = 2 });
+                {
+                    if (usr != cusr)
+                        return View(new EditUserGetModel() { User = usr, Roles = roles, Error = 2 });
+                }
                 if(!string.IsNullOrEmpty(model.Password) && !string.IsNullOrEmpty(model.ConfPassword))
                 {
                     if (model.Password != model.ConfPassword)
-                        return View(new EditUserGetModel() { User = usr, Error = 3 });
+                        return View(new EditUserGetModel() { User = usr, Roles = roles, Error = 3 });
                     else
                         usr.Password = await _c.Argon2HashAsync(model.Password);
                 }
+                var ro = await _db.Roles.Where(r => r.Name == model.Role).FirstOrDefaultAsync();
+                if (ro == null)
+                    return View(new EditUserGetModel() { User = usr, Roles = roles, Error = 4 });
+                usr.Role = ro;
                 usr.Username = username;
                 usr.Name = model.Name;
                 usr.Surname = model.Surname;
@@ -128,30 +143,17 @@ namespace TTControlPanel.Controllers
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(new EditUserGetModel { User = usr, Error = 1 });
+            return View(new EditUserGetModel { User = usr, Roles = roles, Error = 1 });
         }
 
         [HttpGet]
         [Authentication]
-        public async Task<IActionResult> Ban(int id)
+        public async Task<IActionResult> ToggleBan(int id)
         {
             var user = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
             if (user != null)
             {
-                user.Ban = true;
-                await _db.SaveChangesAsync();
-            }
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        [Authentication]
-        public async Task<IActionResult> Restore(int id)
-        {
-            var user = await _db.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
-            if (user != null)
-            {
-                user.Ban = false;
+                user.Ban = !user.Ban;
                 await _db.SaveChangesAsync();
             }
             return RedirectToAction("Index");

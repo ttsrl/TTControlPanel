@@ -44,7 +44,7 @@ namespace TTControlPanel.Controllers
                 if(user.Ban)
                     return View("Index", new LoginModel { Error = LoginError.Banned });
                 await _db.Entry(user).Reference(u => u.Role).LoadAsync();
-                if (user.Role.GrantLogin)
+                if (user.Role.GrantLogin && user.Role.GrantUseCPanel)
                 {
                     HttpContext.Session.SetInt32("UserId", user.Id);
                     return RedirectToAction("Index", "Home");

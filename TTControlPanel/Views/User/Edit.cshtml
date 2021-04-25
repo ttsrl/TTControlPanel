@@ -11,6 +11,7 @@
     <label class="error_lbl" asp-if="Model.Error == 1">Errore durante la procedura di modifica, controllare di aver inserito tutti i dati richiesti in modo corretto.</label>
     <label class="error_lbl" asp-if="Model.Error == 2">Errore, questo utente risulta già inserito.</label>
     <label class="error_lbl" asp-if="Model.Error == 3">Errore, le due password non coincidono.</label>
+    <label class="error_lbl" asp-if="Model.Error == 4">Errore, ruolo richiesto non trovato.</label>
 </div>
 <form asp-antiforgery="true" asp-controller="User" asp-action="Edit" asp-route-id="@Model.User.Id" autocomplete="off" style="width:350px;">
     <label style="margin-top:15px;">Nome:</label>
@@ -21,6 +22,15 @@
     <br />
     <label style="margin-top:15px;">Email:</label>
     <input type="email" name="email" value="@Model.User.Email" />
+    <br />
+    <label style="margin-top:15px;">Ruolo:</label>
+    <select name="role" style="width:100%;">
+        <option value="">--</option>
+        @foreach (var r in Model.Roles)
+        {
+            <option value="@r.Name" asp-selected="r.Name == Model.User.Role.Name">@r.Description</option>
+        }
+    </select>
     <br />
     <label style="margin-top:15px;">Password:</label>
     <input type="password" name="password" value="" />
