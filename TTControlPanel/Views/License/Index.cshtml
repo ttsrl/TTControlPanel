@@ -10,10 +10,16 @@
 <div asp-if="Model.Error != 0">
     <label class="error_lbl" asp-if="Model.Error == 1">Errore, licenza inesistente.</label>
 </div>
+<div class="actionLinks">
+    <a asp-action="New" asp-controller="License">Nuova</a>
+    <label for="searchBar" style="width: 60px;">Cerca:</label>
+    <input type="text" id="txtSearch" value="" style="margin: 0 !important; width: 200px;" placeholder="Productkey, Cliente, Data" onkeyup="filterSearch(event)" autocomplete="off" autofocus />
+</div>
 <table class="table">
     <tr style="font-weight:bold;">
-        <td style="width:315px;">ProductKey</td>
+        <td style="width:180px;">ProductKey</td>
         <td style="width:50px;">Tipo</td>
+        <td style="width:135px;">Cliente</td>
         <td style="width:100px;">Data Rilascio</td>
         <td style="width:75px;">Stato</td>
         <td style="width:100px;">Data Attivazione</td>
@@ -58,15 +64,16 @@
         }
         var stringt = (l.ActivationDateTimeUtc == null) ? "-" : ((DateTime)l.ActivationDateTimeUtc).ToDateTimeCE().ToString("dd/MM/yy") + "<br />" + ((DateTime)l.ActivationDateTimeUtc).ToDateTimeCE().ToString("HH:mm");
         var typet = (l.ProductKey.Type == ProductKey.PKType.Normal) ? "N" : ((l.ProductKey.Type == ProductKey.PKType.Time) ? "T" : "P");
-        <tr class="@(l.Banned ? "ban" : "")">
-            <td class="justify" style="font-size: 12px; font-weight: bold;"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key</a></td>
+        <tr id="k_@l.ProductKey.Key" class="@(l.Banned ? "ban" : "")">
+            <td class="justify" style="font-size: 12px; font-weight: bold;"><a asp-controller="License" asp-action="Details" asp-route-id="@l.Id">@l.ProductKey.Key.Insert(18, "\r")</a></td>
             <td style="text-align:center; font-size: 12px; font-weight: bold;">@typet</td>
+            <td style="font-size: 13px;">@l.Client.Name</td>
             <td style="font-size: 11px;">@l.TimestampDateTimeUtc.ToDateTimeCE().ToString("dd/MM/yy")<br />@l.TimestampDateTimeUtc.ToDateTimeCE().ToString("HH:mm")</td>
             <td style="font-size: 13px;" class="license@((!l.Active) ? "I" : (exp ? "S" : "A"))">@((!l.Active) ? "Pronta" : (exp ? "Scaduta" : "Attiva"))</td>
             <td style="font-size: 11px;">@Html.Raw(stringt)</td>
             <td style="text-align: center; font-size: 13px;" class="license@(l.Banned ? "B" : "A")">@(l.Banned ? "NO" : "SI")</td>
             <td style="text-align: center;"><span title="@title" style="vertical-align: middle;" class="led @(resll == 0 ? "black" : resll == 1 ? "red" : resll == 2 ? "orange" : "green")"></span></td>
-            <td>
+            <td style="text-align: right;">
                 <span asp-if="@(!l.Banned)"><a asp-controller="License" asp-action="Ban" asp-route-id="@l.Id">Blocca</a></span>
                 <span asp-if="@(l.Banned)"><a asp-controller="License" asp-action="Restore" asp-route-id="@l.Id">Consenti</a></span>
                 <span><a asp-controller="License" asp-action="Delete" asp-route-id="@l.Id">Rimuovi</a></span>
@@ -81,3 +88,43 @@
 <div>
     <a asp-action="New" asp-controller="License"><input type="button" value="Nuova" /></a>
 </div>
+
+@section Scripts{
+    <script class="inject-json" data-name="licenses" type="application/json">
+        @Html.Raw(JsonConvert.SerializeObject(Model.Licenses))
+    </script>
+    <script type="text/javascript">
+
+        function filterSearch(e) {
+            var val = e.currentTarget.value;
+            //var rep = val.replace(/[A-Za-z]/g, "");
+            $("#txtSearch").val(val);
+            var words = val.split(' ');
+            for (var i = 0; i < words.length; i++) {
+                var word = words[i].toLowerCase();
+                $(licenses).each(function (index, item) {
+                    var bcC = item.ProductKey.Key.toString().toLowerCase();
+                    var artC = item.Client.Name.toString().toLowerCase();
+                    var dt = new Date(item.TimestampDateTimeUtc);
+                    var data = dt.format("dd/mm/yyyy");
+                    if (i == 0) {
+                        if ((bcC.indexOf(word) >= 0) || (artC.indexOf(word) >= 0) || (data.indexOf(word) >= 0)) {
+                            $("#k_" + item.ProductKey.Key.toString()).css("display", "");
+                        } else {
+                            $("#k_" + item.ProductKey.Key.toString()).css("display", "none");
+                        }
+                    } else {
+                        if ($("#k_" + item.ProductKey.Key.toString()).css("display") != "none") {
+                            if ((bcC.indexOf(word) >= 0) || (artC.indexOf(word) >= 0) || (data.indexOf(word) >= 0)) {
+                                $("#k_" + item.ProductKey.Key.toString()).css("display", "");
+                            } else {
+                                $("#k_" + item.ProductKey.Key.toString()).css("display", "none");
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+    </script>
+}

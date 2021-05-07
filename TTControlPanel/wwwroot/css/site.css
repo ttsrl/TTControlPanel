@@ -513,18 +513,19 @@ form label {
 
         .table td.justify a {
             text-align: justify;
+            text-align-last: justify;
             display: inline-block;
             width: 100%;
             text-justify: inter-character;
-            height: 0px;
-            line-height: 0px;
+            height: auto;
+            /*line-height: 0px;*/
         }
 
-            .table td.justify a:after {
+/*            .table td.justify a:after {
                 content: "";
                 display: inline-block;
                 width: 100%;
-            }
+            }*/
 
 #explorerLink {
     border-bottom: 1px solid #e1e1e1;
@@ -727,3 +728,10 @@ form label {
         visibility: visible;
         display: inline-block;
     }
+
+
+.actionLinks {
+    margin: 20px 0px;
+    display: block;
+    text-align: right;
+}

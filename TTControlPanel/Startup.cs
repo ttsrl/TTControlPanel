@@ -34,7 +34,7 @@ namespace TTControlPanel
 
             services.AddMemoryCache();
             services.AddResponseCaching();
-            services.AddControllersWithViews(o => o.Filters.Add<AuthenticationFilter>());
+            services.AddControllersWithViews(o => o.Filters.Add<AuthenticationFilter>()).AddRazorRuntimeCompilation();
 
             //session
             services.AddSession(options =>
