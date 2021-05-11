@@ -35,12 +35,7 @@ namespace TTControlPanel.Services
         public DbSet<Working> Workings { get; set; }
 
 
-        public DbSet<AuthorizationLog> AuthorizationLogs { get; set; }
         public DbSet<Repository> Repositories { get; set; }
-        public DbSet<SshKey> SshKeys { get; set; }
-        public DbSet<TeamRepositoryRole> TeamRepositoryRoles { get; set; }
-        public DbSet<Team> Teams { get; set; }
-        public DbSet<UserTeamRole> UserTeamRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

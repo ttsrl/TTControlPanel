@@ -372,11 +372,11 @@ main {
 
             main .page .menu ul li {
                 display: inline-block;
-                padding: 5px 18px;
+                padding: 5px 15px;
             }
 
                 main .page .menu ul li:first-of-type {
-                    padding: 5px 18px 5px 0px;
+                    padding: 5px 15px 5px 0px;
                 }
 
         main .page #pg-hd div:first-of-type ul li:last-of-type {

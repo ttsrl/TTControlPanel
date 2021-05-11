@@ -1,0 +1,27 @@
+﻿@model RepositoriesModel
+@{
+    ViewData["Title"] = "Repositories";
+}
+
+<div id="explorerLink">
+    Utenti
+</div>
+<h1>Lista Repositories</h1>
+<br />
+<table class="table">
+    <tr>
+        <td>Nome</td>
+        <td>Utente</td>
+        <td>Data creazione</td>
+        <td>Data ultima modifica</td>
+    </tr>
+    @foreach (var r in Model.Repositories)
+    {
+        <tr>
+            <td>@r.Name</td>
+            <td>@r.UserName</td>
+            <td>@r.CreationDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+            <td>@r.UpdateTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+        </tr>
+    }
+</table>
