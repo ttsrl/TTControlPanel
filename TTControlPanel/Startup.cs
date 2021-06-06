@@ -48,6 +48,7 @@ namespace TTControlPanel
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddScoped<Utils>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<KeepAlive>();
             services.AddSingleton<Cryptography>();
             services.AddSingleton<GitHub>();
         }

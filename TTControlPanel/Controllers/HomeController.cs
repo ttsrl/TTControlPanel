@@ -14,12 +14,14 @@ namespace TTControlPanel.Controllers
         private readonly Cryptography _c;
         private readonly DBContext _db;
         private readonly GitHub _git;
+        private readonly KeepAlive _keepalive;
 
-        public HomeController(DBContext db, Cryptography c, GitHub git)
+        public HomeController(DBContext db, KeepAlive ka, Cryptography c, GitHub git)
         {
             _db = db ?? throw new ArgumentNullException(nameof(db));
             _c = c ?? throw new ArgumentNullException(nameof(c));
             _git = git ?? throw new ArgumentNullException(nameof(git));
+            _keepalive = ka ?? throw new ArgumentNullException(nameof(ka));
         }
 
         [HttpGet]

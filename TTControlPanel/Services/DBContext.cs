@@ -33,7 +33,7 @@ namespace TTControlPanel.Services
         public DbSet<Order> Orders { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Working> Workings { get; set; }
-
+        public DbSet<KeepAliveRequest> KeepAliveRequests { get; set; }
 
         public DbSet<Repository> Repositories { get; set; }
 
